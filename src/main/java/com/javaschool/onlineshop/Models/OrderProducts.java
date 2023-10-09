@@ -1,8 +1,13 @@
 package com.javaschool.onlineshop.Models;
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
+
+import lombok.Data;
 
 @Entity
 @Table(name="Order_has_Products")
+@Data
+@NoArgsConstructor
 public class OrderProducts {
 	
 	//COLUMNS
@@ -18,29 +23,5 @@ public class OrderProducts {
 			
 	@Column(name = "quantity")
 	private Integer quantity;
-
-	public Order getOrderProduct() {
-		return OrderProduct;
-	}
-
-	public void setOrderProduct(Order orderProduct) {
-		OrderProduct = orderProduct;
-	}
-
-	public Products getProductOrders() {
-		return ProductOrders;
-	}
-
-	public void setProductOrders(Products productOrders) {
-		ProductOrders = productOrders;
-	}
-
-	public Integer getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(Integer quantity) {
-		this.quantity = quantity;
-	}
 
 }

@@ -1,15 +1,30 @@
 package com.javaschool.onlineshop.Models;
 import java.util.List;
 import java.util.UUID;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
+import lombok.Data;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import lombok.NoArgsConstructor;
+
 
 @Entity
 @Table(name="Orders")
+@Data
+@NoArgsConstructor
 public class Order {
 	
 	//COLUMNS
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID order_uuid;
 	
 	@OneToOne
@@ -26,7 +41,7 @@ public class Order {
 	
 	@OneToOne
 	@JoinColumn(name = "order_userAddress_uuid")
-	private User_Address userAddress;
+	private UserAddress userAddress;
 	
 	@ManyToOne
 	@JoinColumn(name = "order_user_uuid")
@@ -41,76 +56,4 @@ public class Order {
 	//RELATIONS
 	@OneToMany(mappedBy = "OrderProduct", cascade= CascadeType.ALL)
 	private List<OrderProducts> order_product;
-
-	public UUID getOrder_uuid() {
-		return order_uuid;
-	}
-
-	public void setOrder_uuid(UUID order_uuid) {
-		this.order_uuid = order_uuid;
-	}
-
-	public Payment getPayment() {
-		return payment;
-	}
-
-	public void setPayment(Payment payment) {
-		this.payment = payment;
-	}
-
-	public Status getStatus() {
-		return status;
-	}
-
-	public void setStatus(Status status) {
-		this.status = status;
-	}
-
-	public Delivery getDelivery() {
-		return delivery;
-	}
-
-	public void setDelivery(Delivery delivery) {
-		this.delivery = delivery;
-	}
-
-	public User_Address getUserAddress() {
-		return userAddress;
-	}
-
-	public void setUserAddress(User_Address userAddress) {
-		this.userAddress = userAddress;
-	}
-
-	public ShopUser getShopUser() {
-		return shopUser;
-	}
-
-	public void setShopUser(ShopUser shopUser) {
-		this.shopUser = shopUser;
-	}
-
-	public Boolean getPay_status() {
-		return pay_status;
-	}
-
-	public void setPay_status(Boolean pay_status) {
-		this.pay_status = pay_status;
-	}
-
-	public Boolean getIsDeleted() {
-		return isDeleted;
-	}
-
-	public void setIsDeleted(Boolean isDeleted) {
-		this.isDeleted = isDeleted;
-	}
-
-	public List<OrderProducts> getOrder_product() {
-		return order_product;
-	}
-
-	public void setOrder_product(List<OrderProducts> order_product) {
-		this.order_product = order_product;
-	}
 }

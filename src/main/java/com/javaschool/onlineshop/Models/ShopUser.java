@@ -2,15 +2,31 @@ package com.javaschool.onlineshop.Models;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+import lombok.Data;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import lombok.NoArgsConstructor;
+
 
 @Entity
 @Table(name="Shop_Users")
+@Data
+@NoArgsConstructor
 public class ShopUser {
 	
 	//COLUMNS
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID user_uuid;
 	
     @OneToOne
@@ -38,53 +54,9 @@ public class ShopUser {
     
     //RELATIONS
     @OneToMany(mappedBy = "user", cascade= CascadeType.ALL)
-	private List<User_Address> address;
+	private List<UserAddress> address;
 	
 	@OneToMany(mappedBy = "shopUser", cascade= CascadeType.ALL)
 	private List<Order> orders;
     
-	//GETTERS AND SETTERS
-    public UUID getuser_uuid() {
-		return user_uuid;
-    }
-    
-    public String getName() {
-    	return name;
-    }
-    
-    public String getSurName() {
-    	return surname;
-    }
-    
-    public String getMail() {
-    	return mail;
-    }
-    
-    public String getPassword() {
-    	return password;
-    }
-    
-    public Date getDate(){
-    	return date;
-    }
-    
-    public Boolean getIsDeleted() {
-		return isDeleted;
-	}
-    
-    public List<User_Address> getUserAddress(){
-    	return address;
-    }
-    
-    public Role getUserRole() {
-    	return users_rol;
-    }
-
-	public List<Order> getOrders() {
-		return orders;
-	}
-
-	public void setOrders(List<Order> orders) {
-		this.orders = orders;
-	}
 }

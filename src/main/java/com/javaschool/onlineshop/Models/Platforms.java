@@ -1,14 +1,26 @@
 package com.javaschool.onlineshop.Models;
 import java.util.List;
 import java.util.UUID;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
+import lombok.Data;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import lombok.NoArgsConstructor;
+
 
 @Entity
 @Table(name="Platforms")
+@Data
+@NoArgsConstructor
 public class Platforms {
 	//COLUMNS
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID platform_uuid;
 
 	@Column(name = "platform_type")
@@ -19,23 +31,5 @@ public class Platforms {
 	
 	//RELATIONS
 	@OneToMany(mappedBy = "platform", cascade= CascadeType.ALL)
-	private List<Products> products;
-	
-	//GETTERS AND SETTERS
-	public UUID GetPlatformUuid() {
-		return platform_uuid;
-	}
-		
-	public String GetPlatformType() {
-		return type;
-	}
-		
-	public Boolean GetPlatformIsDeleted() {
-		return isDeleted;
-	}
-	
-	public List<Products> GetProductsPlatform(){
-		return products;
-	}
-		
+	private List<Products> products;	
 }

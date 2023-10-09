@@ -1,13 +1,23 @@
 package com.javaschool.onlineshop.Models;
 import java.util.UUID;
-import jakarta.persistence.*;
+import lombok.Data;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.Column;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name="Category")
+@Data
+@NoArgsConstructor
 public class Category {
+	
 	//COLUMNS
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID category_uuid;
 
 	@Column(name = "category_type")
@@ -15,18 +25,4 @@ public class Category {
 	
 	@Column(name = "category_isDeleted")
 	private Boolean isDeleted;
-	
-	
-	//GETTERS AND SETTERS
-	public UUID getCategoryUuid() {
-		return category_uuid;
-	}
-	
-	public String getCategoryType() {
-		return type;
-	}
-	
-	public Boolean getCategoryIsDeleted() {
-		return isDeleted;
-	}
 }

@@ -1,15 +1,29 @@
 package com.javaschool.onlineshop.Models;
 import java.util.List;
+import lombok.Data;
 import java.util.UUID;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import lombok.NoArgsConstructor;
+
 
 @Entity
 @Table(name="Cities")
+@Data
+@NoArgsConstructor
 public class City {
 	
 	//COLUMNS
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID city_uuid; 
 	
 	@ManyToOne
@@ -25,25 +39,4 @@ public class City {
 	//RELATIONS
 	@OneToMany(mappedBy = "city_uuid", cascade= CascadeType.ALL)
 	private List<PostalCode> postal_codes;
-	
-	//GETTERS AND SETTERS
-	public UUID getCountryUuid() {
-		return city_uuid;
-	}
-	
-	public String getCityName() {
-		return name;
-	}
-	
-	public Boolean getCityIsDeleted() {
-		return isDeleted;
-	}
-	
-	public Country getCityCountry() {
-		return country;
-	}
-	
-	public List<PostalCode> getCityPostalCodes(){
-		return postal_codes;
-	}
 }

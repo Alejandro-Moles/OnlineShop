@@ -1,14 +1,24 @@
 package com.javaschool.onlineshop.Models;
 import java.util.UUID;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
+import lombok.Data;
+import jakarta.persistence.Id;
+import jakarta.persistence.Column;
+import lombok.NoArgsConstructor;
+
 
 @Entity
 @Table(name="Order_Status")
+@Data
+@NoArgsConstructor
 public class Status {
 	
 	//COLUMNS
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID status_uuid;
 		
 	@Column(name = "status_type")
@@ -16,18 +26,4 @@ public class Status {
 		
 	@Column(name = "status_isDeleted")
 	private Boolean isDeleted;
-
-		
-	//GETTERS AND SETTERS
-	public UUID getStatustUuid() {
-		return status_uuid;
-	}
-
-	public String getStatusType() {
-		return type;
-	}
-
-	public Boolean getStatusIsDeleted() {
-		return isDeleted;
-	}
 }

@@ -1,14 +1,29 @@
 package com.javaschool.onlineshop.Models;
 import java.util.List;
 import java.util.UUID;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
+import lombok.Data;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import lombok.NoArgsConstructor;
+
 
 @Entity
 @Table(name="Products")
+@Data
+@NoArgsConstructor
 public class Products {
 	//COLUMNS
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID product_uuid;
 	
 	@OneToOne
@@ -52,71 +67,4 @@ public class Products {
 	
 	@OneToMany(mappedBy = "ProductOrders", cascade= CascadeType.ALL)
 	private List<OrderProducts> product_orders;
-
-	//GETTERS AND SETTERS
-	public UUID getProduct_uuid() {
-		return product_uuid;
-	}
-
-	public Category getProductsCategoty() {
-		return categoty;
-	}
-
-	public Platforms getProductsPlatform() {
-		return platform;
-	}
-
-	public String getProductsTitle() {
-		return title;
-	}
-
-	public Double getProductsPrice() {
-		return price;
-	}
-
-	public Double getProductsWeight() {
-		return weight;
-	}
-
-	public Integer getProductsStock() {
-		return stock;
-	}
-
-	public Integer getProductsPEGI() {
-		return PEGI;
-	}
-
-	public Boolean getProductsIsDigital() {
-		return isDigital;
-	}
-
-	public void setIsDigital(Boolean isDigital) {
-		this.isDigital = isDigital;
-	}
-
-	public String getProductsDescription() {
-		return description;
-	}
-
-	public String getProductsImage() {
-		return image;
-	}
-
-	public Boolean getProductsIsDeleted() {
-		return isDeleted;
-	}
-
-	public void setIsDeleted(Boolean isDeleted) {
-		this.isDeleted = isDeleted;
-	}
-
-	public List<ProductsGenre> getProducts_genre() {
-		return products_genre;
-	}
-
-	public List<OrderProducts> getProduct_orders() {
-		return product_orders;
-	}
-	
-	
 }

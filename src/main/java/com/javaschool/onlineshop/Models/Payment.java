@@ -1,14 +1,24 @@
 package com.javaschool.onlineshop.Models;
 import java.util.UUID;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
+import lombok.Data;
+import jakarta.persistence.Id;
+import jakarta.persistence.Column;
+import lombok.NoArgsConstructor;
+
 
 @Entity
 @Table(name="Order_Payment")
+@Data
+@NoArgsConstructor
 public class Payment {
 	
 	//COLUMNS
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID payment_uuid;
 	
 	@Column(name = "payment_type")
@@ -16,18 +26,4 @@ public class Payment {
 	
 	@Column(name = "payment_isDeleted")
 	private Boolean isDeleted;
-
-	
-	//GETTERS AND SETTERS
-	public UUID getPaymentUuid() {
-		return payment_uuid;
-	}
-
-	public String getPaymentType() {
-		return type;
-	}
-
-	public Boolean getPaymentIsDeleted() {
-		return isDeleted;
-	}
 }

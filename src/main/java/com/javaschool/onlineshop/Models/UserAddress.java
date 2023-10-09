@@ -1,14 +1,27 @@
 package com.javaschool.onlineshop.Models;
 import java.util.UUID;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
+import lombok.Data;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Column;
+import lombok.NoArgsConstructor;
+
 
 @Entity
 @Table(name="User_Address")
-public class User_Address {
+@Data
+@NoArgsConstructor
+public class UserAddress {
 
 	//COLUMNS
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID address_uuid;
 	
 	@ManyToOne
@@ -31,33 +44,4 @@ public class User_Address {
 	@Column(name = "address_isDeleted")
 	private Boolean isDeleted;
 	
-	
-	//GETTERS AND SETTERS
-	public UUID getAddUuid() {
-		return address_uuid;
-	}
-	
-	public ShopUser getAddShopUser() {
-		return user;
-	}
-	
-	public PostalCode getAddPostalCode() {
-		return postal_code;
-	}
-	
-	public String getAddStreet() {
-		return street;
-	}
-	
-	public String getAddHome() {
-		return home;
-	}
-	
-	public String getAddApartament() {
-		return apartament;
-	}
-	
-	public Boolean getAddIsDeleted() {
-		return isDeleted;
-	}
 }
