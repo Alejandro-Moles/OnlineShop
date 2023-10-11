@@ -1,6 +1,8 @@
 package com.javaschool.onlineshop.Models;
 import java.util.UUID;
-import lombok.Data;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,11 +10,14 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name="Category")
-@Data
+@AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class Category {
 	
 	//COLUMNS
