@@ -43,7 +43,7 @@ public class ShopUser {
     @Temporal(TemporalType.DATE)
     private Date date;
     
-    @Column(name = "user_mail")
+    @Column(name = "user_mail", unique = true)
     private String mail;
     
     @Column(name = "user_password")

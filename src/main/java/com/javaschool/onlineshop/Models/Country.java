@@ -23,7 +23,7 @@ public class Country {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID country_uuid; 
 	
-	@Column(name = "country_name")
+	@Column(name = "country_name", unique = true)
 	private String name;
 	
 	@Column(name ="country_isDeleted")

@@ -21,7 +21,7 @@ public class Payment {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID payment_uuid;
 	
-	@Column(name = "payment_type")
+	@Column(name = "payment_type", unique = true)
 	private String type;
 	
 	@Column(name = "payment_isDeleted")

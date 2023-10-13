@@ -1,20 +1,30 @@
 package com.javaschool.onlineshop.Services;
 
+import com.javaschool.onlineshop.DTO.RoleRequestDTO;
+import com.javaschool.onlineshop.Mapper.RoleMapper;
 import com.javaschool.onlineshop.Models.Role;
 import com.javaschool.onlineshop.Repositories.RoleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
+@Transactional
 public class RoleService {
     private final RoleRepository roleRepository;
+    private final RoleMapper roleMapper;
 
-    @Autowired
-    public RoleService(RoleRepository roleRepository){
-        this.roleRepository = roleRepository;
+    public RoleRequestDTO saveRole(RoleRequestDTO roleDTO){
+        Role role = new Role();
+        role.setType(roleDTO.getType());
+        role.setDeleted(false);
+
+        roleRepository.save(role);
+        return createRoleDTO(role);
     }
 
-    public void saveRole(Role role){
-        roleRepository.save(role);
+    private RoleRequestDTO createRoleDTO(Role role){
+        return roleMapper.createRoleDTO(role);
     }
 }

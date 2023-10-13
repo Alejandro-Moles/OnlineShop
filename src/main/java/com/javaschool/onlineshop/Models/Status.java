@@ -21,7 +21,7 @@ public class Status {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID status_uuid;
 		
-	@Column(name = "status_type")
+	@Column(name = "status_type", unique = true)
 	private String type;
 		
 	@Column(name = "status_isDeleted")

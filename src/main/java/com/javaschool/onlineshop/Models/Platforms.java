@@ -23,7 +23,7 @@ public class Platforms {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID platform_uuid;
 
-	@Column(name = "platform_type")
+	@Column(name = "platform_type", unique = true)
 	private String type;
 		
 	@Column(name = "platform_isDeleted")

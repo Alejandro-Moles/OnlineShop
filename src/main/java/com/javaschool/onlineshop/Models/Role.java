@@ -22,7 +22,7 @@ public class Role {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID role_uuid; 
 	
-	@Column(name = "role_type")
+	@Column(name = "role_type", unique = true)
 	private String type;
 	
 	@Column(name ="role_isDeleted")

@@ -1,20 +1,30 @@
 package com.javaschool.onlineshop.Services;
 
+import com.javaschool.onlineshop.DTO.StatusRequestDTO;
+import com.javaschool.onlineshop.Mapper.StatusMapper;
 import com.javaschool.onlineshop.Models.Status;
 import com.javaschool.onlineshop.Repositories.StatusRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
+@Transactional
 public class StatusService {
     private final StatusRepository statusRepository;
+    private final StatusMapper statusMapper;
 
-    @Autowired
-    public StatusService(StatusRepository statusRepository){
-        this.statusRepository = statusRepository;
+    public StatusRequestDTO saveStatus(StatusRequestDTO statusDTO){
+        Status status = new Status();
+        status.setType(statusDTO.getType());
+        status.setIsDeleted(false);
+
+        statusRepository.save(status);
+        return createStatusDTO(status);
     }
 
-    public void saveStatus(Status status){
-        statusRepository.save(status);
+    private StatusRequestDTO createStatusDTO(Status status){
+        return statusMapper.createStatusDTO(status);
     }
 }

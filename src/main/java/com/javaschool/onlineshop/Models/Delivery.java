@@ -21,7 +21,7 @@ public class Delivery {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID delivery_uuid;
 			
-	@Column(name = "delivery_type")
+	@Column(name = "delivery_type", unique = true)
 	private String type;
 			
 	@Column(name = "delivery_isDeleted")

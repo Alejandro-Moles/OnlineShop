@@ -23,7 +23,7 @@ public class Genre {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID genre_uuid;
 
-	@Column(name = "genre_type")
+	@Column(name = "genre_type", unique = true)
 	private String type;
 			
 	@Column(name = "genre_isDeleted")

@@ -1,20 +1,30 @@
 package com.javaschool.onlineshop.Services;
 
+import com.javaschool.onlineshop.DTO.DeliveryRequestDTO;
+import com.javaschool.onlineshop.Mapper.DeliveryMapper;
 import com.javaschool.onlineshop.Models.Delivery;
 import com.javaschool.onlineshop.Repositories.DeliveryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
+@Transactional
 public class DeliveryService {
     private final DeliveryRepository deliveryRepository;
+    private final DeliveryMapper deliveryMapper;
 
-    @Autowired
-    public DeliveryService(DeliveryRepository deliveryRepository){
-        this.deliveryRepository = deliveryRepository;
+    public DeliveryRequestDTO saveDelivery(DeliveryRequestDTO deliveryDTO){
+        Delivery delivery = new Delivery();
+        delivery.setType(deliveryDTO.getType());
+        delivery.setIsDeleted(false);
+
+        deliveryRepository.save(delivery);
+        return createDeliveryDTO(delivery);
     }
 
-    public void saveDelivery(Delivery delivery){
-        deliveryRepository.save(delivery);
+    private DeliveryRequestDTO createDeliveryDTO(Delivery delivery){
+        return deliveryMapper.createDeliveryDTO(delivery);
     }
 }

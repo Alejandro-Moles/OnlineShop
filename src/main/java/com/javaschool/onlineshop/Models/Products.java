@@ -28,13 +28,13 @@ public class Products {
 	
 	@OneToOne
     @JoinColumn(name = "product_category_uuid")
-    private Category categoty;
+    private Category category;
 	
 	@ManyToOne
 	@JoinColumn(name = "product_platform_uuid")
 	private Platforms platform;
 
-	@Column(name = "product_title")
+	@Column(name = "product_title", unique = true)
 	private String title;
 	
 	@Column(name = "product_price")

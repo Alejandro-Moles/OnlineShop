@@ -1,7 +1,7 @@
 package com.javaschool.onlineshop.Controllers;
 
-import com.javaschool.onlineshop.DTO.RoleRequestDTO;
-import com.javaschool.onlineshop.Services.RoleService;
+import com.javaschool.onlineshop.DTO.CityRequestDTO;
+import com.javaschool.onlineshop.Services.CityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/roles")
+@RequestMapping("/cities")
 @RequiredArgsConstructor
-public class RoleController {
-    private final RoleService roleService;
+public class CityController {
+    private final CityService cityService;
 
     @PostMapping
-    public ResponseEntity<String> createRole(@RequestBody RoleRequestDTO roleDTO) {
-        RoleRequestDTO result = roleService.saveRole(roleDTO);
-        return ResponseEntity.ok("Role created : " + result.getType());
+    public ResponseEntity<String> createCity(@RequestBody CityRequestDTO cityDTO) {
+        CityRequestDTO result = cityService.saveCity(cityDTO);
+        return ResponseEntity.ok("City created with ID: " + result.getName());
     }
 }
