@@ -1,6 +1,7 @@
 package com.javaschool.onlineshop.Services;
 
 import com.javaschool.onlineshop.DTO.CityRequestDTO;
+import com.javaschool.onlineshop.Exception.ResourceDuplicate;
 import com.javaschool.onlineshop.Mapper.CityMapper;
 import com.javaschool.onlineshop.Models.City;
 import com.javaschool.onlineshop.Models.Country;
@@ -23,6 +24,10 @@ public class CityService {
         city.setName(cityDTO.getName());
         city.setDeleted(false);
         city.setCountry(findCountry(cityDTO.getCountryName()));
+
+        if (cityRepository.existsByNameAndCountry(city.getName(), city.getCountry())) {
+            throw new ResourceDuplicate("City already exists within country");
+        }
 
         cityRepository.save(city);
         return createCityDTO(city);

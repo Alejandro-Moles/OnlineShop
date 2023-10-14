@@ -25,9 +25,9 @@ public class PostalCode {
 	
 	@ManyToOne
     @JoinColumn(name = "postal_code_city_uuid")
-    private City city_uuid;
+    private City city;
 	
-	@Column(name = "postal_code_content")
+	@Column(name = "postal_code_content",unique = true)
 	private String content;
 	
 	@Column(name ="postal_code_isDeleted")

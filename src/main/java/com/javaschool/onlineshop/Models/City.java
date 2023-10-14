@@ -25,7 +25,7 @@ public class City {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID city_uuid; 
-	
+
 	@ManyToOne
 	@JoinColumn(name = "city_country_uuid")
 	private Country country;
@@ -37,6 +37,6 @@ public class City {
 	private boolean isDeleted;
 	
 	//RELATIONS
-	@OneToMany(mappedBy = "city_uuid", cascade= CascadeType.ALL)
+	@OneToMany(mappedBy = "city", cascade= CascadeType.ALL)
 	private List<PostalCode> postal_codes;
 }
