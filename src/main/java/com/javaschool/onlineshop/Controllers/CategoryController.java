@@ -20,6 +20,6 @@ public class CategoryController {
     @PostMapping
     public ResponseEntity<String> createCategory(@RequestBody CategoryRequestDTO categoryDTO) {
         CategoryRequestDTO result = categoryService.saveCategory(categoryDTO);
-        return ResponseEntity.ok("City created with ID: " + result.getType());
+        return ResponseEntity.ok("Category created : " + result.getType());
     }
 }

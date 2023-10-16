@@ -48,4 +48,11 @@ public class ShopUserService {
         byte[] encodeBytes = Base64.getEncoder().encode(password.getBytes());
         return new String(encodeBytes);
     }
+
+    //This method decrypts the encrypted password stored in the database.
+    private String decodePasswordBase64(String encodedPassword){
+        byte[] decodedBytes = Base64.getDecoder().decode(encodedPassword);
+        return new String(decodedBytes);
+    }
+
 }

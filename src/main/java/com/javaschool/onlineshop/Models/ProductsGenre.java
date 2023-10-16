@@ -1,11 +1,9 @@
 package com.javaschool.onlineshop.Models;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.NoArgsConstructor;
+
+import java.util.UUID;
 
 
 @Entity
@@ -16,12 +14,17 @@ public class ProductsGenre {
 
 	//COLUMNS
 	@Id
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private UUID products_genre_uuid;
+
 	@ManyToOne
 	@JoinColumn(name = "product_uuid")
 	private Products product;
-		
-	@Id
+
 	@ManyToOne
 	@JoinColumn(name = "genre_uuid")
 	private Genre genre;
+
+	@Column(name = "isDeleted")
+	private Boolean isDeleted;
 }
