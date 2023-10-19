@@ -5,7 +5,7 @@ import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.PaymentMapper;
 import com.javaschool.onlineshop.models.Payment;
 import com.javaschool.onlineshop.repositories.PaymentRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

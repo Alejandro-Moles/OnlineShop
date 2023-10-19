@@ -10,9 +10,9 @@ import com.javaschool.onlineshop.models.UserAddress;
 import com.javaschool.onlineshop.repositories.PostalCodeRepository;
 import com.javaschool.onlineshop.repositories.ShopUserRepository;
 import com.javaschool.onlineshop.repositories.UserAddressRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -44,10 +44,12 @@ public class UserAddressService {
         return userAddressMapper.createUserAddressDTO(userAddress);
     }
 
+    @Transactional(readOnly = true)
     private ShopUser findShopUser(String mail){
         return shopUserRepository.findByMail(mail).orElseThrow(() -> new NoExistData("This shop user don't exist"));
     }
 
+    @Transactional(readOnly = true)
     private PostalCode findPostalCode(String content){
         return postalCodeRepository.findByContent(content).orElseThrow(null);
     }

@@ -8,9 +8,9 @@ import com.javaschool.onlineshop.models.*;
 import com.javaschool.onlineshop.repositories.CategoryRepository;
 import com.javaschool.onlineshop.repositories.PlatformsRepository;
 import com.javaschool.onlineshop.repositories.ProductsRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -47,10 +47,12 @@ public class ProductsService {
         return productsMapper.createProductDTO(products);
     }
 
+    @Transactional(readOnly = true)
     private Category findCategory(String type){
         return categoryRepository.findByType(type).orElseThrow(() -> new NoExistData("This category don't exist"));
     }
 
+    @Transactional(readOnly = true)
     private Platforms findPlatform(String type){
         return platformsRepository.findByType(type).orElseThrow(() -> new NoExistData("This platform don't exist"));
     }

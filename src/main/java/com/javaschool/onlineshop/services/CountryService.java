@@ -5,9 +5,9 @@ import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.CountyMapper;
 import com.javaschool.onlineshop.models.Country;
 import com.javaschool.onlineshop.repositories.CountryRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,7 +16,7 @@ public class CountryService {
     private final CountryRepository countryRepository;
     private final CountyMapper countyMapper;
 
-    public CountryRequestDTO saveContry(CountryRequestDTO countryDTO){
+    public CountryRequestDTO saveCountry(CountryRequestDTO countryDTO){
         Country country = new Country();
         country.setName(countryDTO.getName());
         country.setDeleted(false);

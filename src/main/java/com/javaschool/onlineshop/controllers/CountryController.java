@@ -17,7 +17,7 @@ public class CountryController {
 
     @PostMapping
     public ResponseEntity<String> createCountry(@RequestBody CountryRequestDTO countryDTO) {
-        CountryRequestDTO result = countryService.saveContry(countryDTO);
+        CountryRequestDTO result = countryService.saveCountry(countryDTO);
         return ResponseEntity.ok("Country created with : " + result.getName());
     }
 }

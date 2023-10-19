@@ -6,7 +6,7 @@ import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.CategoryMapper;
 import com.javaschool.onlineshop.models.Category;
 import com.javaschool.onlineshop.repositories.CategoryRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.UUID;
@@ -32,6 +32,7 @@ public class CategoryService {
 		return createCategoryDTO(category);
 	}
 
+	@Transactional(readOnly = true)
 	public Category getCategoryPorId(UUID id) {
 		return categoryRepository.findById(id).orElseThrow(() -> new NoExistData("This city don't exist"));
 	}

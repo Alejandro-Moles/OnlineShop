@@ -8,9 +8,10 @@ import com.javaschool.onlineshop.models.Role;
 import com.javaschool.onlineshop.models.ShopUser;
 import com.javaschool.onlineshop.repositories.RoleRepository;
 import com.javaschool.onlineshop.repositories.ShopUserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.Base64;
 
@@ -41,6 +42,7 @@ public class ShopUserService {
         return createShopUserDTO(shopUser);
     }
 
+    @Transactional(readOnly = true)
     private Role findRole(String type){
         return roleRepository.findByType(type).orElseThrow(() -> new NoExistData("This rol don't exist"));
     }

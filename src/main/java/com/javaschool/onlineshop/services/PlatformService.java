@@ -5,9 +5,9 @@ import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.PlatformMapper;
 import com.javaschool.onlineshop.models.Platforms;
 import com.javaschool.onlineshop.repositories.PlatformsRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service

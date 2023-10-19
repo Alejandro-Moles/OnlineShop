@@ -5,7 +5,7 @@ import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.GenreMapper;
 import com.javaschool.onlineshop.models.Genre;
 import com.javaschool.onlineshop.repositories.GenreRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +29,7 @@ public class GenreService {
         return createGenreDTO(genre);
     }
 
+    @Transactional(readOnly = true)
     private GenreRequestDTO createGenreDTO(Genre genre){
         return genreMapper.createGenreDTO(genre);
     }

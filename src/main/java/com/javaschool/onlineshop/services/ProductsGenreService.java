@@ -8,9 +8,9 @@ import com.javaschool.onlineshop.models.*;
 import com.javaschool.onlineshop.repositories.GenreRepository;
 import com.javaschool.onlineshop.repositories.ProductsGenreRepository;
 import com.javaschool.onlineshop.repositories.ProductsRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,10 +34,12 @@ public class ProductsGenreService {
         return createProductsGenreDTO(productsGenre);
     }
 
+    @Transactional(readOnly = true)
     private Products findProducts(String title){
         return productsRepository.findByTitle(title).orElseThrow(() -> new NoExistData("This product don't exist"));
     }
 
+    @Transactional(readOnly = true)
     private Genre findGenre(String type){
         return genreRepository.findByType(type).orElseThrow(() -> new NoExistData("This genre don't exist"));
     }

@@ -8,9 +8,9 @@ import com.javaschool.onlineshop.models.City;
 import com.javaschool.onlineshop.models.PostalCode;
 import com.javaschool.onlineshop.repositories.CityRepository;
 import com.javaschool.onlineshop.repositories.PostalCodeRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -40,6 +40,7 @@ public class PostalCodeService {
         return postalCodeMapper.createPostalCodeDTO(postalCode);
     }
 
+    @Transactional(readOnly = true)
     private City findCity(PostalCodeRequestDTO postalCodeDTO){
        return cityRepository.findById(cityRepository.findCityUuidByCityAndCountry(postalCodeDTO.getCityName(), postalCodeDTO.getCountryName())).orElseThrow(() -> new NoExistData("This city don't exist"));
     }

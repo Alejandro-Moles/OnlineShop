@@ -8,7 +8,7 @@ import com.javaschool.onlineshop.models.City;
 import com.javaschool.onlineshop.models.Country;
 import com.javaschool.onlineshop.repositories.CityRepository;
 import com.javaschool.onlineshop.repositories.CountryRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +34,7 @@ public class CityService {
         return createCityDTO(city);
     }
 
+    @Transactional(readOnly = true)
     private Country findCountry(String name){
         return countryRepository.findByName(name).orElseThrow(() -> new NoExistData("This country don't exist"));
     }
