@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -22,25 +24,16 @@ public class ProductsService {
     private final PlatformsRepository platformsRepository;
 
     public ProductRequestDTO saveProduct(ProductRequestDTO productDTO){
-        Products products = new Products();
-        products.setTitle(productDTO.getTitle());
-        products.setPrice(productDTO.getPrice());
-        products.setWeight(productDTO.getWeight());
-        products.setPEGI(productDTO.getPegi());
-        products.setStock(productDTO.getStock());
-        products.setIsDigital(productDTO.getIsDigital());
-        products.setDescription(productDTO.getDescription());
-        products.setImage(productDTO.getImage());
-        products.setIsDeleted(productDTO.getIsDeleted());
-        products.setCategory(findCategory(productDTO.getCategory()));
-        products.setPlatform(findPlatform(productDTO.getPlatform()));
-
+        Products products = createProductEntity(productDTO, new Products());
         if (productsRepository.existsByTitle(products.getTitle())) {
             throw new ResourceDuplicate("Product already exists");
         }
-
         productsRepository.save(products);
         return createProductDTO(products);
+    }
+
+    public List<ProductRequestDTO> getAllProducts(){
+        return productsRepository.findAll().stream().map(this::createProductDTO).toList();
     }
 
     private ProductRequestDTO createProductDTO(Products products){
@@ -55,5 +48,21 @@ public class ProductsService {
     @Transactional(readOnly = true)
     private Platforms findPlatform(String type){
         return platformsRepository.findByType(type).orElseThrow(() -> new NoExistData("This platform don't exist"));
+    }
+
+    private Products createProductEntity(ProductRequestDTO productDTO, Products products){
+        products.setTitle(productDTO.getTitle());
+        products.setPrice(productDTO.getPrice());
+        products.setWeight(productDTO.getWeight());
+        products.setPEGI(productDTO.getPegi());
+        products.setStock(productDTO.getStock());
+        products.setIsDigital(productDTO.getIsDigital());
+        products.setDescription(productDTO.getDescription());
+        products.setImage(productDTO.getImage());
+        products.setIsDeleted(productDTO.getIsDeleted());
+        products.setCategory(findCategory(productDTO.getCategory()));
+        products.setPlatform(findPlatform(productDTO.getPlatform()));
+
+        return products;
     }
 }

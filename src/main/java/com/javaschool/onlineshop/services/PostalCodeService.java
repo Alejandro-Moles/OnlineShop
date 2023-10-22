@@ -22,18 +22,12 @@ public class PostalCodeService {
     private final CityRepository cityRepository;
 
     public PostalCodeRequestDTO savePostalCode(PostalCodeRequestDTO postalCodeDTO){
-        PostalCode postalCode = new PostalCode();
-        postalCode.setContent(postalCodeDTO.getContent());
-        postalCode.setDeleted(false);
-        postalCode.setCity(findCity(postalCodeDTO));
-
+        PostalCode postalCode = createPostalCodeEntity(postalCodeDTO, new PostalCode());
         if (postalCodeRepository.existsByContent(postalCode.getContent())) {
             throw new ResourceDuplicate("Postal code already exists");
         }
-
         postalCodeRepository.save(postalCode);
         return createPostalCodeDTO(postalCode);
-
     }
 
     private PostalCodeRequestDTO createPostalCodeDTO(PostalCode postalCode){
@@ -43,5 +37,12 @@ public class PostalCodeService {
     @Transactional(readOnly = true)
     private City findCity(PostalCodeRequestDTO postalCodeDTO){
        return cityRepository.findById(cityRepository.findCityUuidByCityAndCountry(postalCodeDTO.getCityName(), postalCodeDTO.getCountryName())).orElseThrow(() -> new NoExistData("This city don't exist"));
+    }
+
+    private PostalCode createPostalCodeEntity(PostalCodeRequestDTO postalCodeDTO, PostalCode postalCode){
+        postalCode.setContent(postalCodeDTO.getContent());
+        postalCode.setDeleted(false);
+        postalCode.setCity(findCity(postalCodeDTO));
+        return postalCode;
     }
 }

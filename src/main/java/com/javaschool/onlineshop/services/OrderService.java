@@ -1,5 +1,6 @@
 package com.javaschool.onlineshop.services;
 
+import com.javaschool.onlineshop.dto.OrderProductsRequestDTO;
 import com.javaschool.onlineshop.dto.OrderRequestDTO;
 import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.mapper.OrderMapper;
@@ -22,16 +23,7 @@ public class OrderService {
     private final UserAddressRepository userAddressRepository;
 
     public OrderRequestDTO saveOrder(OrderRequestDTO orderDTO){
-        Order order = new Order();
-        order.setPayment(findPayment(orderDTO.getPayment()));
-        order.setStatus(findStatus(orderDTO.getStatus()));
-        order.setDelivery(findDelivery(orderDTO.getDelivery()));
-        order.setShopUser(findShopUser(orderDTO.getMail()));
-        order.setPay_status(orderDTO.getPayStatus());
-        order.setIsDeleted(orderDTO.getIsDeleted());
-        order.setUserAddress(findUserAddress(orderDTO.getApartament(), orderDTO.getHome(), orderDTO.getStreet()));
-        order.setDate(orderDTO.getOrderDate());
-
+        Order order = createOrderEntity(orderDTO, new Order());
         orderRepository.save(order);
         return createOrderDTO(order);
     }
@@ -63,5 +55,17 @@ public class OrderService {
 
     private OrderRequestDTO createOrderDTO(Order order){
         return orderMapper.createOrderDTO(order);
+    }
+
+    private Order createOrderEntity(OrderRequestDTO orderDTO, Order order){
+        order.setPayment(findPayment(orderDTO.getPayment()));
+        order.setStatus(findStatus(orderDTO.getStatus()));
+        order.setDelivery(findDelivery(orderDTO.getDelivery()));
+        order.setShopUser(findShopUser(orderDTO.getMail()));
+        order.setPay_status(orderDTO.getPayStatus());
+        order.setIsDeleted(orderDTO.getIsDeleted());
+        order.setUserAddress(findUserAddress(orderDTO.getApartament(), orderDTO.getHome(), orderDTO.getStreet()));
+        order.setDate(orderDTO.getOrderDate());
+        return order;
     }
 }

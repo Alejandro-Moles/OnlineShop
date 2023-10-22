@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 public class GenreMapper {
     public GenreRequestDTO createGenreDTO(Genre genre){
         GenreRequestDTO genreDTO= new GenreRequestDTO();
+        genreDTO.setUuid(genre.getGenre_uuid());
         genreDTO.setType(genre.getType());
         genreDTO.setIsDeleted(genre.getIsDeleted());
 

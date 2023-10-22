@@ -17,19 +17,21 @@ public class RoleService {
     private final RoleMapper roleMapper;
 
     public RoleRequestDTO saveRole(RoleRequestDTO roleDTO){
-        Role role = new Role();
-        role.setType(roleDTO.getType());
-        role.setDeleted(false);
-
+        Role role = createRoleEntity(roleDTO, new Role());
         if (roleRepository.existsByType(role.getType())) {
             throw new ResourceDuplicate("Role already exists");
         }
-
         roleRepository.save(role);
         return createRoleDTO(role);
     }
 
     private RoleRequestDTO createRoleDTO(Role role){
         return roleMapper.createRoleDTO(role);
+    }
+
+    private Role createRoleEntity(RoleRequestDTO roleDTO, Role role){
+        role.setType(roleDTO.getType());
+        role.setDeleted(false);
+        return role;
     }
 }

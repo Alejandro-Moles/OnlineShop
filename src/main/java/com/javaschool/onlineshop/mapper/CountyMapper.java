@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 public class CountyMapper {
     public CountryRequestDTO createCountryDTO(Country country){
         CountryRequestDTO countryDTO = new CountryRequestDTO();
+        countryDTO.setUuid(country.getCountry_uuid());
         countryDTO.setName(country.getName());
         countryDTO.setDeleted(country.isDeleted());
 

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 public class RoleMapper {
     public RoleRequestDTO createRoleDTO(Role role){
         RoleRequestDTO roleDTO = new RoleRequestDTO();
+        roleDTO.setUuid(role.getRole_uuid());
         roleDTO.setType(role.getType());
         roleDTO.setDeleted(role.isDeleted());
 

@@ -24,20 +24,10 @@ public class ShopUserService {
     private final RoleRepository roleRepository;
 
     public ShopUserRequestDTO saveShopUser(ShopUserRequestDTO shopUserDTO){
-        ShopUser shopUser = new ShopUser();
-
-        shopUser.setName(shopUserDTO.getName());
-        shopUser.setDeleted(false);
-        shopUser.setUsers_rol(findRole(shopUserDTO.getUserRol()));
-        shopUser.setMail(shopUserDTO.getMail());
-        shopUser.setPassword(encodePasswordToBase64(shopUserDTO.getPassword()));
-        shopUser.setDate(shopUserDTO.getBirth());
-        shopUser.setSurname(shopUserDTO.getSurname());
-
+        ShopUser shopUser = createShopUserEntity(shopUserDTO, new ShopUser());
         if (shopUserRepository.existsByMail(shopUser.getMail())) {
             throw new ResourceDuplicate("Shop User already exists with that mail");
         }
-
         shopUserRepository.save(shopUser);
         return createShopUserDTO(shopUser);
     }
@@ -61,6 +51,17 @@ public class ShopUserService {
     private String decodePasswordBase64(String encodedPassword){
         byte[] decodedBytes = Base64.getDecoder().decode(encodedPassword);
         return new String(decodedBytes);
+    }
+
+    private ShopUser createShopUserEntity(ShopUserRequestDTO shopUserDTO, ShopUser shopUser){
+        shopUser.setName(shopUserDTO.getName());
+        shopUser.setDeleted(false);
+        shopUser.setUsers_rol(findRole(shopUserDTO.getUserRol()));
+        shopUser.setMail(shopUserDTO.getMail());
+        shopUser.setPassword(encodePasswordToBase64(shopUserDTO.getPassword()));
+        shopUser.setDate(shopUserDTO.getBirth());
+        shopUser.setSurname(shopUserDTO.getSurname());
+        return shopUser;
     }
 
 }

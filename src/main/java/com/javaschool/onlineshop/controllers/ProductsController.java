@@ -4,10 +4,9 @@ import com.javaschool.onlineshop.dto.ProductRequestDTO;
 import com.javaschool.onlineshop.services.ProductsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/products")
@@ -20,4 +19,11 @@ public class ProductsController {
         ProductRequestDTO result = productsService.saveProduct(productDTO);
         return ResponseEntity.ok("Product created : " + result.getTitle());
     }
+
+    @GetMapping
+    public ResponseEntity<List<ProductRequestDTO>> getAllProducts(){
+        List<ProductRequestDTO> result = productsService.getAllProducts();
+        return ResponseEntity.ok(result);
+    }
+
 }

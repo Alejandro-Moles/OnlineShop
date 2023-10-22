@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 public class OrderProductsMapper {
     public OrderProductsRequestDTO createOrderProductsDTO(OrderProducts orderProducts){
         OrderProductsRequestDTO orderProductDTO = new OrderProductsRequestDTO();
+        orderProductDTO.setUuid(orderProducts.getOrder_products_uuid());
         orderProductDTO.setOrderUUID(orderProducts.getOrder().getOrder_uuid());
         orderProductDTO.setProductTitle(orderProducts.getProduct().getTitle());
         orderProductDTO.setQuantity(orderProducts.getQuantity());

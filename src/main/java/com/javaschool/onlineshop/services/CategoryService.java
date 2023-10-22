@@ -20,20 +20,16 @@ public class CategoryService {
 
 
 	public CategoryRequestDTO saveCategory(CategoryRequestDTO categoryDTO) {
-		Category category = new Category();
-		category.setType(categoryDTO.getType());
-		category.setIsDeleted(false);
-
+		Category category = createCategoryEntity(categoryDTO, new Category());
 		if (categoryRepository.existsByType(category.getType())) {
 			throw new ResourceDuplicate("Category already exists");
 		}
-
 		categoryRepository.save(category);
 		return createCategoryDTO(category);
 	}
 
 	@Transactional(readOnly = true)
-	public Category getCategoryPorId(UUID id) {
+	public Category getCategoryById(UUID id) {
 		return categoryRepository.findById(id).orElseThrow(() -> new NoExistData("This city don't exist"));
 	}
 
@@ -43,5 +39,11 @@ public class CategoryService {
 
 	private CategoryRequestDTO createCategoryDTO(Category category){
 		return categoryMapper.createCategoryDTO(category);
+	}
+
+	private Category createCategoryEntity(CategoryRequestDTO categoryDTO, Category category){
+		category.setType(categoryDTO.getType());
+		category.setIsDeleted(categoryDTO.isDeleted());
+		return category;
 	}
 }

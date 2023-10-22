@@ -2,8 +2,11 @@ package com.javaschool.onlineshop.dto;
 
 import lombok.Data;
 
+import java.util.UUID;
+
 @Data
 public class ProductRequestDTO {
+    private UUID uuid;
     private String category;
     private String platform;
     private String title;

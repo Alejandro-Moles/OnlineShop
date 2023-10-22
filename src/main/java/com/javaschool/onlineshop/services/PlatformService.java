@@ -18,19 +18,21 @@ public class PlatformService {
     private final PlatformMapper platformMapper;
 
     public PlatformsRequestDTO savePlatform(PlatformsRequestDTO platformsDTO) {
-        Platforms platforms = new Platforms();
-        platforms.setType(platformsDTO.getType());
-        platforms.setIsDeleted(false);
-
+        Platforms platforms = createPlatformEntity(platformsDTO,  new Platforms());
         if (platformsRepository.existsByType(platforms.getType())) {
             throw new ResourceDuplicate("Platform already exists");
         }
-
         platformsRepository.save(platforms);
         return createPlatformsDTO(platforms);
     }
 
     private PlatformsRequestDTO createPlatformsDTO(Platforms platforms){
         return platformMapper.createPlatformDTO(platforms);
+    }
+
+    private Platforms createPlatformEntity(PlatformsRequestDTO platformsDTO, Platforms platforms){
+        platforms.setType(platformsDTO.getType());
+        platforms.setIsDeleted(false);
+        return platforms;
     }
 }

@@ -23,19 +23,10 @@ public class UserAddressService {
     private final ShopUserRepository shopUserRepository;
     private final PostalCodeRepository postalCodeRepository;
     public UserAddressRequestDTO saveUserAddress(UserAddressRequestDTO userAddressDTO){
-        UserAddress userAddress = new UserAddress();
-
-        userAddress.setApartament(userAddressDTO.getApartament());
-        userAddress.setHome(userAddressDTO.getHome());
-        userAddress.setStreet(userAddressDTO.getStreet());
-        userAddress.setIsDeleted(userAddressDTO.getIsDeleted());
-        userAddress.setUser(findShopUser(userAddressDTO.getUserMail()));
-        userAddress.setPostal_code(findPostalCode(userAddressDTO.getPostalCode()));
-
+        UserAddress userAddress = createUserAddressEntity(userAddressDTO, new UserAddress());
         if(userAddressRepository.existsByApartamentAndStreetAndUserAndHome(userAddress.getApartament(), userAddress.getStreet(), userAddress.getUser(), userAddress.getHome())){
             throw new ResourceDuplicate("Address already exists within this credentials");
         }
-
         userAddressRepository.save(userAddress);
         return createUserAddressDTO(userAddress);
     }
@@ -52,5 +43,15 @@ public class UserAddressService {
     @Transactional(readOnly = true)
     private PostalCode findPostalCode(String content){
         return postalCodeRepository.findByContent(content).orElseThrow(null);
+    }
+
+    private UserAddress createUserAddressEntity(UserAddressRequestDTO userAddressDTO, UserAddress userAddress){
+        userAddress.setApartament(userAddressDTO.getApartament());
+        userAddress.setHome(userAddressDTO.getHome());
+        userAddress.setStreet(userAddressDTO.getStreet());
+        userAddress.setIsDeleted(userAddressDTO.getIsDeleted());
+        userAddress.setUser(findShopUser(userAddressDTO.getUserMail()));
+        userAddress.setPostal_code(findPostalCode(userAddressDTO.getPostalCode()));
+        return userAddress;
     }
 }

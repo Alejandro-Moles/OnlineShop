@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 public class CityMapper {
     public CityRequestDTO createCityDTO(City city){
         CityRequestDTO cityDTO = new CityRequestDTO();
+        cityDTO.setUuid(city.getCity_uuid());
         cityDTO.setName(city.getName());
         cityDTO.setDeleted(city.isDeleted());
         cityDTO.setCountryName(city.getCountry().getName());

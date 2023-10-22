@@ -27,16 +27,10 @@ public class OrderProductsService {
 
 
     public OrderProductsRequestDTO saveOrderProducts(OrderProductsRequestDTO orderProductsDTO){
-        OrderProducts orderProducts = new OrderProducts();
-        orderProducts.setOrder(findOrderByUUID(orderProductsDTO.getOrderUUID()));
-        orderProducts.setQuantity(orderProductsDTO.getQuantity());
-        orderProducts.setIsDeleted(false);
-        orderProducts.setProduct(findProducts(orderProductsDTO.getProductTitle()));
-
+        OrderProducts orderProducts = createOrderProductsEntity(orderProductsDTO,new OrderProducts());
         if(orderProductsRepository.existsByOrderAndProduct(orderProducts.getOrder(), orderProducts.getProduct())){
             throw new ResourceDuplicate("Order already have with this product");
         }
-
         orderProductsRepository.save(orderProducts);
         return createOrderProductsDTO(orderProducts);
     }
@@ -53,5 +47,13 @@ public class OrderProductsService {
 
     private OrderProductsRequestDTO createOrderProductsDTO(OrderProducts orderProducts){
         return orderProductsMapper.createOrderProductsDTO(orderProducts);
+    }
+
+    private OrderProducts createOrderProductsEntity(OrderProductsRequestDTO orderProductsDTO, OrderProducts orderProducts){
+        orderProducts.setOrder(findOrderByUUID(orderProductsDTO.getOrderUUID()));
+        orderProducts.setQuantity(orderProductsDTO.getQuantity());
+        orderProducts.setIsDeleted(false);
+        orderProducts.setProduct(findProducts(orderProductsDTO.getProductTitle()));
+        return orderProducts;
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 public class ShopUserMapper {
     public ShopUserRequestDTO createShopUserDTO(ShopUser shopUser){
         ShopUserRequestDTO shopUserDTO = new ShopUserRequestDTO();
+        shopUserDTO.setUuid(shopUser.getUser_uuid());
         shopUserDTO.setName(shopUser.getName());
         shopUserDTO.setSurname(shopUser.getSurname());
         shopUserDTO.setMail(shopUser.getMail());

@@ -2,8 +2,11 @@ package com.javaschool.onlineshop.dto;
 
 import lombok.Data;
 
+import java.util.UUID;
+
 @Data
 public class PostalCodeRequestDTO {
+    private UUID uuid;
     private String content;
     private boolean isDeleted;
     private String cityName;

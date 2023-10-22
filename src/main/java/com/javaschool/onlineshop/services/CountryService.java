@@ -17,19 +17,21 @@ public class CountryService {
     private final CountyMapper countyMapper;
 
     public CountryRequestDTO saveCountry(CountryRequestDTO countryDTO){
-        Country country = new Country();
-        country.setName(countryDTO.getName());
-        country.setDeleted(false);
-
+        Country country = createCountryEntity(countryDTO, new Country());
         if (countryRepository.existsByName(country.getName())) {
             throw new ResourceDuplicate("Country already exists");
         }
-
         countryRepository.save(country);
         return createCountyDTO(country);
     }
 
     private CountryRequestDTO createCountyDTO(Country country){
         return countyMapper.createCountryDTO(country);
+    }
+
+    private Country createCountryEntity(CountryRequestDTO countryDTO, Country country){
+        country.setName(countryDTO.getName());
+        country.setDeleted(false);
+        return country;
     }
 }

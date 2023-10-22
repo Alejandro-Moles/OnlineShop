@@ -21,11 +21,7 @@ public class CityService {
     private final CityMapper cityMapper;
 
     public CityRequestDTO saveCity(CityRequestDTO cityDTO){
-        City city = new City();
-        city.setName(cityDTO.getName());
-        city.setDeleted(false);
-        city.setCountry(findCountry(cityDTO.getCountryName()));
-
+        City city = createCityEntity(cityDTO, new City());
         if (cityRepository.existsByNameAndCountry(city.getName(), city.getCountry())) {
             throw new ResourceDuplicate("City already exists within country");
         }
@@ -41,5 +37,12 @@ public class CityService {
 
     private CityRequestDTO createCityDTO(City city){
         return cityMapper.createCityDTO(city);
+    }
+
+    private City createCityEntity(CityRequestDTO cityDTO, City city){
+        city.setName(cityDTO.getName());
+        city.setDeleted(cityDTO.isDeleted());
+        city.setCountry(findCountry(cityDTO.getCountryName()));
+        return city;
     }
 }

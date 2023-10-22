@@ -6,6 +6,7 @@ import java.util.UUID;
 
 @Data
 public class OrderProductsRequestDTO {
+    private UUID uuid;
     private UUID orderUUID;
     private String productTitle;
     private Integer quantity;

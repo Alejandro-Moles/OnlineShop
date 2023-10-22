@@ -17,14 +17,10 @@ public class GenreService {
     private final GenreMapper genreMapper;
 
     public GenreRequestDTO saveGenre(GenreRequestDTO genreDTO) {
-        Genre genre = new Genre();
-        genre.setType(genreDTO.getType());
-        genre.setIsDeleted(false);
-
+        Genre genre = createGenreEntity(genreDTO, new Genre());
         if (genreRepository.existsByType(genre.getType())) {
             throw new ResourceDuplicate("Genre already exists");
         }
-
         genreRepository.save(genre);
         return createGenreDTO(genre);
     }
@@ -32,5 +28,11 @@ public class GenreService {
     @Transactional(readOnly = true)
     private GenreRequestDTO createGenreDTO(Genre genre){
         return genreMapper.createGenreDTO(genre);
+    }
+
+    private Genre createGenreEntity(GenreRequestDTO genreDTO, Genre genre){
+        genre.setType(genreDTO.getType());
+        genre.setIsDeleted(false);
+        return genre;
     }
 }

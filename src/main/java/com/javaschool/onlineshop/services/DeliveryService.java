@@ -17,19 +17,21 @@ public class DeliveryService {
     private final DeliveryMapper deliveryMapper;
 
     public DeliveryRequestDTO saveDelivery(DeliveryRequestDTO deliveryDTO){
-        Delivery delivery = new Delivery();
-        delivery.setType(deliveryDTO.getType());
-        delivery.setIsDeleted(false);
-
+        Delivery delivery = createDeliveryEntity(deliveryDTO, new Delivery());
         if (deliveryRepository.existsByType(delivery.getType())) {
             throw new ResourceDuplicate("Delivery already exists");
         }
-
         deliveryRepository.save(delivery);
         return createDeliveryDTO(delivery);
     }
 
     private DeliveryRequestDTO createDeliveryDTO(Delivery delivery){
         return deliveryMapper.createDeliveryDTO(delivery);
+    }
+
+    private Delivery createDeliveryEntity(DeliveryRequestDTO deliveryDTO, Delivery delivery){
+        delivery.setType(deliveryDTO.getType());
+        delivery.setIsDeleted(false);
+        return delivery;
     }
 }

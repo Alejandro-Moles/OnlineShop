@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 public class ProductsMapper {
     public ProductRequestDTO createProductDTO(Products products){
         ProductRequestDTO productDTO = new ProductRequestDTO();
+        productDTO.setUuid(products.getProduct_uuid());
         productDTO.setCategory(products.getCategory().getType());
         productDTO.setPlatform(products.getPlatform().getType());
         productDTO.setTitle(products.getTitle());

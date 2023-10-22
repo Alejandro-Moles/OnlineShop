@@ -22,11 +22,7 @@ public class ProductsGenreService {
     private final ProductsGenreMapper productsGenreMapper;
 
     public ProductsGenreRequestDTO saveProductsGenre(ProductsGenreRequestDTO productsGenreDTO) {
-        ProductsGenre productsGenre = new ProductsGenre();
-        productsGenre.setGenre(findGenre(productsGenreDTO.getGenre_type()));
-        productsGenre.setProduct(findProducts(productsGenreDTO.getProduct_title()));
-        productsGenre.setIsDeleted(productsGenreDTO.getIsDeleted());
-
+        ProductsGenre productsGenre = createProductsGenreEntity(productsGenreDTO, new ProductsGenre());
         if(productsGenreRepository.existsByProductAndGenre(productsGenre.getProduct(), productsGenre.getGenre())){
             throw new ResourceDuplicate("Products already exists with that genre");
         }
@@ -46,5 +42,12 @@ public class ProductsGenreService {
 
     private ProductsGenreRequestDTO createProductsGenreDTO(ProductsGenre productsGenre){
         return productsGenreMapper.createGenreProductsDTO(productsGenre);
+    }
+
+    private ProductsGenre createProductsGenreEntity(ProductsGenreRequestDTO productsGenreDTO, ProductsGenre productsGenre){
+        productsGenre.setGenre(findGenre(productsGenreDTO.getGenre_type()));
+        productsGenre.setProduct(findProducts(productsGenreDTO.getProduct_title()));
+        productsGenre.setIsDeleted(productsGenreDTO.getIsDeleted());
+        return productsGenre;
     }
 }
