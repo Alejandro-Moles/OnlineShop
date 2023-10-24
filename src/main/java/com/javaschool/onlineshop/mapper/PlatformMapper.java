@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class PlatformMapper {
     public PlatformsRequestDTO createPlatformDTO(Platforms platforms){
         PlatformsRequestDTO platformsDTO = new PlatformsRequestDTO();
-        platformsDTO.setUuid(platforms.getPlatform_uuid());
+        platformsDTO.setUuid(platforms.getPlatformUuid());
         platformsDTO.setType(platforms.getType());
         platformsDTO.setDeleted(platforms.getIsDeleted());
 

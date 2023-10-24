@@ -27,7 +27,7 @@ public class ShopUser {
 	//COLUMNS
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID user_uuid;
+	private UUID userUuid;
 	
     @OneToOne
     @JoinColumn(name = "user_role_uuid")

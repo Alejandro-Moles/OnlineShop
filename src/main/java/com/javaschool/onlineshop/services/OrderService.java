@@ -1,11 +1,20 @@
 package com.javaschool.onlineshop.services;
 
-import com.javaschool.onlineshop.dto.OrderProductsRequestDTO;
 import com.javaschool.onlineshop.dto.OrderRequestDTO;
 import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.mapper.OrderMapper;
-import com.javaschool.onlineshop.models.*;
-import com.javaschool.onlineshop.repositories.*;
+import com.javaschool.onlineshop.models.Order;
+import com.javaschool.onlineshop.models.Payment;
+import com.javaschool.onlineshop.models.Status;
+import com.javaschool.onlineshop.models.Delivery;
+import com.javaschool.onlineshop.models.ShopUser;
+import com.javaschool.onlineshop.models.UserAddress;
+import com.javaschool.onlineshop.repositories.DeliveryRepository;
+import com.javaschool.onlineshop.repositories.OrderRepository;
+import com.javaschool.onlineshop.repositories.PaymentRepository;
+import com.javaschool.onlineshop.repositories.StatusRepository;
+import com.javaschool.onlineshop.repositories.ShopUserRepository;
+import com.javaschool.onlineshop.repositories.UserAddressRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

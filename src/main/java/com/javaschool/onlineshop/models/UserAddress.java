@@ -22,7 +22,7 @@ public class UserAddress {
 	//COLUMNS
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID address_uuid;
+	private UUID addressUuid;
 	
 	@ManyToOne
 	@JoinColumn(name = "address_user_uuid")

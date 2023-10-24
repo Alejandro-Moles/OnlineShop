@@ -19,7 +19,7 @@ public class Status {
 	//COLUMNS
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID status_uuid;
+	private UUID statusUuid;
 		
 	@Column(name = "status_type", unique = true)
 	private String type;

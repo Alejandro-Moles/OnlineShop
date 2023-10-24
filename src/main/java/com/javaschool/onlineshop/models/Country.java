@@ -21,7 +21,7 @@ public class Country {
 	//COLUMNS
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID country_uuid; 
+	private UUID countryUuid;
 	
 	@Column(name = "country_name", unique = true)
 	private String name;

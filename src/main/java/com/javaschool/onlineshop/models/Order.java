@@ -17,7 +17,7 @@ public class Order {
 	//COLUMNS
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID order_uuid;
+	private UUID orderUuid;
 	
 	@OneToOne
 	@JoinColumn(name = "order_payment_uuid")

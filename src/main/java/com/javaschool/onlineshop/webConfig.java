@@ -18,4 +18,17 @@ public class webConfig {
             }
         };
     }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, TokenAuthFilter filter) throws Exception {
+        httpSecurity.cors()
+                .and().csrf().disable()
+                .exceptionHandling()
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().authorizeRequests()
+                .requestMatchers("/auth/login").permitAll()
+                .anyRequest().authenticated();
+        httpSecurity.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+        return httpSecurity.build();
+    }
 }

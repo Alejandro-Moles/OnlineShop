@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class ProductsGenreMapper {
     public ProductsGenreRequestDTO createGenreProductsDTO(ProductsGenre productsGenre){
         ProductsGenreRequestDTO productsGenreDTO= new ProductsGenreRequestDTO();
-        productsGenreDTO.setUuid(productsGenre.getProducts_genre_uuid());
+        productsGenreDTO.setUuid(productsGenre.getProductsGenreUuid());
         productsGenreDTO.setGenre_type(productsGenre.getGenre().getType());
         productsGenreDTO.setProduct_title(productsGenre.getProduct().getTitle());
         productsGenreDTO.setIsDeleted(productsGenre.getIsDeleted());

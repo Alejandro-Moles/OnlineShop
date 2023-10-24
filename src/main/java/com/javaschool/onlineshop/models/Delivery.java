@@ -19,7 +19,7 @@ public class Delivery {
 	//COLUMNS
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID delivery_uuid;
+	private UUID deliveryUuid;
 			
 	@Column(name = "delivery_type", unique = true)
 	private String type;

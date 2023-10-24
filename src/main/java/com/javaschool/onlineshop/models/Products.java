@@ -24,7 +24,7 @@ public class Products {
 	//COLUMNS
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID product_uuid;
+	private UUID productUuid;
 	
 	@OneToOne
     @JoinColumn(name = "product_category_uuid")

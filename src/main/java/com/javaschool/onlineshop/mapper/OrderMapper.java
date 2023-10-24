@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class OrderMapper {
     public OrderRequestDTO createOrderDTO(Order order){
         OrderRequestDTO orderDTO = new OrderRequestDTO();
-        orderDTO.setUuid(order.getOrder_uuid());
+        orderDTO.setUuid(order.getOrderUuid());
         orderDTO.setPayment(order.getPayment().getType());
         orderDTO.setStatus(order.getStatus().getType());
         orderDTO.setDelivery(order.getDelivery().getType());

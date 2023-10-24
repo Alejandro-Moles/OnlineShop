@@ -21,7 +21,7 @@ public class Genre {
 	//COLUMNS
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID genre_uuid;
+	private UUID genreUuid;
 
 	@Column(name = "genre_type", unique = true)
 	private String type;

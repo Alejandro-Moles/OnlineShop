@@ -19,7 +19,7 @@ public class Payment {
 	//COLUMNS
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID payment_uuid;
+	private UUID paymentUuid;
 	
 	@Column(name = "payment_type", unique = true)
 	private String type;

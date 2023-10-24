@@ -21,7 +21,7 @@ public class Platforms {
 	//COLUMNS
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID platform_uuid;
+	private UUID platformUuid;
 
 	@Column(name = "platform_type", unique = true)
 	private String type;

@@ -23,7 +23,7 @@ public class Category {
 	//COLUMNS
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID category_uuid;
+	private UUID categoryUuid;
 
 	@Column(name = "category_type",  unique = true)
 	private String type;

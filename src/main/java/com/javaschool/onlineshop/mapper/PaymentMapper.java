@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class PaymentMapper {
     public PaymentRequestDTO createPaymentDTO(Payment payment){
         PaymentRequestDTO paymentDTO = new PaymentRequestDTO();
-        paymentDTO.setUuid(payment.getPayment_uuid());
+        paymentDTO.setUuid(payment.getPaymentUuid());
         paymentDTO.setType(payment.getType());
         paymentDTO.setDeleted(payment.getIsDeleted());
 

@@ -24,7 +24,7 @@ public class City {
 	//COLUMNS
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID city_uuid; 
+	private UUID cityUuid;
 
 	@ManyToOne
 	@JoinColumn(name = "city_country_uuid")

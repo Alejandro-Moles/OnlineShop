@@ -4,7 +4,9 @@ import com.javaschool.onlineshop.dto.ProductRequestDTO;
 import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.ProductsMapper;
-import com.javaschool.onlineshop.models.*;
+import com.javaschool.onlineshop.models.Category;
+import com.javaschool.onlineshop.models.Platforms;
+import com.javaschool.onlineshop.models.Products;
 import com.javaschool.onlineshop.repositories.CategoryRepository;
 import com.javaschool.onlineshop.repositories.PlatformsRepository;
 import com.javaschool.onlineshop.repositories.ProductsRepository;
@@ -25,8 +27,8 @@ public class ProductsService {
 
     public ProductRequestDTO saveProduct(ProductRequestDTO productDTO){
         Products products = createProductEntity(productDTO, new Products());
-        if (productsRepository.existsByTitle(products.getTitle())) {
-            throw new ResourceDuplicate("Product already exists");
+        if (productsRepository.existsByTitleAndPlatform(products.getTitle(), products.getPlatform())) {
+            throw new ResourceDuplicate("Product already exists with that platform");
         }
         productsRepository.save(products);
         return createProductDTO(products);

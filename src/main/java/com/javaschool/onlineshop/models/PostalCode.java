@@ -21,7 +21,7 @@ public class PostalCode {
 	//COLUMNS
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID postal_code_uuid;
+	private UUID postalCodeUuid;
 	
 	@ManyToOne
     @JoinColumn(name = "postal_code_city_uuid")

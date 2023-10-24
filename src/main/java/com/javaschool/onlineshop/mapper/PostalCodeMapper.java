@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class PostalCodeMapper {
     public PostalCodeRequestDTO createPostalCodeDTO(PostalCode postalCode){
         PostalCodeRequestDTO postalDTO = new PostalCodeRequestDTO();
-        postalDTO.setUuid(postalCode.getPostal_code_uuid());
+        postalDTO.setUuid(postalCode.getPostalCodeUuid());
         postalDTO.setContent(postalCode.getContent());
         postalDTO.setDeleted(postalCode.isDeleted());
         postalDTO.setCityName(postalCode.getCity().getName());

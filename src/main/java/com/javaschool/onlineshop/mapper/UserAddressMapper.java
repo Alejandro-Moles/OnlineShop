@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class UserAddressMapper {
     public UserAddressRequestDTO createUserAddressDTO(UserAddress userAddress){
         UserAddressRequestDTO userAddressDTO = new UserAddressRequestDTO();
-        userAddressDTO.setUuid(userAddress.getAddress_uuid());
+        userAddressDTO.setUuid(userAddress.getAddressUuid());
         userAddressDTO.setApartament(userAddress.getApartament());
         userAddressDTO.setHome(userAddress.getHome());
         userAddressDTO.setStreet(userAddress.getStreet());

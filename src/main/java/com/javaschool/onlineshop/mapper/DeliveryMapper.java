@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class DeliveryMapper {
     public DeliveryRequestDTO createDeliveryDTO(Delivery delivery){
         DeliveryRequestDTO deliveryDTO = new DeliveryRequestDTO();
-        deliveryDTO.setUuid(delivery.getDelivery_uuid());
+        deliveryDTO.setUuid(delivery.getDeliveryUuid());
         deliveryDTO.setType(delivery.getType());
         deliveryDTO.setDeleted(delivery.getIsDeleted());
 
