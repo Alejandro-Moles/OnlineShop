@@ -10,7 +10,7 @@ public class PlatformMapper {
         PlatformsRequestDTO platformsDTO = new PlatformsRequestDTO();
         platformsDTO.setUuid(platforms.getPlatformUuid());
         platformsDTO.setType(platforms.getType());
-        platformsDTO.setDeleted(platforms.getIsDeleted());
+        platformsDTO.setIsDeleted(platforms.getIsDeleted());
 
         return platformsDTO;
     }

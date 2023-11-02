@@ -1,6 +1,5 @@
 package com.javaschool.onlineshop.services;
 
-
 import com.javaschool.onlineshop.dto.PaymentRequestDTO;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.PaymentMapper;
@@ -9,6 +8,8 @@ import com.javaschool.onlineshop.repositories.PaymentRepository;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -34,5 +35,10 @@ public class PaymentService {
         payment.setType(paymentDTO.getType());
         payment.setIsDeleted(false);
         return payment;
+    }
+
+    @Transactional(readOnly = true)
+    public List<PaymentRequestDTO> getAllPayment(){
+        return paymentRepository.findAll().stream().map(this::createPaymentDTO).toList();
     }
 }

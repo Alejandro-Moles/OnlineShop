@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -33,5 +35,10 @@ public class DeliveryService {
         delivery.setType(deliveryDTO.getType());
         delivery.setIsDeleted(false);
         return delivery;
+    }
+
+    @Transactional(readOnly = true)
+    public List<DeliveryRequestDTO> getAllDeliveries(){
+        return deliveryRepository.findAll().stream().map(this::createDeliveryDTO).toList();
     }
 }

@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -34,5 +36,10 @@ public class GenreService {
         genre.setType(genreDTO.getType());
         genre.setIsDeleted(false);
         return genre;
+    }
+
+    @Transactional(readOnly = true)
+    public List<GenreRequestDTO> getAllGenres(){
+        return genreRepository.findAll().stream().map(this::createGenreDTO).toList();
     }
 }

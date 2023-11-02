@@ -10,7 +10,7 @@ public class CategoryMapper {
         CategoryRequestDTO categoryDTO = new CategoryRequestDTO();
         categoryDTO.setUuid(category.getCategoryUuid());
         categoryDTO.setType(category.getType());
-        categoryDTO.setDeleted(category.getIsDeleted());
+        categoryDTO.setIsDeleted(category.getIsDeleted());
         return categoryDTO;
     }
 }

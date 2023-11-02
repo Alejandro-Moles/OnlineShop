@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -53,5 +55,10 @@ public class UserAddressService {
         userAddress.setUser(findShopUser(userAddressDTO.getUserMail()));
         userAddress.setPostal_code(findPostalCode(userAddressDTO.getPostalCode()));
         return userAddress;
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserAddressRequestDTO> getAllUserAddress(){
+        return userAddressRepository.findAll().stream().map(this::createUserAddressDTO).toList();
     }
 }

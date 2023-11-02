@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -44,5 +46,10 @@ public class CityService {
         city.setDeleted(cityDTO.isDeleted());
         city.setCountry(findCountry(cityDTO.getCountryName()));
         return city;
+    }
+
+    @Transactional(readOnly = true)
+    public List<CityRequestDTO> getAllCities(){
+        return cityRepository.findAll().stream().map(this::createCityDTO).toList();
     }
 }

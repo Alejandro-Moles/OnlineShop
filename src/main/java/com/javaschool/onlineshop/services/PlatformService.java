@@ -1,6 +1,7 @@
 package com.javaschool.onlineshop.services;
 
 import com.javaschool.onlineshop.dto.PlatformsRequestDTO;
+import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.PlatformMapper;
 import com.javaschool.onlineshop.models.Platforms;
@@ -8,6 +9,9 @@ import com.javaschool.onlineshop.repositories.PlatformsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -30,9 +34,25 @@ public class PlatformService {
         return platformMapper.createPlatformDTO(platforms);
     }
 
+    public void updatePlatform(UUID uuid, PlatformsRequestDTO platformsDTO){
+        Platforms platforms = loadPlatform(uuid);
+        createPlatformEntity(platformsDTO, platforms);
+        platformsRepository.save(platforms);
+    }
+
     private Platforms createPlatformEntity(PlatformsRequestDTO platformsDTO, Platforms platforms){
         platforms.setType(platformsDTO.getType());
         platforms.setIsDeleted(false);
         return platforms;
+    }
+
+    @Transactional(readOnly = true)
+    public List<PlatformsRequestDTO> getAllPlatforms(){
+        return platformsRepository.findAll().stream().map(this::createPlatformsDTO).toList();
+    }
+
+    @Transactional(readOnly = true)
+    private Platforms loadPlatform(UUID uuid){
+        return platformsRepository.findById(uuid).orElseThrow(() -> new NoExistData("Platform don't exist"));
     }
 }

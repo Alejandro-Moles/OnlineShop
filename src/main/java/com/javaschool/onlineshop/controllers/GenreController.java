@@ -1,13 +1,13 @@
 package com.javaschool.onlineshop.controllers;
 
 import com.javaschool.onlineshop.dto.GenreRequestDTO;
+import com.javaschool.onlineshop.dto.PaymentRequestDTO;
 import com.javaschool.onlineshop.services.GenreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/genres")
@@ -19,5 +19,11 @@ public class GenreController {
     public ResponseEntity<String> createGenre(@RequestBody GenreRequestDTO genreDTO) {
         GenreRequestDTO result = genreService.saveGenre(genreDTO);
         return ResponseEntity.ok("Genre created : " + result.getType());
+    }
+
+    @GetMapping
+    public ResponseEntity<List<GenreRequestDTO>> getAllGenres(){
+        List<GenreRequestDTO> result = genreService.getAllGenres();
+        return ResponseEntity.ok(result);
     }
 }

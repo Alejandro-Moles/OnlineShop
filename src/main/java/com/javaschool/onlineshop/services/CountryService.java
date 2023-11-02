@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -22,10 +24,10 @@ public class CountryService {
             throw new ResourceDuplicate("Country already exists");
         }
         countryRepository.save(country);
-        return createCountyDTO(country);
+        return createCountryDTO(country);
     }
 
-    private CountryRequestDTO createCountyDTO(Country country){
+    private CountryRequestDTO createCountryDTO(Country country){
         return countyMapper.createCountryDTO(country);
     }
 
@@ -33,5 +35,10 @@ public class CountryService {
         country.setName(countryDTO.getName());
         country.setDeleted(false);
         return country;
+    }
+
+    @Transactional(readOnly = true)
+    public List<CountryRequestDTO> getAllCountries(){
+        return countryRepository.findAll().stream().map(this::createCountryDTO).toList();
     }
 }

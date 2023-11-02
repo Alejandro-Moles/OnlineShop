@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.Base64;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -64,4 +65,8 @@ public class ShopUserService {
         return shopUser;
     }
 
+    @Transactional(readOnly = true)
+    public List<ShopUserRequestDTO> getAllShopUser(){
+        return shopUserRepository.findAll().stream().map(this::createShopUserDTO).toList();
+    }
 }
