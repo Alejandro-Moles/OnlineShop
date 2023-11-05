@@ -10,7 +10,7 @@ public class CityMapper {
         CityRequestDTO cityDTO = new CityRequestDTO();
         cityDTO.setUuid(city.getCityUuid());
         cityDTO.setName(city.getName());
-        cityDTO.setDeleted(city.isDeleted());
+        cityDTO.setIsDeleted(city.isDeleted());
         cityDTO.setCountryName(city.getCountry().getName());
 
         return cityDTO;

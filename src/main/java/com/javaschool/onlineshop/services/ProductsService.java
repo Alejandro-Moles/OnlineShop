@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,6 +35,7 @@ public class ProductsService {
         return createProductDTO(products);
     }
 
+    @Transactional(readOnly = true)
     public List<ProductRequestDTO> getAllProducts(){
         return productsRepository.findAll().stream().map(this::createProductDTO).toList();
     }
@@ -43,6 +43,12 @@ public class ProductsService {
     public ProductRequestDTO getProductsbyUuid(UUID uuid){
         Products products = loadProduct(uuid);
         return createProductDTO(products);
+    }
+
+    public void updateProduct(UUID uuid, ProductRequestDTO productDTO){
+        Products products = loadProduct(uuid);
+        createProductEntity(productDTO, products);
+        productsRepository.save(products);
     }
 
     private ProductRequestDTO createProductDTO(Products products){
@@ -75,6 +81,7 @@ public class ProductsService {
         return products;
     }
 
+    @Transactional(readOnly = true)
     private Products loadProduct(UUID uuid){
         return productsRepository.findById(uuid).orElseThrow(() -> new NoExistData("Product don't exist"));
     }

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/cities")
@@ -24,5 +25,11 @@ public class CityController {
     public ResponseEntity<List<CityRequestDTO>> getAllCities(){
         List<CityRequestDTO> result = cityService.getAllCities();
         return ResponseEntity.ok(result);
+    }
+
+    @PutMapping("/{uuid}")
+    public ResponseEntity<String> updateCity(@PathVariable UUID uuid, @RequestBody CityRequestDTO cityDTO){
+        cityService.updateCity(uuid, cityDTO);
+        return ResponseEntity.ok("City changed succesfully");
     }
 }

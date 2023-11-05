@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -37,13 +38,19 @@ public class CityService {
         return countryRepository.findByName(name).orElseThrow(() -> new NoExistData("This country don't exist"));
     }
 
+    public void updateCity(UUID uuid, CityRequestDTO cityDTO){
+        City city = loadCity(uuid);
+        createCityEntity(cityDTO, city);
+        cityRepository.save(city);
+    }
+
     private CityRequestDTO createCityDTO(City city){
         return cityMapper.createCityDTO(city);
     }
 
     private City createCityEntity(CityRequestDTO cityDTO, City city){
         city.setName(cityDTO.getName());
-        city.setDeleted(cityDTO.isDeleted());
+        city.setDeleted(cityDTO.getIsDeleted());
         city.setCountry(findCountry(cityDTO.getCountryName()));
         return city;
     }
@@ -51,5 +58,10 @@ public class CityService {
     @Transactional(readOnly = true)
     public List<CityRequestDTO> getAllCities(){
         return cityRepository.findAll().stream().map(this::createCityDTO).toList();
+    }
+
+    @Transactional(readOnly = true)
+    private City loadCity(UUID uuid){
+        return cityRepository.findById(uuid).orElseThrow(() -> new NoExistData("City don't exist"));
     }
 }

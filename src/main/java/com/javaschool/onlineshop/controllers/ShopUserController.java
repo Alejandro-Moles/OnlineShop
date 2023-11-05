@@ -1,6 +1,5 @@
 package com.javaschool.onlineshop.controllers;
 
-import com.javaschool.onlineshop.dto.GenreRequestDTO;
 import com.javaschool.onlineshop.dto.ShopUserRequestDTO;
 import com.javaschool.onlineshop.services.ShopUserService;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/shopUsers")
@@ -24,5 +24,11 @@ public class ShopUserController {
     public ResponseEntity<List<ShopUserRequestDTO>> getAllShopUser(){
         List<ShopUserRequestDTO> result = shopUserService.getAllShopUser();
         return ResponseEntity.ok(result);
+    }
+
+    @PutMapping("/{uuid}")
+    public ResponseEntity<String> updateShopUser(@PathVariable UUID uuid, @RequestBody ShopUserRequestDTO shopUserDTO){
+        shopUserService.updateShopUser(uuid, shopUserDTO);
+        return ResponseEntity.ok("Shop user changed successfully");
     }
 }

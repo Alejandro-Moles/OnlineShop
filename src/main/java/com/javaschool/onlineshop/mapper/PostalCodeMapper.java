@@ -10,7 +10,7 @@ public class PostalCodeMapper {
         PostalCodeRequestDTO postalDTO = new PostalCodeRequestDTO();
         postalDTO.setUuid(postalCode.getPostalCodeUuid());
         postalDTO.setContent(postalCode.getContent());
-        postalDTO.setDeleted(postalCode.isDeleted());
+        postalDTO.setIsDeleted(postalCode.isDeleted());
         postalDTO.setCityName(postalCode.getCity().getName());
         postalDTO.setCountryName(postalCode.getCity().getCountry().getName());
 

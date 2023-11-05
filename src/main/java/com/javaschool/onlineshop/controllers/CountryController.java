@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/countries")
@@ -24,5 +25,11 @@ public class CountryController {
     public ResponseEntity<List<CountryRequestDTO>> getAllCountries(){
         List<CountryRequestDTO> result = countryService.getAllCountries();
         return ResponseEntity.ok(result);
+    }
+
+    @PutMapping("/{uuid}")
+    public ResponseEntity<String> updateCountry(@PathVariable UUID uuid, @RequestBody CountryRequestDTO countryDTO){
+        countryService.updateCountry(uuid, countryDTO);
+        return ResponseEntity.ok("Country changed succesfully");
     }
 }

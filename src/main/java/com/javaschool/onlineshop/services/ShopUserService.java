@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -56,7 +57,7 @@ public class ShopUserService {
 
     private ShopUser createShopUserEntity(ShopUserRequestDTO shopUserDTO, ShopUser shopUser){
         shopUser.setName(shopUserDTO.getName());
-        shopUser.setDeleted(false);
+        shopUser.setDeleted(shopUserDTO.getIsDeleted());
         shopUser.setUsers_rol(findRole(shopUserDTO.getUserRol()));
         shopUser.setMail(shopUserDTO.getMail());
         shopUser.setPassword(encodePasswordToBase64(shopUserDTO.getPassword()));
@@ -65,8 +66,20 @@ public class ShopUserService {
         return shopUser;
     }
 
+    public void updateShopUser(UUID uuid, ShopUserRequestDTO shopUserDTO){
+        ShopUser shopUser = loadShopUser(uuid);
+        createShopUserEntity(shopUserDTO, shopUser);
+        shopUserRepository.save(shopUser);
+    }
+
+
     @Transactional(readOnly = true)
     public List<ShopUserRequestDTO> getAllShopUser(){
         return shopUserRepository.findAll().stream().map(this::createShopUserDTO).toList();
+    }
+
+    @Transactional(readOnly = true)
+    private ShopUser loadShopUser(UUID uuid){
+        return shopUserRepository.findById(uuid).orElseThrow(() -> new NoExistData("Shop user don't exist"));
     }
 }

@@ -11,4 +11,12 @@ public class PostalCodeRequestDTO {
     private boolean isDeleted;
     private String cityName;
     private String countryName;
+
+    public Boolean getIsDeleted(){
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Boolean deleted){
+        this.isDeleted = deleted;
+    }
 }

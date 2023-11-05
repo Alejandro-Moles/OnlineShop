@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/payments")
@@ -25,5 +26,11 @@ public class PaymentController {
     public ResponseEntity<List<PaymentRequestDTO>> getAllPayment(){
         List<PaymentRequestDTO> result = paymentService.getAllPayment();
         return ResponseEntity.ok(result);
+    }
+
+    @PutMapping("/{uuid}")
+    public ResponseEntity<String> updatePayment(@PathVariable UUID uuid, @RequestBody PaymentRequestDTO paymentDTO){
+        paymentService.updatePayment(uuid, paymentDTO);
+        return ResponseEntity.ok("Payment changed succesfully");
     }
 }

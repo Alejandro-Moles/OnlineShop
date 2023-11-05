@@ -1,6 +1,7 @@
 package com.javaschool.onlineshop.services;
 
 import com.javaschool.onlineshop.dto.CountryRequestDTO;
+import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.CountyMapper;
 import com.javaschool.onlineshop.models.Country;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -31,14 +33,25 @@ public class CountryService {
         return countyMapper.createCountryDTO(country);
     }
 
+    public void updateCountry(UUID uuid, CountryRequestDTO countryDTO){
+        Country country = loadCountry(uuid);
+        createCountryEntity(countryDTO, country);
+        countryRepository.save(country);
+    }
+
     private Country createCountryEntity(CountryRequestDTO countryDTO, Country country){
         country.setName(countryDTO.getName());
-        country.setDeleted(false);
+        country.setDeleted(countryDTO.getIsDeleted());
         return country;
     }
 
     @Transactional(readOnly = true)
     public List<CountryRequestDTO> getAllCountries(){
         return countryRepository.findAll().stream().map(this::createCountryDTO).toList();
+    }
+
+    @Transactional(readOnly = true)
+    private Country loadCountry(UUID uuid){
+        return countryRepository.findById(uuid).orElseThrow(() -> new NoExistData("Country don't exist"));
     }
 }

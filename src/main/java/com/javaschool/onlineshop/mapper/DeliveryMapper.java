@@ -10,7 +10,7 @@ public class DeliveryMapper {
         DeliveryRequestDTO deliveryDTO = new DeliveryRequestDTO();
         deliveryDTO.setUuid(delivery.getDeliveryUuid());
         deliveryDTO.setType(delivery.getType());
-        deliveryDTO.setDeleted(delivery.getIsDeleted());
+        deliveryDTO.setIsDeleted(delivery.getIsDeleted());
 
         return deliveryDTO;
     }

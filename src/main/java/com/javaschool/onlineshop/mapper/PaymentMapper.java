@@ -10,7 +10,7 @@ public class PaymentMapper {
         PaymentRequestDTO paymentDTO = new PaymentRequestDTO();
         paymentDTO.setUuid(payment.getPaymentUuid());
         paymentDTO.setType(payment.getType());
-        paymentDTO.setDeleted(payment.getIsDeleted());
+        paymentDTO.setIsDeleted(payment.getIsDeleted());
 
         return paymentDTO;
     }

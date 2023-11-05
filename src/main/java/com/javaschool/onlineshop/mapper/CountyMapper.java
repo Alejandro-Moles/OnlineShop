@@ -10,7 +10,7 @@ public class CountyMapper {
         CountryRequestDTO countryDTO = new CountryRequestDTO();
         countryDTO.setUuid(country.getCountryUuid());
         countryDTO.setName(country.getName());
-        countryDTO.setDeleted(country.isDeleted());
+        countryDTO.setIsDeleted(country.isDeleted());
 
 
         return countryDTO;

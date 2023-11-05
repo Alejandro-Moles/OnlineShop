@@ -1,13 +1,13 @@
 package com.javaschool.onlineshop.controllers;
 
 import com.javaschool.onlineshop.dto.GenreRequestDTO;
-import com.javaschool.onlineshop.dto.PaymentRequestDTO;
 import com.javaschool.onlineshop.services.GenreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/genres")
@@ -25,5 +25,11 @@ public class GenreController {
     public ResponseEntity<List<GenreRequestDTO>> getAllGenres(){
         List<GenreRequestDTO> result = genreService.getAllGenres();
         return ResponseEntity.ok(result);
+    }
+
+    @PutMapping("/{uuid}")
+    public ResponseEntity<String> updateGenre(@PathVariable UUID uuid, @RequestBody GenreRequestDTO genreDTO){
+        genreService.updateGenre(uuid, genreDTO);
+        return ResponseEntity.ok("Genre changed successfully");
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/postalCodes")
@@ -24,5 +25,11 @@ public class PostalCodeController {
     public ResponseEntity<List<PostalCodeRequestDTO>> getAllPostalCode(){
         List<PostalCodeRequestDTO> result = postalCodeService.getAllPostalCodes();
         return ResponseEntity.ok(result);
+    }
+
+    @PutMapping("/{uuid}")
+    public ResponseEntity<String> updatePostalCode(@PathVariable UUID uuid, @RequestBody PostalCodeRequestDTO postalCodeDTO){
+        postalCodeService.updatePostalCode(uuid, postalCodeDTO);
+        return ResponseEntity.ok("Postal Code changed succesfully");
     }
 }

@@ -9,4 +9,5 @@ public class GenreRequestDTO {
     private UUID uuid;
     private String type;
     private Boolean isDeleted;
+
 }

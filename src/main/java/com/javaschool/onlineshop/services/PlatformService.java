@@ -42,7 +42,7 @@ public class PlatformService {
 
     private Platforms createPlatformEntity(PlatformsRequestDTO platformsDTO, Platforms platforms){
         platforms.setType(platformsDTO.getType());
-        platforms.setIsDeleted(false);
+        platforms.setIsDeleted(platformsDTO.getIsDeleted());
         return platforms;
     }
 

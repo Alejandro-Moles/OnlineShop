@@ -1,6 +1,7 @@
 package com.javaschool.onlineshop.services;
 
 import com.javaschool.onlineshop.dto.PaymentRequestDTO;
+import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.PaymentMapper;
 import com.javaschool.onlineshop.models.Payment;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -33,12 +35,23 @@ public class PaymentService {
 
     private Payment createPaymentEntity(PaymentRequestDTO paymentDTO, Payment payment){
         payment.setType(paymentDTO.getType());
-        payment.setIsDeleted(false);
+        payment.setIsDeleted(paymentDTO.getIsDeleted());
         return payment;
+    }
+
+    public void updatePayment(UUID uuid, PaymentRequestDTO paymentDTO){
+        Payment payment = loadPayment(uuid);
+        createPaymentEntity(paymentDTO, payment);
+        paymentRepository.save(payment);
     }
 
     @Transactional(readOnly = true)
     public List<PaymentRequestDTO> getAllPayment(){
         return paymentRepository.findAll().stream().map(this::createPaymentDTO).toList();
+    }
+
+    @Transactional(readOnly = true)
+    private Payment loadPayment(UUID uuid){
+        return paymentRepository.findById(uuid).orElseThrow(() -> new NoExistData("Payment don't exist"));
     }
 }

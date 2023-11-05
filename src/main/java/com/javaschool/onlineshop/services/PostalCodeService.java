@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -41,9 +42,15 @@ public class PostalCodeService {
        return cityRepository.findById(cityRepository.findCityUuidByCityAndCountry(postalCodeDTO.getCityName(), postalCodeDTO.getCountryName())).orElseThrow(() -> new NoExistData("This city don't exist"));
     }
 
+    public void updatePostalCode(UUID uuid, PostalCodeRequestDTO postalCodeDTO){
+        PostalCode postalCode = loadPostalCode(uuid);
+        createPostalCodeEntity(postalCodeDTO, postalCode);
+        postalCodeRepository.save(postalCode);
+    }
+
     private PostalCode createPostalCodeEntity(PostalCodeRequestDTO postalCodeDTO, PostalCode postalCode){
         postalCode.setContent(postalCodeDTO.getContent());
-        postalCode.setDeleted(false);
+        postalCode.setDeleted(postalCodeDTO.getIsDeleted());
         postalCode.setCity(findCity(postalCodeDTO));
         return postalCode;
     }
@@ -51,5 +58,10 @@ public class PostalCodeService {
     @Transactional(readOnly = true)
     public List<PostalCodeRequestDTO> getAllPostalCodes(){
         return postalCodeRepository.findAll().stream().map(this::createPostalCodeDTO).toList();
+    }
+
+    @Transactional(readOnly = true)
+    private PostalCode loadPostalCode(UUID uuid){
+        return postalCodeRepository.findById(uuid).orElseThrow(() -> new NoExistData("Postal code don't exist"));
     }
 }

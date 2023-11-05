@@ -10,4 +10,12 @@ public class CityRequestDTO {
     private String name;
     private boolean isDeleted;
     private String countryName;
+
+    public Boolean getIsDeleted(){
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Boolean deleted){
+        this.isDeleted = deleted;
+    }
 }
