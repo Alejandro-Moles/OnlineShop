@@ -9,5 +9,6 @@ import java.util.UUID;
 public interface ShopUserRepository extends JpaRepository<ShopUser, UUID> {
     Optional<ShopUser> findByMail(String mail);
 
+
     boolean existsByMail(String name);
 }

@@ -58,7 +58,6 @@ public class ShopUserService {
     private ShopUser createShopUserEntity(ShopUserRequestDTO shopUserDTO, ShopUser shopUser){
         shopUser.setName(shopUserDTO.getName());
         shopUser.setDeleted(shopUserDTO.getIsDeleted());
-        shopUser.setUsers_rol(findRole(shopUserDTO.getUserRol()));
         shopUser.setMail(shopUserDTO.getMail());
         shopUser.setPassword(encodePasswordToBase64(shopUserDTO.getPassword()));
         shopUser.setDate(shopUserDTO.getBirth());
@@ -82,4 +81,6 @@ public class ShopUserService {
     private ShopUser loadShopUser(UUID uuid){
         return shopUserRepository.findById(uuid).orElseThrow(() -> new NoExistData("Shop user don't exist"));
     }
+
+
 }

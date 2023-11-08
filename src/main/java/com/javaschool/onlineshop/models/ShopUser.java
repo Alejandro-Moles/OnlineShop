@@ -1,20 +1,11 @@
 package com.javaschool.onlineshop.models;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+
+import jakarta.persistence.*;
 import lombok.Data;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import lombok.NoArgsConstructor;
 
 
@@ -28,10 +19,6 @@ public class ShopUser {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID userUuid;
-	
-    @OneToOne
-    @JoinColumn(name = "user_role_uuid")
-    private Role users_rol;
 
     @Column(name = "user_name")
     private String name;
@@ -58,5 +45,10 @@ public class ShopUser {
 	
 	@OneToMany(mappedBy = "shopUser", cascade= CascadeType.ALL)
 	private List<Order> orders;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name="users_roles", joinColumns = @JoinColumn(name="user_uuid", referencedColumnName = "userUuid"),
+        inverseJoinColumns = @JoinColumn(name = "role_uuid", referencedColumnName = "roleUuid"))
+    private List<Role> roles = new ArrayList<>();
     
 }
