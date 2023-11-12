@@ -9,6 +9,7 @@ import com.javaschool.onlineshop.models.ShopUser;
 import com.javaschool.onlineshop.repositories.RoleRepository;
 import com.javaschool.onlineshop.repositories.ShopUserRepository;
 import com.javaschool.onlineshop.security.JWTGenerator;
+import com.javaschool.onlineshop.services.ShopUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,7 @@ public class AuthController {
     private final RoleRepository roleRepository;
     private final ShopUserMapper shopUserMapper;
     private final JWTGenerator jwtGenerator;
+    private final ShopUserService shopUserService;
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginRequestDTO loginDTO){
@@ -44,17 +46,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequestDTO registerDto){
-        if(shopUserRepository.existsByMail(registerDto.getMail())){
-            return new ResponseEntity<>("User mail is taken", HttpStatus.BAD_REQUEST);
-        }
-
-        ShopUser user = shopUserMapper.createShopUserEntity(registerDto, new ShopUser());
-
-        Role roles = roleRepository.findByType("USER").get();
-        user.setRoles(Collections.singletonList(roles));
-
-        shopUserRepository.save(user);
-
+        shopUserService.registerShopUser(registerDto);
         return new ResponseEntity<>("User register success", HttpStatus.OK);
     }
 }

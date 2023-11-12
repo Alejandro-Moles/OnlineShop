@@ -1,5 +1,6 @@
 package com.javaschool.onlineshop.controllers;
 
+import com.javaschool.onlineshop.dto.ProductRequestDTO;
 import com.javaschool.onlineshop.dto.ShopUserRequestDTO;
 import com.javaschool.onlineshop.services.ShopUserService;
 import lombok.RequiredArgsConstructor;
@@ -31,4 +32,16 @@ public class ShopUserController {
         shopUserService.updateShopUser(uuid, shopUserDTO);
         return ResponseEntity.ok("Shop user changed successfully");
     }
+
+    @GetMapping("/actual")
+    public ResponseEntity<ShopUserRequestDTO>getCurrentUser(){
+        return ResponseEntity.ok(shopUserService.getCurrentUser());
+    }
+
+    @GetMapping("/profile/{uuid}")
+    public ResponseEntity<ShopUserRequestDTO> getShopUserbyUuid(@PathVariable UUID uuid){
+        ShopUserRequestDTO result = shopUserService.getShopUserbyUuid(uuid);
+        return ResponseEntity.ok(result);
+    }
+
 }
