@@ -1,14 +1,13 @@
 package com.javaschool.onlineshop.repositories;
 
-import com.javaschool.onlineshop.models.Country;
+import com.javaschool.onlineshop.models.CountryModel;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public interface CountryRepository extends JpaRepository<Country, UUID> {
-    Optional<Country> findByName(String name);
+public interface CountryRepository extends JpaRepository<CountryModel, UUID> {
+    Optional<CountryModel> findByName(String name);
 
     boolean existsByName(String name);
 }

@@ -3,7 +3,7 @@ package com.javaschool.onlineshop.services;
 import com.javaschool.onlineshop.dto.RoleRequestDTO;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.RoleMapper;
-import com.javaschool.onlineshop.models.Role;
+import com.javaschool.onlineshop.models.RoleModel;
 import com.javaschool.onlineshop.repositories.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class RoleService {
     private final RoleMapper roleMapper;
 
     public RoleRequestDTO saveRole(RoleRequestDTO roleDTO){
-        Role role = createRoleEntity(roleDTO, new Role());
+        RoleModel role = createRoleEntity(roleDTO, new RoleModel());
         if (roleRepository.existsByType(role.getType())) {
             throw new ResourceDuplicate("Role already exists");
         }
@@ -25,11 +25,11 @@ public class RoleService {
         return createRoleDTO(role);
     }
 
-    private RoleRequestDTO createRoleDTO(Role role){
+    private RoleRequestDTO createRoleDTO(RoleModel role){
         return roleMapper.createRoleDTO(role);
     }
 
-    private Role createRoleEntity(RoleRequestDTO roleDTO, Role role){
+    private RoleModel createRoleEntity(RoleRequestDTO roleDTO, RoleModel role){
         role.setType(roleDTO.getType());
         role.setDeleted(false);
         return role;

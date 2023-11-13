@@ -1,12 +1,12 @@
 package com.javaschool.onlineshop.mapper;
 
 import com.javaschool.onlineshop.dto.CityRequestDTO;
-import com.javaschool.onlineshop.models.City;
+import com.javaschool.onlineshop.models.CityModel;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CityMapper {
-    public CityRequestDTO createCityDTO(City city){
+    public CityRequestDTO createCityDTO(CityModel city){
         CityRequestDTO cityDTO = new CityRequestDTO();
         cityDTO.setUuid(city.getCityUuid());
         cityDTO.setName(city.getName());

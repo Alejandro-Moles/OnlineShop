@@ -4,7 +4,7 @@ import com.javaschool.onlineshop.dto.GenreRequestDTO;
 import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.GenreMapper;
-import com.javaschool.onlineshop.models.Genre;
+import com.javaschool.onlineshop.models.GenreModel;
 import com.javaschool.onlineshop.repositories.GenreRepository;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class GenreService {
     private final GenreMapper genreMapper;
 
     public GenreRequestDTO saveGenre(GenreRequestDTO genreDTO) {
-        Genre genre = createGenreEntity(genreDTO, new Genre());
+        GenreModel genre = createGenreEntity(genreDTO, new GenreModel());
         if (genreRepository.existsByType(genre.getType())) {
             throw new ResourceDuplicate("Genre already exists");
         }
@@ -30,18 +30,18 @@ public class GenreService {
     }
 
     @Transactional(readOnly = true)
-    private GenreRequestDTO createGenreDTO(Genre genre){
+    private GenreRequestDTO createGenreDTO(GenreModel genre){
         return genreMapper.createGenreDTO(genre);
     }
 
-    private Genre createGenreEntity(GenreRequestDTO genreDTO, Genre genre){
+    private GenreModel createGenreEntity(GenreRequestDTO genreDTO, GenreModel genre){
         genre.setType(genreDTO.getType());
         genre.setIsDeleted(genreDTO.getIsDeleted());
         return genre;
     }
 
     public void updateGenre(UUID uuid, GenreRequestDTO genreDTO){
-        Genre genre = loadGenre(uuid);
+        GenreModel genre = loadGenre(uuid);
         createGenreEntity(genreDTO, genre);
         genreRepository.save(genre);
     }
@@ -52,7 +52,7 @@ public class GenreService {
     }
 
     @Transactional(readOnly = true)
-    private Genre loadGenre(UUID uuid){
+    private GenreModel loadGenre(UUID uuid){
         return genreRepository.findById(uuid).orElseThrow(() -> new NoExistData("Genre don't exist"));
     }
 }

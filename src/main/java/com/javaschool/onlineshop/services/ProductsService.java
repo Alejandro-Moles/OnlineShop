@@ -4,9 +4,9 @@ import com.javaschool.onlineshop.dto.ProductRequestDTO;
 import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.ProductsMapper;
-import com.javaschool.onlineshop.models.Category;
-import com.javaschool.onlineshop.models.Platforms;
-import com.javaschool.onlineshop.models.Products;
+import com.javaschool.onlineshop.models.CategoryModel;
+import com.javaschool.onlineshop.models.PlatformsModel;
+import com.javaschool.onlineshop.models.ProductsModel;
 import com.javaschool.onlineshop.repositories.CategoryRepository;
 import com.javaschool.onlineshop.repositories.PlatformsRepository;
 import com.javaschool.onlineshop.repositories.ProductsRepository;
@@ -27,7 +27,7 @@ public class ProductsService {
     private final PlatformsRepository platformsRepository;
 
     public ProductRequestDTO saveProduct(ProductRequestDTO productDTO){
-        Products products = createProductEntity(productDTO, new Products());
+        ProductsModel products = createProductEntity(productDTO, new ProductsModel());
         if (productsRepository.existsByTitleAndPlatform(products.getTitle(), products.getPlatform())) {
             throw new ResourceDuplicate("Product already exists with that platform");
         }
@@ -41,31 +41,31 @@ public class ProductsService {
     }
 
     public ProductRequestDTO getProductsbyUuid(UUID uuid){
-        Products products = loadProduct(uuid);
+        ProductsModel products = loadProduct(uuid);
         return createProductDTO(products);
     }
 
     public void updateProduct(UUID uuid, ProductRequestDTO productDTO){
-        Products products = loadProduct(uuid);
+        ProductsModel products = loadProduct(uuid);
         createProductEntity(productDTO, products);
         productsRepository.save(products);
     }
 
-    private ProductRequestDTO createProductDTO(Products products){
+    private ProductRequestDTO createProductDTO(ProductsModel products){
         return productsMapper.createProductDTO(products);
     }
 
     @Transactional(readOnly = true)
-    private Category findCategory(String type){
+    private CategoryModel findCategory(String type){
         return categoryRepository.findByType(type).orElseThrow(() -> new NoExistData("This category don't exist"));
     }
 
     @Transactional(readOnly = true)
-    private Platforms findPlatform(String type){
+    private PlatformsModel findPlatform(String type){
         return platformsRepository.findByType(type).orElseThrow(() -> new NoExistData("This platform don't exist"));
     }
 
-    private Products createProductEntity(ProductRequestDTO productDTO, Products products){
+    private ProductsModel createProductEntity(ProductRequestDTO productDTO, ProductsModel products){
         products.setTitle(productDTO.getTitle());
         products.setPrice(productDTO.getPrice());
         products.setWeight(productDTO.getWeight());
@@ -82,7 +82,7 @@ public class ProductsService {
     }
 
     @Transactional(readOnly = true)
-    private Products loadProduct(UUID uuid){
+    private ProductsModel loadProduct(UUID uuid){
         return productsRepository.findById(uuid).orElseThrow(() -> new NoExistData("Product don't exist"));
     }
 }

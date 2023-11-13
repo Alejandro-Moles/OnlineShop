@@ -6,32 +6,24 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
 import lombok.Data;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Column;
 import lombok.NoArgsConstructor;
 
 
 @Entity
-@Table(name="Postal_Code")
+@Table(name="Order_Payment")
 @Data
 @NoArgsConstructor
-public class PostalCode {
-
+public class PaymentModel {
+	
 	//COLUMNS
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID postalCodeUuid;
+	private UUID paymentUuid;
 	
-	@ManyToOne
-    @JoinColumn(name = "postal_code_city_uuid")
-    private City city;
+	@Column(name = "payment_type", unique = true)
+	private String type;
 	
-	@Column(name = "postal_code_content",unique = true)
-	private String content;
-	
-	@Column(name ="postal_code_isDeleted")
-	private boolean isDeleted;
-
-	
+	@Column(name = "payment_isDeleted")
+	private Boolean isDeleted;
 }

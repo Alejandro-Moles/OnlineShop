@@ -1,8 +1,10 @@
 package com.javaschool.onlineshop.controllers;
 
 import com.javaschool.onlineshop.dto.CartDTO;
-import com.javaschool.onlineshop.models.CartItem;
+import com.javaschool.onlineshop.models.CartItemModel;
+import com.javaschool.onlineshop.models.ShopUserModel;
 import com.javaschool.onlineshop.services.CartService;
+import com.javaschool.onlineshop.services.ShopUserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,22 +20,29 @@ public class CartController {
 
     private final CartService cartService;
 
-    @GetMapping("/cart")
-    public List<CartItem> getCart(HttpSession session){
-        System.out.println(session);
-        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
-        System.out.println(cart);
-        if(cart == null){
-            cart = new ArrayList<>();
-            session.setAttribute("cart", cart);
+    @GetMapping("/createCart")
+    public List<CartItemModel> createCart(HttpSession session){
+        if(cartService.getUserLoggedMail() != null){
+            return cartService.createCartToUser(session, cartService.getUserLoggedMail());
         }
-        System.out.println(cart);
-        return cart;
+        return cartService.createCart(session);
+    }
+
+    @GetMapping("/getCart")
+    public List<CartItemModel> getCart(HttpSession session){
+        if(cartService.getUserLoggedMail() != null){
+            return cartService.getCartToUser(session, cartService.getUserLoggedMail());
+        }
+        return cartService.getCart(session);
     }
 
     @PostMapping("/cart/add")
     public ResponseEntity<String> addToCart(@RequestBody CartDTO cartRequestDTO, HttpSession session) {
         try {
+            if(cartService.getUserLoggedMail() != null){
+                cartService.addProductToCartToUser(cartRequestDTO, session, cartService.getUserLoggedMail());
+                return ResponseEntity.ok("Producto agregado al carrito del usuario");
+            }
             cartService.addProductToCart(cartRequestDTO, session);
             return ResponseEntity.ok("Producto agregado al carrito");
         } catch (Exception e) {

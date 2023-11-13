@@ -2,7 +2,7 @@ package com.javaschool.onlineshop.mapper;
 
 import com.javaschool.onlineshop.dto.RegisterRequestDTO;
 import com.javaschool.onlineshop.dto.ShopUserRequestDTO;
-import com.javaschool.onlineshop.models.ShopUser;
+import com.javaschool.onlineshop.models.ShopUserModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class ShopUserMapper {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ShopUserRequestDTO createShopUserDTO(ShopUser shopUser){
+    public ShopUserRequestDTO createShopUserDTO(ShopUserModel shopUser){
         ShopUserRequestDTO shopUserDTO = new ShopUserRequestDTO();
         shopUserDTO.setUuid(shopUser.getUserUuid());
         shopUserDTO.setName(shopUser.getName());
@@ -30,7 +30,7 @@ public class ShopUserMapper {
     }
 
 
-    public ShopUser createShopUserEntity(RegisterRequestDTO registerDTO, ShopUser shopUser){
+    public ShopUserModel createShopUserEntity(RegisterRequestDTO registerDTO, ShopUserModel shopUser){
         shopUser.setMail(registerDTO.getMail());
         shopUser.setName(registerDTO.getName());
         shopUser.setSurname(registerDTO.getSurname());

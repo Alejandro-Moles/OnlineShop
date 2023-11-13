@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Table(name="Products")
 @Data
 @NoArgsConstructor
-public class Products {
+public class ProductsModel {
 	//COLUMNS
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
@@ -28,11 +28,11 @@ public class Products {
 	
 	@OneToOne
     @JoinColumn(name = "product_category_uuid")
-    private Category category;
+    private CategoryModel category;
 	
 	@ManyToOne
 	@JoinColumn(name = "product_platform_uuid")
-	private Platforms platform;
+	private PlatformsModel platform;
 
 	@Column(name = "product_title", unique = true)
 	private String title;
@@ -63,9 +63,9 @@ public class Products {
 	
 	//RELATIONS
 	@OneToMany(mappedBy = "product", cascade= CascadeType.ALL)
-	private List<ProductsGenre> products_genre;
+	private List<ProductsGenreModel> products_genre;
 	
 	@OneToMany(mappedBy = "product", cascade= CascadeType.ALL)
-	private List<OrderProducts> product_orders;
+	private List<OrderProductsModel> product_orders;
 
 }

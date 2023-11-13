@@ -4,8 +4,8 @@ import com.javaschool.onlineshop.dto.CityRequestDTO;
 import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.CityMapper;
-import com.javaschool.onlineshop.models.City;
-import com.javaschool.onlineshop.models.Country;
+import com.javaschool.onlineshop.models.CityModel;
+import com.javaschool.onlineshop.models.CountryModel;
 import com.javaschool.onlineshop.repositories.CityRepository;
 import com.javaschool.onlineshop.repositories.CountryRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +24,7 @@ public class CityService {
     private final CityMapper cityMapper;
 
     public CityRequestDTO saveCity(CityRequestDTO cityDTO){
-        City city = createCityEntity(cityDTO, new City());
+        CityModel city = createCityEntity(cityDTO, new CityModel());
         if (cityRepository.existsByNameAndCountry(city.getName(), city.getCountry())) {
             throw new ResourceDuplicate("City already exists within country");
         }
@@ -34,21 +34,21 @@ public class CityService {
     }
 
     @Transactional(readOnly = true)
-    private Country findCountry(String name){
+    private CountryModel findCountry(String name){
         return countryRepository.findByName(name).orElseThrow(() -> new NoExistData("This country don't exist"));
     }
 
     public void updateCity(UUID uuid, CityRequestDTO cityDTO){
-        City city = loadCity(uuid);
+        CityModel city = loadCity(uuid);
         createCityEntity(cityDTO, city);
         cityRepository.save(city);
     }
 
-    private CityRequestDTO createCityDTO(City city){
+    private CityRequestDTO createCityDTO(CityModel city){
         return cityMapper.createCityDTO(city);
     }
 
-    private City createCityEntity(CityRequestDTO cityDTO, City city){
+    private CityModel createCityEntity(CityRequestDTO cityDTO, CityModel city){
         city.setName(cityDTO.getName());
         city.setDeleted(cityDTO.getIsDeleted());
         city.setCountry(findCountry(cityDTO.getCountryName()));
@@ -61,7 +61,7 @@ public class CityService {
     }
 
     @Transactional(readOnly = true)
-    private City loadCity(UUID uuid){
+    private CityModel loadCity(UUID uuid){
         return cityRepository.findById(uuid).orElseThrow(() -> new NoExistData("City don't exist"));
     }
 }

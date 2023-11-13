@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Table(name="Orders")
 @Data
 @NoArgsConstructor
-public class Order {
+public class OrderModel {
 	
 	//COLUMNS
 	@Id
@@ -21,23 +21,23 @@ public class Order {
 	
 	@OneToOne
 	@JoinColumn(name = "order_payment_uuid")
-	private Payment payment;
+	private PaymentModel payment;
 	
 	@OneToOne
 	@JoinColumn(name = "order_status_uuid")
-	private Status status;
+	private StatusModel status;
 	
 	@OneToOne
 	@JoinColumn(name = "order_delivery_uuid")
-	private Delivery delivery;
+	private DeliveryModel delivery;
 	
 	@OneToOne
 	@JoinColumn(name = "order_userAddress_uuid")
-	private UserAddress userAddress;
+	private UserAddressModel userAddress;
 	
 	@ManyToOne
 	@JoinColumn(name = "order_user_uuid")
-	private ShopUser shopUser;
+	private ShopUserModel shopUser;
 	
 	@Column(name = "order_pay_status")
 	private Boolean pay_status;
@@ -51,5 +51,5 @@ public class Order {
 	
 	//RELATIONS
 	@OneToMany(mappedBy = "order", cascade= CascadeType.ALL)
-	private List<OrderProducts> order_product;
+	private List<OrderProductsModel> order_product;
 }

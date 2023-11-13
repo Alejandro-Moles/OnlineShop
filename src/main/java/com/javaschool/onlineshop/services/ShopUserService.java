@@ -1,26 +1,21 @@
 package com.javaschool.onlineshop.services;
 
-import com.javaschool.onlineshop.dto.ProductRequestDTO;
 import com.javaschool.onlineshop.dto.RegisterRequestDTO;
 import com.javaschool.onlineshop.dto.ShopUserRequestDTO;
 import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.ShopUserMapper;
-import com.javaschool.onlineshop.models.Products;
-import com.javaschool.onlineshop.models.Role;
-import com.javaschool.onlineshop.models.ShopUser;
+import com.javaschool.onlineshop.models.RoleModel;
+import com.javaschool.onlineshop.models.ShopUserModel;
 import com.javaschool.onlineshop.repositories.RoleRepository;
 import com.javaschool.onlineshop.repositories.ShopUserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -34,7 +29,7 @@ public class ShopUserService {
     private final RoleRepository roleRepository;
 
     public ShopUserRequestDTO saveShopUser(ShopUserRequestDTO shopUserDTO){
-        ShopUser shopUser = createShopUserEntity(shopUserDTO, new ShopUser());
+        ShopUserModel shopUser = createShopUserEntity(shopUserDTO, new ShopUserModel());
         if (shopUserRepository.existsByMail(shopUser.getMail())) {
             throw new ResourceDuplicate("Shop User already exists with that mail");
         }
@@ -43,15 +38,15 @@ public class ShopUserService {
     }
 
     @Transactional(readOnly = true)
-    private Role findRole(String type){
+    private RoleModel findRole(String type){
         return roleRepository.findByType(type).orElseThrow(() -> new NoExistData("This rol don't exist"));
     }
 
-    private ShopUserRequestDTO createShopUserDTO(ShopUser shopUser){
+    private ShopUserRequestDTO createShopUserDTO(ShopUserModel shopUser){
         return shopUserMapper.createShopUserDTO(shopUser);
     }
 
-    private ShopUser createShopUserEntity(ShopUserRequestDTO shopUserDTO, ShopUser shopUser){
+    public ShopUserModel createShopUserEntity(ShopUserRequestDTO shopUserDTO, ShopUserModel shopUser){
         shopUser.setName(shopUserDTO.getName());
         shopUser.setDeleted(shopUserDTO.getIsDeleted());
         shopUser.setMail(shopUserDTO.getMail());
@@ -61,7 +56,7 @@ public class ShopUserService {
     }
 
     public void updateShopUser(UUID uuid, ShopUserRequestDTO shopUserDTO){
-        ShopUser shopUser = loadShopUser(uuid);
+        ShopUserModel shopUser = loadShopUser(uuid);
         createShopUserEntity(shopUserDTO, shopUser);
         shopUserRepository.save(shopUser);
     }
@@ -72,7 +67,7 @@ public class ShopUserService {
     }
 
     @Transactional(readOnly = true)
-    private ShopUser loadShopUser(UUID uuid){
+    private ShopUserModel loadShopUser(UUID uuid){
         return shopUserRepository.findById(uuid).orElseThrow(() -> new NoExistData("Shop user don't exist"));
     }
 
@@ -81,8 +76,8 @@ public class ShopUserService {
             throw new ResourceDuplicate("Shop User already exists with that mail");
         }
 
-        ShopUser user = shopUserMapper.createShopUserEntity(registerDTO, new ShopUser());
-        Role roles = roleRepository.findByType("USER").get();
+        ShopUserModel user = shopUserMapper.createShopUserEntity(registerDTO, new ShopUserModel());
+        RoleModel roles = roleRepository.findByType("USER").get();
         user.setRoles(Collections.singletonList(roles));
         shopUserRepository.save(user);
         return createShopUserDTO(user);
@@ -94,12 +89,12 @@ public class ShopUserService {
             throw  new NoExistData("User not found");
         }
         String mail = authentication.getName();
-        ShopUser user = shopUserRepository.findByMail(mail).orElseThrow(() -> new NoExistData("User not found"));
+        ShopUserModel user = shopUserRepository.findByMail(mail).orElseThrow(() -> new NoExistData("User not found"));
         return shopUserMapper.createShopUserDTO(user);
     }
 
     public ShopUserRequestDTO getShopUserbyUuid(UUID uuid){
-        ShopUser shopUser = loadShopUser(uuid);
+        ShopUserModel shopUser = loadShopUser(uuid);
         return createShopUserDTO(shopUser);
     }
 }

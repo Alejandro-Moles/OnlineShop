@@ -8,40 +8,30 @@ import lombok.Data;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Column;
 import lombok.NoArgsConstructor;
 
 
 @Entity
-@Table(name="User_Address")
+@Table(name="Postal_Code")
 @Data
 @NoArgsConstructor
-public class UserAddress {
+public class PostalCodeModel {
 
 	//COLUMNS
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID addressUuid;
+	private UUID postalCodeUuid;
 	
 	@ManyToOne
-	@JoinColumn(name = "address_user_uuid")
-	private ShopUser user;
+    @JoinColumn(name = "postal_code_city_uuid")
+    private CityModel city;
 	
-	@OneToOne
-	@JoinColumn(name = "address_postal_code_uuid")
-	private PostalCode postal_code;
+	@Column(name = "postal_code_content",unique = true)
+	private String content;
 	
-	@Column(name = "address_street")
-	private String street;
-	
-	@Column(name = "address_home")
-	private String home;
-	
-	@Column(name = "address_apartament")
-	private String apartament;
-	
-	@Column(name = "address_isDeleted")
-	private Boolean isDeleted;
+	@Column(name ="postal_code_isDeleted")
+	private boolean isDeleted;
+
 	
 }

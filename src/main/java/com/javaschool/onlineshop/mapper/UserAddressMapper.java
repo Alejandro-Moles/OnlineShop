@@ -1,12 +1,12 @@
 package com.javaschool.onlineshop.mapper;
 
 import com.javaschool.onlineshop.dto.UserAddressRequestDTO;
-import com.javaschool.onlineshop.models.UserAddress;
+import com.javaschool.onlineshop.models.UserAddressModel;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserAddressMapper {
-    public UserAddressRequestDTO createUserAddressDTO(UserAddress userAddress){
+    public UserAddressRequestDTO createUserAddressDTO(UserAddressModel userAddress){
         UserAddressRequestDTO userAddressDTO = new UserAddressRequestDTO();
         userAddressDTO.setUuid(userAddress.getAddressUuid());
         userAddressDTO.setApartament(userAddress.getApartament());

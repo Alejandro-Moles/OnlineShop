@@ -10,7 +10,7 @@ import java.util.UUID;
 @Table(name="Products_has_Genre")
 @Data
 @NoArgsConstructor
-public class ProductsGenre {
+public class ProductsGenreModel {
 
 	//COLUMNS
 	@Id
@@ -19,11 +19,11 @@ public class ProductsGenre {
 
 	@ManyToOne
 	@JoinColumn(name = "product_uuid")
-	private Products product;
+	private ProductsModel product;
 
 	@ManyToOne
 	@JoinColumn(name = "genre_uuid")
-	private Genre genre;
+	private GenreModel genre;
 
 	@Column(name = "isDeleted")
 	private Boolean isDeleted;

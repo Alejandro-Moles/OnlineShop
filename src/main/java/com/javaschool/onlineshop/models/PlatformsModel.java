@@ -1,14 +1,12 @@
 package com.javaschool.onlineshop.models;
 import java.util.List;
-import lombok.Data;
 import java.util.UUID;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
+import lombok.Data;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -16,27 +14,22 @@ import lombok.NoArgsConstructor;
 
 
 @Entity
-@Table(name="Cities")
+@Table(name="Platforms")
 @Data
 @NoArgsConstructor
-public class City {
-	
+public class PlatformsModel {
 	//COLUMNS
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID cityUuid;
+	private UUID platformUuid;
 
-	@ManyToOne
-	@JoinColumn(name = "city_country_uuid")
-	private Country country;
-	
-	@Column(name = "city_name")
-	private String name;
-	
-	@Column(name ="city_isDeleted")
-	private boolean isDeleted;
+	@Column(name = "platform_type", unique = true)
+	private String type;
+		
+	@Column(name = "platform_isDeleted")
+	private Boolean isDeleted;
 	
 	//RELATIONS
-	@OneToMany(mappedBy = "city", cascade= CascadeType.ALL)
-	private List<PostalCode> postal_codes;
+	@OneToMany(mappedBy = "platform", cascade= CascadeType.ALL)
+	private List<ProductsModel> products;
 }

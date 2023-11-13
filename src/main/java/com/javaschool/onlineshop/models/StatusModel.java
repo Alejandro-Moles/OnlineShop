@@ -1,5 +1,4 @@
 package com.javaschool.onlineshop.models;
-import java.util.List;
 import java.util.UUID;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,29 +6,24 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
 import lombok.Data;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import lombok.NoArgsConstructor;
 
 
 @Entity
-@Table(name="Platforms")
+@Table(name="Order_Status")
 @Data
 @NoArgsConstructor
-public class Platforms {
+public class StatusModel {
+	
 	//COLUMNS
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID platformUuid;
-
-	@Column(name = "platform_type", unique = true)
+	private UUID statusUuid;
+		
+	@Column(name = "status_type", unique = true)
 	private String type;
 		
-	@Column(name = "platform_isDeleted")
+	@Column(name = "status_isDeleted")
 	private Boolean isDeleted;
-	
-	//RELATIONS
-	@OneToMany(mappedBy = "platform", cascade= CascadeType.ALL)
-	private List<Products> products;	
 }

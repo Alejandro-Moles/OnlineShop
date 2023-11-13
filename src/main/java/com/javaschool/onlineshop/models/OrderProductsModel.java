@@ -10,7 +10,7 @@ import java.util.UUID;
 @Table(name="Order_has_Products")
 @Data
 @NoArgsConstructor
-public class OrderProducts {
+public class OrderProductsModel {
 	
 	//COLUMNS
 	@Id
@@ -19,11 +19,11 @@ public class OrderProducts {
 
 	@ManyToOne
 	@JoinColumn(name = "order_uuid")
-	private Order order;
+	private OrderModel order;
 
 	@ManyToOne
 	@JoinColumn(name = "product_uuid")
-	private Products product;
+	private ProductsModel product;
 			
 	@Column(name = "quantity")
 	private Integer quantity;

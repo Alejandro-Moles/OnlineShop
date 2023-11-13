@@ -3,12 +3,12 @@ package com.javaschool.onlineshop.services;
 import com.javaschool.onlineshop.dto.OrderRequestDTO;
 import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.mapper.OrderMapper;
-import com.javaschool.onlineshop.models.Order;
-import com.javaschool.onlineshop.models.Payment;
-import com.javaschool.onlineshop.models.Status;
-import com.javaschool.onlineshop.models.Delivery;
-import com.javaschool.onlineshop.models.ShopUser;
-import com.javaschool.onlineshop.models.UserAddress;
+import com.javaschool.onlineshop.models.OrderModel;
+import com.javaschool.onlineshop.models.PaymentModel;
+import com.javaschool.onlineshop.models.StatusModel;
+import com.javaschool.onlineshop.models.DeliveryModel;
+import com.javaschool.onlineshop.models.ShopUserModel;
+import com.javaschool.onlineshop.models.UserAddressModel;
 import com.javaschool.onlineshop.repositories.DeliveryRepository;
 import com.javaschool.onlineshop.repositories.OrderRepository;
 import com.javaschool.onlineshop.repositories.PaymentRepository;
@@ -32,41 +32,41 @@ public class OrderService {
     private final UserAddressRepository userAddressRepository;
 
     public OrderRequestDTO saveOrder(OrderRequestDTO orderDTO){
-        Order order = createOrderEntity(orderDTO, new Order());
+        OrderModel order = createOrderEntity(orderDTO, new OrderModel());
         orderRepository.save(order);
         return createOrderDTO(order);
     }
 
     @Transactional(readOnly = true)
-    private Payment findPayment(String type){
+    private PaymentModel findPayment(String type){
         return paymentRepository.findByType(type).orElseThrow(() -> new NoExistData("This payment method don't exist"));
     }
 
     @Transactional(readOnly = true)
-    private Status findStatus(String type){
+    private StatusModel findStatus(String type){
         return statusRepository.findByType(type).orElseThrow(() -> new NoExistData("This status don't exist"));
     }
 
     @Transactional(readOnly = true)
-    private Delivery findDelivery(String type){
+    private DeliveryModel findDelivery(String type){
         return deliveryRepository.findByType(type).orElseThrow(() -> new NoExistData("This delivery don't exist"));
     }
 
     @Transactional(readOnly = true)
-    private ShopUser findShopUser(String mail){
+    private ShopUserModel findShopUser(String mail){
         return shopUserRepository.findByMail(mail).orElseThrow(() -> new NoExistData("This shop user don't exist"));
     }
 
     @Transactional(readOnly = true)
-    private UserAddress findUserAddress(String apartament, String home, String street){
+    private UserAddressModel findUserAddress(String apartament, String home, String street){
         return userAddressRepository.findByApartamentAndHomeAndStreet(apartament, home, street).orElseThrow(() -> new NoExistData("This user address don't exist"));
     }
 
-    private OrderRequestDTO createOrderDTO(Order order){
+    private OrderRequestDTO createOrderDTO(OrderModel order){
         return orderMapper.createOrderDTO(order);
     }
 
-    private Order createOrderEntity(OrderRequestDTO orderDTO, Order order){
+    private OrderModel createOrderEntity(OrderRequestDTO orderDTO, OrderModel order){
         order.setPayment(findPayment(orderDTO.getPayment()));
         order.setStatus(findStatus(orderDTO.getStatus()));
         order.setDelivery(findDelivery(orderDTO.getDelivery()));

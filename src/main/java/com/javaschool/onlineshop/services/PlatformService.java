@@ -4,7 +4,7 @@ import com.javaschool.onlineshop.dto.PlatformsRequestDTO;
 import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.PlatformMapper;
-import com.javaschool.onlineshop.models.Platforms;
+import com.javaschool.onlineshop.models.PlatformsModel;
 import com.javaschool.onlineshop.repositories.PlatformsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class PlatformService {
     private final PlatformMapper platformMapper;
 
     public PlatformsRequestDTO savePlatform(PlatformsRequestDTO platformsDTO) {
-        Platforms platforms = createPlatformEntity(platformsDTO,  new Platforms());
+        PlatformsModel platforms = createPlatformEntity(platformsDTO,  new PlatformsModel());
         if (platformsRepository.existsByType(platforms.getType())) {
             throw new ResourceDuplicate("Platform already exists");
         }
@@ -30,17 +30,17 @@ public class PlatformService {
         return createPlatformsDTO(platforms);
     }
 
-    private PlatformsRequestDTO createPlatformsDTO(Platforms platforms){
+    private PlatformsRequestDTO createPlatformsDTO(PlatformsModel platforms){
         return platformMapper.createPlatformDTO(platforms);
     }
 
     public void updatePlatform(UUID uuid, PlatformsRequestDTO platformsDTO){
-        Platforms platforms = loadPlatform(uuid);
+        PlatformsModel platforms = loadPlatform(uuid);
         createPlatformEntity(platformsDTO, platforms);
         platformsRepository.save(platforms);
     }
 
-    private Platforms createPlatformEntity(PlatformsRequestDTO platformsDTO, Platforms platforms){
+    private PlatformsModel createPlatformEntity(PlatformsRequestDTO platformsDTO, PlatformsModel platforms){
         platforms.setType(platformsDTO.getType());
         platforms.setIsDeleted(platformsDTO.getIsDeleted());
         return platforms;
@@ -52,7 +52,7 @@ public class PlatformService {
     }
 
     @Transactional(readOnly = true)
-    private Platforms loadPlatform(UUID uuid){
+    private PlatformsModel loadPlatform(UUID uuid){
         return platformsRepository.findById(uuid).orElseThrow(() -> new NoExistData("Platform don't exist"));
     }
 }

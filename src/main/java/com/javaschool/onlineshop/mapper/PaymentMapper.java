@@ -1,12 +1,12 @@
 package com.javaschool.onlineshop.mapper;
 
 import com.javaschool.onlineshop.dto.PaymentRequestDTO;
-import com.javaschool.onlineshop.models.Payment;
+import com.javaschool.onlineshop.models.PaymentModel;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PaymentMapper {
-    public PaymentRequestDTO createPaymentDTO(Payment payment){
+    public PaymentRequestDTO createPaymentDTO(PaymentModel payment){
         PaymentRequestDTO paymentDTO = new PaymentRequestDTO();
         paymentDTO.setUuid(payment.getPaymentUuid());
         paymentDTO.setType(payment.getType());

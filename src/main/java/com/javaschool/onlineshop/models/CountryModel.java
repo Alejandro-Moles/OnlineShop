@@ -1,30 +1,35 @@
 package com.javaschool.onlineshop.models;
-
+import java.util.List;
+import lombok.Data;
 import java.util.UUID;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
-import lombok.Data;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import lombok.NoArgsConstructor;
 
 
 @Entity
-@Table(name="Roles")
+@Table(name="Countries")
 @Data
 @NoArgsConstructor
-public class Role {
-	
+public class CountryModel {
 	//COLUMNS
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID roleUuid;
+	private UUID countryUuid;
 	
-	@Column(name = "role_type", unique = true)
-	private String type;
+	@Column(name = "country_name", unique = true)
+	private String name;
 	
-	@Column(name ="role_isDeleted")
+	@Column(name ="country_isDeleted")
 	private boolean isDeleted;
+	
+	//RELATION
+	@OneToMany(mappedBy = "country", cascade= CascadeType.ALL)
+	private List<CityModel> cities;
 }

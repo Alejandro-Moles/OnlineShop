@@ -4,7 +4,7 @@ import com.javaschool.onlineshop.dto.PaymentRequestDTO;
 import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.PaymentMapper;
-import com.javaschool.onlineshop.models.Payment;
+import com.javaschool.onlineshop.models.PaymentModel;
 import com.javaschool.onlineshop.repositories.PaymentRepository;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class PaymentService {
     private final PaymentMapper paymentMapper;
 
     public PaymentRequestDTO savePayment(PaymentRequestDTO paymentDTO){
-        Payment payment = createPaymentEntity(paymentDTO, new Payment());
+        PaymentModel payment = createPaymentEntity(paymentDTO, new PaymentModel());
         if (paymentRepository.existsByType(payment.getType())) {
             throw new ResourceDuplicate("Payment already exists");
         }
@@ -29,18 +29,18 @@ public class PaymentService {
         return createPaymentDTO(payment);
     }
 
-    private PaymentRequestDTO createPaymentDTO(Payment payment){
+    private PaymentRequestDTO createPaymentDTO(PaymentModel payment){
         return paymentMapper.createPaymentDTO(payment);
     }
 
-    private Payment createPaymentEntity(PaymentRequestDTO paymentDTO, Payment payment){
+    private PaymentModel createPaymentEntity(PaymentRequestDTO paymentDTO, PaymentModel payment){
         payment.setType(paymentDTO.getType());
         payment.setIsDeleted(paymentDTO.getIsDeleted());
         return payment;
     }
 
     public void updatePayment(UUID uuid, PaymentRequestDTO paymentDTO){
-        Payment payment = loadPayment(uuid);
+        PaymentModel payment = loadPayment(uuid);
         createPaymentEntity(paymentDTO, payment);
         paymentRepository.save(payment);
     }
@@ -51,7 +51,7 @@ public class PaymentService {
     }
 
     @Transactional(readOnly = true)
-    private Payment loadPayment(UUID uuid){
+    private PaymentModel loadPayment(UUID uuid){
         return paymentRepository.findById(uuid).orElseThrow(() -> new NoExistData("Payment don't exist"));
     }
 }

@@ -4,9 +4,9 @@ import com.javaschool.onlineshop.dto.OrderProductsRequestDTO;
 import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.OrderProductsMapper;
-import com.javaschool.onlineshop.models.Order;
-import com.javaschool.onlineshop.models.OrderProducts;
-import com.javaschool.onlineshop.models.Products;
+import com.javaschool.onlineshop.models.OrderModel;
+import com.javaschool.onlineshop.models.OrderProductsModel;
+import com.javaschool.onlineshop.models.ProductsModel;
 import com.javaschool.onlineshop.repositories.OrderProductsRepository;
 import com.javaschool.onlineshop.repositories.OrderRepository;
 import com.javaschool.onlineshop.repositories.ProductsRepository;
@@ -27,7 +27,7 @@ public class OrderProductsService {
 
 
     public OrderProductsRequestDTO saveOrderProducts(OrderProductsRequestDTO orderProductsDTO){
-        OrderProducts orderProducts = createOrderProductsEntity(orderProductsDTO,new OrderProducts());
+        OrderProductsModel orderProducts = createOrderProductsEntity(orderProductsDTO,new OrderProductsModel());
         if(orderProductsRepository.existsByOrderAndProduct(orderProducts.getOrder(), orderProducts.getProduct())){
             throw new ResourceDuplicate("Order already have with this product");
         }
@@ -36,20 +36,20 @@ public class OrderProductsService {
     }
 
     @Transactional(readOnly = true)
-    private Order findOrderByUUID(UUID uuid){
+    private OrderModel findOrderByUUID(UUID uuid){
         return orderRepository.findById(uuid).orElseThrow(() -> new NoExistData("This order don't exist"));
     }
 
     @Transactional(readOnly = true)
-    private Products findProducts(String title){
+    private ProductsModel findProducts(String title){
         return productsRepository.findByTitle(title).orElseThrow(() -> new NoExistData("This product don't exist"));
     }
 
-    private OrderProductsRequestDTO createOrderProductsDTO(OrderProducts orderProducts){
+    private OrderProductsRequestDTO createOrderProductsDTO(OrderProductsModel orderProducts){
         return orderProductsMapper.createOrderProductsDTO(orderProducts);
     }
 
-    private OrderProducts createOrderProductsEntity(OrderProductsRequestDTO orderProductsDTO, OrderProducts orderProducts){
+    private OrderProductsModel createOrderProductsEntity(OrderProductsRequestDTO orderProductsDTO, OrderProductsModel orderProducts){
         orderProducts.setOrder(findOrderByUUID(orderProductsDTO.getOrderUUID()));
         orderProducts.setQuantity(orderProductsDTO.getQuantity());
         orderProducts.setIsDeleted(false);

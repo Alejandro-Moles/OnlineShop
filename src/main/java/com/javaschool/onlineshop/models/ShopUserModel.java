@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Table(name="Shop_Users")
 @Data
 @NoArgsConstructor
-public class ShopUser {
+public class ShopUserModel {
 	
 	//COLUMNS
 	@Id
@@ -41,14 +41,14 @@ public class ShopUser {
     
     //RELATIONS
     @OneToMany(mappedBy = "user", cascade= CascadeType.ALL)
-	private List<UserAddress> address;
+	private List<UserAddressModel> address;
 	
 	@OneToMany(mappedBy = "shopUser", cascade= CascadeType.ALL)
-	private List<Order> orders;
+	private List<OrderModel> orders;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name="users_roles", joinColumns = @JoinColumn(name="user_uuid", referencedColumnName = "userUuid"),
         inverseJoinColumns = @JoinColumn(name = "role_uuid", referencedColumnName = "roleUuid"))
-    private List<Role> roles = new ArrayList<>();
-    
+    private List<RoleModel> roles = new ArrayList<>();
+
 }

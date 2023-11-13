@@ -1,10 +1,9 @@
 package com.javaschool.onlineshop.security;
 
 import com.javaschool.onlineshop.exception.NoExistData;
-import com.javaschool.onlineshop.models.Role;
-import com.javaschool.onlineshop.models.ShopUser;
+import com.javaschool.onlineshop.models.RoleModel;
+import com.javaschool.onlineshop.models.ShopUserModel;
 import com.javaschool.onlineshop.repositories.ShopUserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -30,11 +29,11 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userMail) throws UsernameNotFoundException {
-        ShopUser user = shopUserRepository.findByMail(userMail).orElseThrow(() -> new NoExistData("User don't exist"));
+        ShopUserModel user = shopUserRepository.findByMail(userMail).orElseThrow(() -> new NoExistData("User don't exist"));
         return new User(user.getMail(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
     }
 
-    private Collection<GrantedAuthority> mapRolesToAuthorities(List<Role> roles){
+    private Collection<GrantedAuthority> mapRolesToAuthorities(List<RoleModel> roles){
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getType())).collect(Collectors.toList());
     }
 }

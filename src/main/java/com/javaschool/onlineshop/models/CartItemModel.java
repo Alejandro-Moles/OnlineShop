@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.UUID;
 
 @Data
-public class CartItem {
+public class CartItemModel {
     private UUID productUuid;
     private String title;
     private Double price;

@@ -4,7 +4,7 @@ import com.javaschool.onlineshop.dto.CategoryRequestDTO;
 import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.CategoryMapper;
-import com.javaschool.onlineshop.models.Category;
+import com.javaschool.onlineshop.models.CategoryModel;
 import com.javaschool.onlineshop.repositories.CategoryRepository;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class CategoryService {
 
 
 	public CategoryRequestDTO saveCategory(CategoryRequestDTO categoryDTO) {
-		Category category = createCategoryEntity(categoryDTO, new Category());
+		CategoryModel category = createCategoryEntity(categoryDTO, new CategoryModel());
 		if (categoryRepository.existsByType(category.getType())) {
 			throw new ResourceDuplicate("Category already exists");
 		}
@@ -31,7 +31,7 @@ public class CategoryService {
 	}
 
 	@Transactional(readOnly = true)
-	public Category getCategoryById(UUID id) {
+	public CategoryModel getCategoryById(UUID id) {
 		return categoryRepository.findById(id).orElseThrow(() -> new NoExistData("This category don't exist"));
 	}
 
@@ -39,11 +39,11 @@ public class CategoryService {
 		categoryRepository.deleteById(id);
 	}
 
-	private CategoryRequestDTO createCategoryDTO(Category category){
+	private CategoryRequestDTO createCategoryDTO(CategoryModel category){
 		return categoryMapper.createCategoryDTO(category);
 	}
 
-	private Category createCategoryEntity(CategoryRequestDTO categoryDTO, Category category){
+	private CategoryModel createCategoryEntity(CategoryRequestDTO categoryDTO, CategoryModel category){
 		category.setType(categoryDTO.getType());
 		category.setIsDeleted(categoryDTO.getIsDeleted());
 		return category;
@@ -55,13 +55,13 @@ public class CategoryService {
 	}
 
 	public void updateCategory(UUID uuid, CategoryRequestDTO categoryDTO){
-		Category category = loadCategory(uuid);
+		CategoryModel category = loadCategory(uuid);
 		createCategoryEntity(categoryDTO, category);
 		categoryRepository.save(category);
 	}
 
 	@Transactional(readOnly = true)
-	private Category loadCategory(UUID uuid){
+	private CategoryModel loadCategory(UUID uuid){
 		return categoryRepository.findById(uuid).orElseThrow(() -> new NoExistData("Category don't exist"));
 	}
 

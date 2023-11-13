@@ -4,9 +4,9 @@ import com.javaschool.onlineshop.dto.UserAddressRequestDTO;
 import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.UserAddressMapper;
-import com.javaschool.onlineshop.models.PostalCode;
-import com.javaschool.onlineshop.models.ShopUser;
-import com.javaschool.onlineshop.models.UserAddress;
+import com.javaschool.onlineshop.models.PostalCodeModel;
+import com.javaschool.onlineshop.models.ShopUserModel;
+import com.javaschool.onlineshop.models.UserAddressModel;
 import com.javaschool.onlineshop.repositories.PostalCodeRepository;
 import com.javaschool.onlineshop.repositories.ShopUserRepository;
 import com.javaschool.onlineshop.repositories.UserAddressRepository;
@@ -25,7 +25,7 @@ public class UserAddressService {
     private final ShopUserRepository shopUserRepository;
     private final PostalCodeRepository postalCodeRepository;
     public UserAddressRequestDTO saveUserAddress(UserAddressRequestDTO userAddressDTO){
-        UserAddress userAddress = createUserAddressEntity(userAddressDTO, new UserAddress());
+        UserAddressModel userAddress = createUserAddressEntity(userAddressDTO, new UserAddressModel());
         if(userAddressRepository.existsByApartamentAndStreetAndUserAndHome(userAddress.getApartament(), userAddress.getStreet(), userAddress.getUser(), userAddress.getHome())){
             throw new ResourceDuplicate("Address already exists within this credentials");
         }
@@ -33,21 +33,21 @@ public class UserAddressService {
         return createUserAddressDTO(userAddress);
     }
 
-    private UserAddressRequestDTO createUserAddressDTO(UserAddress userAddress){
+    private UserAddressRequestDTO createUserAddressDTO(UserAddressModel userAddress){
         return userAddressMapper.createUserAddressDTO(userAddress);
     }
 
     @Transactional(readOnly = true)
-    private ShopUser findShopUser(String mail){
+    private ShopUserModel findShopUser(String mail){
         return shopUserRepository.findByMail(mail).orElseThrow(() -> new NoExistData("This shop user don't exist"));
     }
 
     @Transactional(readOnly = true)
-    private PostalCode findPostalCode(String content){
+    private PostalCodeModel findPostalCode(String content){
         return postalCodeRepository.findByContent(content).orElseThrow(null);
     }
 
-    private UserAddress createUserAddressEntity(UserAddressRequestDTO userAddressDTO, UserAddress userAddress){
+    private UserAddressModel createUserAddressEntity(UserAddressRequestDTO userAddressDTO, UserAddressModel userAddress){
         userAddress.setApartament(userAddressDTO.getApartament());
         userAddress.setHome(userAddressDTO.getHome());
         userAddress.setStreet(userAddressDTO.getStreet());

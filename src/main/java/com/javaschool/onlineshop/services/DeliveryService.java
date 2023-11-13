@@ -4,7 +4,7 @@ import com.javaschool.onlineshop.dto.DeliveryRequestDTO;
 import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.DeliveryMapper;
-import com.javaschool.onlineshop.models.Delivery;
+import com.javaschool.onlineshop.models.DeliveryModel;
 import com.javaschool.onlineshop.repositories.DeliveryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class DeliveryService {
     private final DeliveryMapper deliveryMapper;
 
     public DeliveryRequestDTO saveDelivery(DeliveryRequestDTO deliveryDTO){
-        Delivery delivery = createDeliveryEntity(deliveryDTO, new Delivery());
+        DeliveryModel delivery = createDeliveryEntity(deliveryDTO, new DeliveryModel());
         if (deliveryRepository.existsByType(delivery.getType())) {
             throw new ResourceDuplicate("Delivery already exists");
         }
@@ -29,18 +29,18 @@ public class DeliveryService {
         return createDeliveryDTO(delivery);
     }
 
-    private DeliveryRequestDTO createDeliveryDTO(Delivery delivery){
+    private DeliveryRequestDTO createDeliveryDTO(DeliveryModel delivery){
         return deliveryMapper.createDeliveryDTO(delivery);
     }
 
-    private Delivery createDeliveryEntity(DeliveryRequestDTO deliveryDTO, Delivery delivery){
+    private DeliveryModel createDeliveryEntity(DeliveryRequestDTO deliveryDTO, DeliveryModel delivery){
         delivery.setType(deliveryDTO.getType());
         delivery.setIsDeleted(deliveryDTO.getIsDeleted());
         return delivery;
     }
 
     public void updateDelivery(UUID uuid, DeliveryRequestDTO deliveryDTO){
-        Delivery delivery = loadDelivery(uuid);
+        DeliveryModel delivery = loadDelivery(uuid);
         createDeliveryEntity(deliveryDTO, delivery);
         deliveryRepository.save(delivery);
     }
@@ -51,7 +51,7 @@ public class DeliveryService {
     }
 
     @Transactional(readOnly = true)
-    private Delivery loadDelivery(UUID uuid){
+    private DeliveryModel loadDelivery(UUID uuid){
         return deliveryRepository.findById(uuid).orElseThrow(() -> new NoExistData("Delivery don't exist"));
     }
 }

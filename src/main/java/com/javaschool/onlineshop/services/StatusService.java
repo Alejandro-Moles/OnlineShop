@@ -3,7 +3,7 @@ package com.javaschool.onlineshop.services;
 import com.javaschool.onlineshop.dto.StatusRequestDTO;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.StatusMapper;
-import com.javaschool.onlineshop.models.Status;
+import com.javaschool.onlineshop.models.StatusModel;
 import com.javaschool.onlineshop.repositories.StatusRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class StatusService {
     private final StatusMapper statusMapper;
 
     public StatusRequestDTO saveStatus(StatusRequestDTO statusDTO){
-        Status status = createStatusEntity(statusDTO, new Status());
+        StatusModel status = createStatusEntity(statusDTO, new StatusModel());
         if (statusRepository.existsByType(status.getType())) {
             throw new ResourceDuplicate("Status already exists");
         }
@@ -25,11 +25,11 @@ public class StatusService {
         return createStatusDTO(status);
     }
 
-    private StatusRequestDTO createStatusDTO(Status status){
+    private StatusRequestDTO createStatusDTO(StatusModel status){
         return statusMapper.createStatusDTO(status);
     }
 
-    private Status createStatusEntity(StatusRequestDTO statusDTO, Status status){
+    private StatusModel createStatusEntity(StatusRequestDTO statusDTO, StatusModel status){
         status.setType(statusDTO.getType());
         status.setIsDeleted(false);
         return status;
