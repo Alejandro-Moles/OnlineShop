@@ -114,4 +114,14 @@ public class CartService {
         }
     }
 
+    public void updateProductCart (List<CartItemModel>  cartItemModels, HttpSession session){
+        System.out.println(cartItemModels);
+        session.setAttribute("cart", cartItemModels);
+    }
+
+    public void updateProductCartForUser (List<CartItemModel>  cartItemModels, String mail, HttpSession session){
+        System.out.println(cartItemModels);
+        System.out.println(mail);
+        session.setAttribute("cart_" + mail, cartItemModels);
+    }
 }

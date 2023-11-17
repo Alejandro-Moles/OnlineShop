@@ -29,7 +29,7 @@ public class UserAddressModel {
 	private ShopUserModel user;
 	
 	@OneToOne
-	@JoinColumn(name = "address_postal_code_uuid")
+	@JoinColumn(name = "address_postal_code_uuid", unique = false)
 	private PostalCodeModel postal_code;
 	
 	@Column(name = "address_street")

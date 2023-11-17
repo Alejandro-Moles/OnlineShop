@@ -1,6 +1,6 @@
 package com.javaschool.onlineshop.controllers;
 
-import com.javaschool.onlineshop.dto.GenreRequestDTO;
+import com.javaschool.onlineshop.dto.ShopUserRequestDTO;
 import com.javaschool.onlineshop.dto.UserAddressRequestDTO;
 import com.javaschool.onlineshop.services.UserAddressService;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/userAddress")
@@ -26,4 +27,18 @@ public class UserAddressController {
         List<UserAddressRequestDTO> result = userAddressService.getAllUserAddress();
         return ResponseEntity.ok(result);
     }
+
+    @GetMapping("user/{uuid}")
+    public ResponseEntity<List<UserAddressRequestDTO>> getAllUserAddressForUser(@PathVariable UUID uuid) {
+        System.out.println(uuid);
+        List<UserAddressRequestDTO> result = userAddressService.getAllUserAddressForUser(uuid);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/{uuid}")
+    public ResponseEntity<UserAddressRequestDTO> getUserAddressByUuid(@PathVariable UUID uuid) {
+        UserAddressRequestDTO result = userAddressService.getUserAddressbyUuid(uuid);
+        return ResponseEntity.ok(result);
+    }
+
 }

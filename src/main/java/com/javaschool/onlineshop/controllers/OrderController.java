@@ -16,8 +16,8 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<String> createOrder(@RequestBody OrderRequestDTO orderDTO) {
+    public ResponseEntity<OrderRequestDTO> createOrder(@RequestBody OrderRequestDTO orderDTO) {
         OrderRequestDTO result = orderService.saveOrder(orderDTO);
-        return ResponseEntity.ok("Order created for: " + result.getMail());
+        return ResponseEntity.ok(result);
     }
 }

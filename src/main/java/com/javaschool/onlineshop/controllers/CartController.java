@@ -50,4 +50,18 @@ public class CartController {
         }
     }
 
+    @PostMapping("/cart/update")
+    public ResponseEntity<String> updateCart(@RequestBody List<CartItemModel> cartItemModels, HttpSession session){
+        System.out.println(cartItemModels);
+        try {
+            if(cartService.getUserLoggedMail() != null){
+                cartService.updateProductCartForUser(cartItemModels, cartService.getUserLoggedMail(), session);
+                return ResponseEntity.ok("Carrito actualizado para el usuario");
+            }
+            cartService.updateProductCart(cartItemModels, session);
+            return ResponseEntity.ok("Carrito actualizado");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar el producto al carrito " + e);
+        }
+    }
 }
