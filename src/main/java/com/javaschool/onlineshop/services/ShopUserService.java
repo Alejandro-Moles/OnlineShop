@@ -1,5 +1,6 @@
 package com.javaschool.onlineshop.services;
 
+import com.javaschool.onlineshop.dto.NewPasswordDTO;
 import com.javaschool.onlineshop.dto.RegisterRequestDTO;
 import com.javaschool.onlineshop.dto.ShopUserRequestDTO;
 import com.javaschool.onlineshop.exception.NoExistData;
@@ -12,12 +13,14 @@ import com.javaschool.onlineshop.repositories.ShopUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -27,6 +30,7 @@ public class ShopUserService {
     private final ShopUserRepository shopUserRepository;
     private final ShopUserMapper shopUserMapper;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public ShopUserRequestDTO saveShopUser(ShopUserRequestDTO shopUserDTO){
         ShopUserModel shopUser = createShopUserEntity(shopUserDTO, new ShopUserModel());
@@ -55,10 +59,15 @@ public class ShopUserService {
         return shopUser;
     }
 
-    public void updateShopUser(UUID uuid, ShopUserRequestDTO shopUserDTO){
+    public void updateShopUser(UUID uuid, NewPasswordDTO passwordDTO){
         ShopUserModel shopUser = loadShopUser(uuid);
-        createShopUserEntity(shopUserDTO, shopUser);
-        shopUserRepository.save(shopUser);
+        if(checkNewPassword(uuid, passwordDTO)){
+            String newPassword = passwordEncoder.encode(passwordDTO.getNewPassword());
+            shopUser.setPassword(newPassword);
+            shopUserRepository.save(shopUser);
+        }else{
+            System.out.println("La antigua contraseña no es la misma");
+        }
     }
 
     @Transactional(readOnly = true)
@@ -86,7 +95,7 @@ public class ShopUserService {
     public ShopUserRequestDTO getCurrentUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication == null || !authentication.isAuthenticated()){
-            throw  new NoExistData("User not found");
+            throw new NoExistData("User not found");
         }
         String mail = authentication.getName();
         ShopUserModel user = shopUserRepository.findByMail(mail).orElseThrow(() -> new NoExistData("User not found"));
@@ -96,5 +105,14 @@ public class ShopUserService {
     public ShopUserRequestDTO getShopUserbyUuid(UUID uuid){
         ShopUserModel shopUser = loadShopUser(uuid);
         return createShopUserDTO(shopUser);
+    }
+
+    private boolean checkNewPassword(UUID uuid, NewPasswordDTO passwordDTO){
+        ShopUserModel userModel = loadShopUser(uuid);
+        if(passwordEncoder.matches(passwordDTO.getOldPassword(), userModel.getPassword())){
+            return true;
+        } else {
+            return false;
+        }
     }
 }

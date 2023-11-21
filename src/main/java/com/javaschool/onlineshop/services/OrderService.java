@@ -1,14 +1,11 @@
 package com.javaschool.onlineshop.services;
 
+import com.javaschool.onlineshop.dto.CountryRequestDTO;
 import com.javaschool.onlineshop.dto.OrderRequestDTO;
+import com.javaschool.onlineshop.dto.ProductRequestDTO;
 import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.mapper.OrderMapper;
-import com.javaschool.onlineshop.models.OrderModel;
-import com.javaschool.onlineshop.models.PaymentModel;
-import com.javaschool.onlineshop.models.StatusModel;
-import com.javaschool.onlineshop.models.DeliveryModel;
-import com.javaschool.onlineshop.models.ShopUserModel;
-import com.javaschool.onlineshop.models.UserAddressModel;
+import com.javaschool.onlineshop.models.*;
 import com.javaschool.onlineshop.repositories.DeliveryRepository;
 import com.javaschool.onlineshop.repositories.OrderRepository;
 import com.javaschool.onlineshop.repositories.PaymentRepository;
@@ -18,6 +15,10 @@ import com.javaschool.onlineshop.repositories.UserAddressRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -76,5 +77,41 @@ public class OrderService {
         order.setUserAddress(findUserAddress(orderDTO.getApartament(), orderDTO.getHome(), orderDTO.getStreet()));
         order.setDate(orderDTO.getOrderDate());
         return order;
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderRequestDTO> getAllOrders(){
+        return orderRepository.findAll().stream().map(this::createOrderDTO).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderRequestDTO> getAllOrdersForUser(UUID userUuid){
+        return orderRepository.findOrderByShopUser(loadShopUser(userUuid)).stream().map(this::createOrderDTO).toList();
+    }
+
+    @Transactional(readOnly = true)
+    private OrderModel loadOrder(UUID uuid){
+        return orderRepository.findById(uuid).orElseThrow(() -> new NoExistData("Product don't exist"));
+    }
+
+    public OrderRequestDTO getOrderUuid(UUID uuid){
+        OrderModel order = loadOrder(uuid);
+        return createOrderDTO(order);
+    }
+
+    public void updateOrder(UUID uuid, String status){
+        OrderModel orderModel = loadOrder(uuid);
+        if(Objects.equals(status, "PENDING_PAYMENT")){
+            orderModel.setPay_status(false);
+        }else {
+            orderModel.setPay_status(true);
+        }
+        orderModel.setStatus(findStatus(status));
+        orderRepository.save(orderModel);
+    }
+
+    @Transactional(readOnly = true)
+    private ShopUserModel loadShopUser(UUID uuid){
+        return shopUserRepository.findById(uuid).orElseThrow(() -> new NoExistData("Shop user don't exist"));
     }
 }

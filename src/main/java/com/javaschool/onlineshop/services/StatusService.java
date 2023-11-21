@@ -1,5 +1,6 @@
 package com.javaschool.onlineshop.services;
 
+import com.javaschool.onlineshop.dto.OrderRequestDTO;
 import com.javaschool.onlineshop.dto.StatusRequestDTO;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.StatusMapper;
@@ -8,6 +9,8 @@ import com.javaschool.onlineshop.repositories.StatusRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,5 +36,10 @@ public class StatusService {
         status.setType(statusDTO.getType());
         status.setIsDeleted(false);
         return status;
+    }
+
+    @Transactional(readOnly = true)
+    public List<StatusRequestDTO> getAllStatus(){
+        return statusRepository.findAll().stream().map(this::createStatusDTO).toList();
     }
 }

@@ -4,6 +4,7 @@ import com.javaschool.onlineshop.dto.OrderProductsRequestDTO;
 import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.OrderProductsMapper;
+import com.javaschool.onlineshop.models.CountryModel;
 import com.javaschool.onlineshop.models.OrderModel;
 import com.javaschool.onlineshop.models.OrderProductsModel;
 import com.javaschool.onlineshop.models.ProductsModel;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -55,5 +57,16 @@ public class OrderProductsService {
         orderProducts.setIsDeleted(false);
         orderProducts.setProduct(findProducts(orderProductsDTO.getProductTitle()));
         return orderProducts;
+    }
+
+    @Transactional(readOnly = true)
+    private OrderModel findOrder(UUID uuid){
+        return orderRepository.findById(uuid).orElseThrow(() -> new NoExistData("This order don't exist"));
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderProductsRequestDTO> findAllOrdersProductByOrder(UUID uuid){
+        OrderModel orderModel = findOrder(uuid);
+        return orderProductsRepository.findOrderProductsByOrder(orderModel).stream().map(this::createOrderProductsDTO).toList();
     }
 }

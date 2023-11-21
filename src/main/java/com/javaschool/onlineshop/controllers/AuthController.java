@@ -37,7 +37,6 @@ public class AuthController {
         String userMail = shopUserService.getCurrentUser().getMail();
         cartService.setUserLoggedMail(userMail);
         cartService.syncCartToUser(session, userMail);
-
         return  new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
     }
 

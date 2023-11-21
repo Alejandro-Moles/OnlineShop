@@ -1,5 +1,6 @@
 package com.javaschool.onlineshop.controllers;
 
+import com.javaschool.onlineshop.dto.NewPasswordDTO;
 import com.javaschool.onlineshop.dto.ProductRequestDTO;
 import com.javaschool.onlineshop.dto.ShopUserRequestDTO;
 import com.javaschool.onlineshop.services.ShopUserService;
@@ -28,8 +29,8 @@ public class ShopUserController {
     }
 
     @PutMapping("/{uuid}")
-    public ResponseEntity<String> updateShopUser(@PathVariable UUID uuid, @RequestBody ShopUserRequestDTO shopUserDTO){
-        shopUserService.updateShopUser(uuid, shopUserDTO);
+    public ResponseEntity<String> updateShopUser(@PathVariable UUID uuid, @RequestBody NewPasswordDTO passwordDTO){
+        shopUserService.updateShopUser(uuid, passwordDTO);
         return ResponseEntity.ok("Shop user changed successfully");
     }
 

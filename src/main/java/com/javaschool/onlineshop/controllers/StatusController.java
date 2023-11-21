@@ -1,13 +1,13 @@
 package com.javaschool.onlineshop.controllers;
 
+import com.javaschool.onlineshop.dto.OrderRequestDTO;
 import com.javaschool.onlineshop.dto.StatusRequestDTO;
 import com.javaschool.onlineshop.services.StatusService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/status")
@@ -19,5 +19,11 @@ public class StatusController {
     public ResponseEntity<String> createStatus(@RequestBody StatusRequestDTO statusDTO) {
         StatusRequestDTO result = statusService.saveStatus(statusDTO);
         return ResponseEntity.ok("Status created : " + result.getType());
+    }
+
+    @GetMapping
+    public ResponseEntity<List<StatusRequestDTO>> getAllStatus(){
+        List<StatusRequestDTO> result = statusService.getAllStatus();
+        return ResponseEntity.ok(result);
     }
 }

@@ -28,7 +28,6 @@ public class CityService {
         if (cityRepository.existsByNameAndCountry(city.getName(), city.getCountry())) {
             throw new ResourceDuplicate("City already exists within country");
         }
-
         cityRepository.save(city);
         return createCityDTO(city);
     }

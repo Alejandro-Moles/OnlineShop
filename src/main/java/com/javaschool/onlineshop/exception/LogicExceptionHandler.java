@@ -15,4 +15,9 @@ public class LogicExceptionHandler {
     public ResponseEntity<?> handleConflict(NoExistData e){
         return ResponseEntity.status(500).body(e.getMessage());
     }
+
+    @ExceptionHandler(PasswordNoMatches.class)
+    public ResponseEntity<?> handleConflict(PasswordNoMatches e){
+        return ResponseEntity.status(500).body(e.getMessage());
+    }
 }
