@@ -1,6 +1,7 @@
 package com.javaschool.onlineshop.services;
 
 import com.javaschool.onlineshop.dto.ProductRequestDTO;
+import com.javaschool.onlineshop.dto.TotalSaleProductDTO;
 import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.ProductsMapper;
@@ -85,4 +86,11 @@ public class ProductsService {
     private ProductsModel loadProduct(UUID uuid){
         return productsRepository.findById(uuid).orElseThrow(() -> new NoExistData("Product don't exist"));
     }
+
+    @Transactional(readOnly = true)
+    public List<TotalSaleProductDTO> getTopSaleProducts() {
+        return productsRepository.findTop10SoldProducts();
+    }
+
+
 }

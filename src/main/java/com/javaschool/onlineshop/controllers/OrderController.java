@@ -1,9 +1,6 @@
 package com.javaschool.onlineshop.controllers;
 
-import com.javaschool.onlineshop.dto.CountryRequestDTO;
-import com.javaschool.onlineshop.dto.OrderRequestDTO;
-import com.javaschool.onlineshop.dto.ProductRequestDTO;
-import com.javaschool.onlineshop.dto.StatusRequestDTO;
+import com.javaschool.onlineshop.dto.*;
 import com.javaschool.onlineshop.services.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -47,5 +44,11 @@ public class OrderController {
     public ResponseEntity<String> updateOrder(@PathVariable UUID uuid, @PathVariable String status){
         orderService.updateOrder(uuid, status);
         return ResponseEntity.ok("Order changed succesfully");
+    }
+
+    @PostMapping("/revenueStatistic")
+    public ResponseEntity<List<RevenueStatisticDTO>> getRevenuesStatistic(@RequestBody DateSelectorStatisticDTO dateDTO) {
+        List<RevenueStatisticDTO> result = orderService.getRevenueStatistic(dateDTO);
+        return ResponseEntity.ok(result);
     }
 }

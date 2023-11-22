@@ -3,6 +3,7 @@ package com.javaschool.onlineshop.controllers;
 import com.javaschool.onlineshop.dto.NewPasswordDTO;
 import com.javaschool.onlineshop.dto.ProductRequestDTO;
 import com.javaschool.onlineshop.dto.ShopUserRequestDTO;
+import com.javaschool.onlineshop.dto.UserStatisticsDTO;
 import com.javaschool.onlineshop.services.ShopUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +43,12 @@ public class ShopUserController {
     @GetMapping("/profile/{uuid}")
     public ResponseEntity<ShopUserRequestDTO> getShopUserbyUuid(@PathVariable UUID uuid){
         ShopUserRequestDTO result = shopUserService.getShopUserbyUuid(uuid);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/statistic/{mail}")
+    public ResponseEntity<UserStatisticsDTO> getShopUserStatistic(@PathVariable String mail){
+        UserStatisticsDTO result = shopUserService.getUserStatistic(mail);
         return ResponseEntity.ok(result);
     }
 

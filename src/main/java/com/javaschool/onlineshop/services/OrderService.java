@@ -1,8 +1,6 @@
 package com.javaschool.onlineshop.services;
 
-import com.javaschool.onlineshop.dto.CountryRequestDTO;
-import com.javaschool.onlineshop.dto.OrderRequestDTO;
-import com.javaschool.onlineshop.dto.ProductRequestDTO;
+import com.javaschool.onlineshop.dto.*;
 import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.mapper.OrderMapper;
 import com.javaschool.onlineshop.models.*;
@@ -113,5 +111,10 @@ public class OrderService {
     @Transactional(readOnly = true)
     private ShopUserModel loadShopUser(UUID uuid){
         return shopUserRepository.findById(uuid).orElseThrow(() -> new NoExistData("Shop user don't exist"));
+    }
+
+    @Transactional(readOnly = true)
+    public List<RevenueStatisticDTO> getRevenueStatistic(DateSelectorStatisticDTO dto){
+        return orderRepository.getRevenueStatistics(dto.getStartDate(), dto.getEndDate());
     }
 }

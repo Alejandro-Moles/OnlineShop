@@ -3,6 +3,7 @@ package com.javaschool.onlineshop.services;
 import com.javaschool.onlineshop.dto.NewPasswordDTO;
 import com.javaschool.onlineshop.dto.RegisterRequestDTO;
 import com.javaschool.onlineshop.dto.ShopUserRequestDTO;
+import com.javaschool.onlineshop.dto.UserStatisticsDTO;
 import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.ShopUserMapper;
@@ -113,6 +114,21 @@ public class ShopUserService {
             return true;
         } else {
             return false;
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public UserStatisticsDTO getUserStatistic(String userMail){
+        Optional<ShopUserModel> shopUserModel = shopUserRepository.findByMail(userMail);
+        if (shopUserModel.isPresent()) {
+            ShopUserModel userModel = shopUserModel.get();
+            if (userModel.getOrders() != null && !userModel.getOrders().isEmpty()) {
+                return shopUserRepository.getUserStatistics(userModel.getUserUuid());
+            } else {
+                return new UserStatisticsDTO(0L, 0.0, 0L);
+            }
+        } else {
+            return null;
         }
     }
 }

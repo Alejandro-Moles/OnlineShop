@@ -1,6 +1,7 @@
 package com.javaschool.onlineshop.controllers;
 
 import com.javaschool.onlineshop.dto.ProductRequestDTO;
+import com.javaschool.onlineshop.dto.TotalSaleProductDTO;
 import com.javaschool.onlineshop.services.ProductsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -39,5 +40,10 @@ public class ProductsController {
         return ResponseEntity.ok("Product changed succesfully");
     }
 
+    @GetMapping("/topProducts")
+    public ResponseEntity<List<TotalSaleProductDTO>> getTopProducts(){
+        List<TotalSaleProductDTO> result = productsService.getTopSaleProducts();
+        return ResponseEntity.ok(result);
+    }
 
 }
