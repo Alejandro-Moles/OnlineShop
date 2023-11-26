@@ -1,5 +1,6 @@
 package com.javaschool.onlineshop.services;
 
+import com.javaschool.onlineshop.dto.CategoryRequestDTO;
 import com.javaschool.onlineshop.dto.PlatformsRequestDTO;
 import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
@@ -54,5 +55,10 @@ public class PlatformService {
     @Transactional(readOnly = true)
     private PlatformsModel loadPlatform(UUID uuid){
         return platformsRepository.findById(uuid).orElseThrow(() -> new NoExistData("Platform don't exist"));
+    }
+
+    @Transactional(readOnly = true)
+    public List<PlatformsRequestDTO> getAllAvailablePlatforms(){
+        return platformsRepository.findAllByIsDeletedFalse().stream().map(this::createPlatformsDTO).toList();
     }
 }

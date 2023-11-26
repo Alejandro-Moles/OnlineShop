@@ -1,5 +1,6 @@
 package com.javaschool.onlineshop.services;
 
+import com.javaschool.onlineshop.dto.PostalCodeRequestDTO;
 import com.javaschool.onlineshop.dto.RoleRequestDTO;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.RoleMapper;
@@ -8,6 +9,8 @@ import com.javaschool.onlineshop.repositories.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,5 +36,10 @@ public class RoleService {
         role.setType(roleDTO.getType());
         role.setDeleted(false);
         return role;
+    }
+
+    @Transactional(readOnly = true)
+    public List<RoleRequestDTO> getAllRoles(){
+        return roleRepository.findAll().stream().map(this::createRoleDTO).toList();
     }
 }

@@ -2,10 +2,14 @@ package com.javaschool.onlineshop.mapper;
 
 import com.javaschool.onlineshop.dto.RegisterRequestDTO;
 import com.javaschool.onlineshop.dto.ShopUserRequestDTO;
+import com.javaschool.onlineshop.models.RoleModel;
 import com.javaschool.onlineshop.models.ShopUserModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ShopUserMapper {
@@ -26,6 +30,11 @@ public class ShopUserMapper {
         shopUserDTO.setPassword(shopUser.getPassword());
         shopUserDTO.setBirth(shopUser.getDate());
         shopUserDTO.setIsDeleted(shopUser.isDeleted());
+
+        List<String> roleNames = shopUser.getRoles().stream()
+                .map(RoleModel::getType)
+                .collect(Collectors.toList());
+        shopUserDTO.setRoles(roleNames);
         return shopUserDTO;
     }
 

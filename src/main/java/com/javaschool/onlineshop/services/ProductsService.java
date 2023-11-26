@@ -92,5 +92,15 @@ public class ProductsService {
         return productsRepository.findTop10SoldProducts();
     }
 
+    @Transactional(readOnly = true)
+    public List<ProductRequestDTO> getAvailableProducts() {
+        List<ProductsModel> availableProducts = productsRepository.findByIsDeletedFalseAndStockGreaterThan(0);
+        return availableProducts.stream().map(this::createProductDTO).toList();
+    }
 
+    @Transactional(readOnly = true)
+    public List<ProductRequestDTO> getAvailableTopProducts() {
+        List<ProductsModel> availableProducts = productsRepository.findTop10SoldProductsByStock();
+        return availableProducts.stream().map(this::createProductDTO).toList();
+    }
 }

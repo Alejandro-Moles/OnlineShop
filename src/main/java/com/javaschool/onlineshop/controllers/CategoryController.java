@@ -34,4 +34,10 @@ public class CategoryController {
         categoryService.updateCategory(uuid, categoryDTO);
         return ResponseEntity.ok("Category changed succesfully");
     }
+
+    @GetMapping("/availableCategory")
+    public ResponseEntity<List<CategoryRequestDTO>> getAllAvailableCategories(){
+        List<CategoryRequestDTO> result = categoryService.getAllAvailableCategories();
+        return ResponseEntity.ok(result);
+    }
 }

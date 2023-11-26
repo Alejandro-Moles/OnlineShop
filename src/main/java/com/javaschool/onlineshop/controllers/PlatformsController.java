@@ -32,4 +32,10 @@ public class PlatformsController {
         platformService.updatePlatform(uuid, platformsDTO);
         return ResponseEntity.ok("Platform changed succesfully");
     }
+
+    @GetMapping("/availablePlatform")
+    public ResponseEntity<List<PlatformsRequestDTO>> getAllAvailablePlatforms(){
+        List<PlatformsRequestDTO> result = platformService.getAllAvailablePlatforms();
+        return ResponseEntity.ok(result);
+    }
 }

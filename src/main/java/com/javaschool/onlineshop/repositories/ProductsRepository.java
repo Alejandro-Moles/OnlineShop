@@ -21,4 +21,12 @@ public interface ProductsRepository  extends JpaRepository<ProductsModel, UUID> 
             "ORDER BY totalSold DESC " +
             "LIMIT 10")
     List<TotalSaleProductDTO> findTop10SoldProducts();
+
+    List<ProductsModel> findByIsDeletedFalseAndStockGreaterThan(Integer stock);
+
+    @Query("SELECT p FROM ProductsModel p " +
+            "WHERE p.isDeleted = false AND p.stock > 0 " +
+            "ORDER BY (SELECT SUM(op.quantity) FROM OrderProductsModel op WHERE op.product = p) DESC " +
+            "LIMIT 10")
+    List<ProductsModel> findTop10SoldProductsByStock();
 }

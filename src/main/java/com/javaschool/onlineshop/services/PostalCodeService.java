@@ -1,5 +1,6 @@
 package com.javaschool.onlineshop.services;
 
+import com.javaschool.onlineshop.dto.PlatformsRequestDTO;
 import com.javaschool.onlineshop.dto.PostalCodeRequestDTO;
 import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
@@ -63,5 +64,10 @@ public class PostalCodeService {
     @Transactional(readOnly = true)
     private PostalCodeModel loadPostalCode(UUID uuid){
         return postalCodeRepository.findById(uuid).orElseThrow(() -> new NoExistData("Postal code don't exist"));
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostalCodeRequestDTO> getAllAvailablePostalCodes(){
+        return postalCodeRepository.findAllByIsDeletedFalse().stream().map(this::createPostalCodeDTO).toList();
     }
 }

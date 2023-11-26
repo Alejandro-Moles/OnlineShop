@@ -46,4 +46,16 @@ public class ProductsController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/availableProducts")
+    public ResponseEntity<List<ProductRequestDTO>> getAvailableProducts() {
+        List<ProductRequestDTO> result = productsService.getAvailableProducts();
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/availableTopProducts")
+    public ResponseEntity<List<ProductRequestDTO>> getAvailableTopProducts() {
+        List<ProductRequestDTO> result = productsService.getAvailableTopProducts();
+        return ResponseEntity.ok(result);
+    }
+
 }

@@ -75,7 +75,6 @@ public class ShopUserService {
     public List<ShopUserRequestDTO> getAllShopUser(){
         return shopUserRepository.findAll().stream().map(this::createShopUserDTO).toList();
     }
-
     @Transactional(readOnly = true)
     private ShopUserModel loadShopUser(UUID uuid){
         return shopUserRepository.findById(uuid).orElseThrow(() -> new NoExistData("Shop user don't exist"));
@@ -130,5 +129,19 @@ public class ShopUserService {
         } else {
             return null;
         }
+    }
+
+    public ShopUserRequestDTO assignRolesToUser(UUID userUuid, List<String> roleTypes) {
+        ShopUserModel shopUser = loadShopUser(userUuid);
+
+        List<RoleModel> roles = roleRepository.findByTypeIn(roleTypes);
+        if (roles.isEmpty()) {
+            throw new NoExistData("No roles found with the provided types");
+        }
+
+        shopUser.setRoles(roles);
+        shopUserRepository.save(shopUser);
+
+        return createShopUserDTO(shopUser);
     }
 }

@@ -65,4 +65,8 @@ public class CategoryService {
 		return categoryRepository.findById(uuid).orElseThrow(() -> new NoExistData("Category don't exist"));
 	}
 
+	@Transactional(readOnly = true)
+	public List<CategoryRequestDTO> getAllAvailableCategories(){
+		return categoryRepository.findAllByIsDeletedFalse().stream().map(this::createCategoryDTO).toList();
+	}
 }

@@ -52,4 +52,13 @@ public class ShopUserController {
         return ResponseEntity.ok(result);
     }
 
+    @PutMapping("/assignRoles/{uuid}")
+    public ResponseEntity<String> assignRolesToUser(
+            @PathVariable UUID uuid,
+            @RequestBody List<String> roleTypes
+    ) {
+        shopUserService.assignRolesToUser(uuid, roleTypes);
+        return ResponseEntity.ok("Roles assigned successfully to user with UUID: " + uuid);
+    }
+
 }
