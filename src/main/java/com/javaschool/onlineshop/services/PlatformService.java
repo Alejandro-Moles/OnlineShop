@@ -1,6 +1,5 @@
 package com.javaschool.onlineshop.services;
 
-import com.javaschool.onlineshop.dto.CategoryRequestDTO;
 import com.javaschool.onlineshop.dto.PlatformsRequestDTO;
 import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
@@ -17,11 +16,22 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class PlatformService {
+
     private final PlatformsRepository platformsRepository;
     private final PlatformMapper platformMapper;
 
+    private PlatformsModel createPlatformEntity(PlatformsRequestDTO platformsDTO, PlatformsModel platforms){
+        platforms.setType(platformsDTO.getType());
+        platforms.setIsDeleted(platformsDTO.getIsDeleted());
+        return platforms;
+    }
+
+    private PlatformsRequestDTO createPlatformsDTO(PlatformsModel platforms){
+        return platformMapper.createPlatformDTO(platforms);
+    }
+
+    @Transactional
     public PlatformsRequestDTO savePlatform(PlatformsRequestDTO platformsDTO) {
         PlatformsModel platforms = createPlatformEntity(platformsDTO,  new PlatformsModel());
         if (platformsRepository.existsByType(platforms.getType())) {
@@ -31,20 +41,11 @@ public class PlatformService {
         return createPlatformsDTO(platforms);
     }
 
-    private PlatformsRequestDTO createPlatformsDTO(PlatformsModel platforms){
-        return platformMapper.createPlatformDTO(platforms);
-    }
-
+    @Transactional
     public void updatePlatform(UUID uuid, PlatformsRequestDTO platformsDTO){
         PlatformsModel platforms = loadPlatform(uuid);
         createPlatformEntity(platformsDTO, platforms);
         platformsRepository.save(platforms);
-    }
-
-    private PlatformsModel createPlatformEntity(PlatformsRequestDTO platformsDTO, PlatformsModel platforms){
-        platforms.setType(platformsDTO.getType());
-        platforms.setIsDeleted(platformsDTO.getIsDeleted());
-        return platforms;
     }
 
     @Transactional(readOnly = true)

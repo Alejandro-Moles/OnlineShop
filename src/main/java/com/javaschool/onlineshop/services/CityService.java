@@ -17,12 +17,24 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class CityService {
+
     private final CityRepository cityRepository;
     private final CountryRepository countryRepository;
     private final CityMapper cityMapper;
 
+    private CityRequestDTO createCityDTO(CityModel city){
+        return cityMapper.createCityDTO(city);
+    }
+
+    private CityModel createCityEntity(CityRequestDTO cityDTO, CityModel city){
+        city.setName(cityDTO.getName());
+        city.setDeleted(cityDTO.getIsDeleted());
+        city.setCountry(findCountry(cityDTO.getCountryName()));
+        return city;
+    }
+
+    @Transactional
     public CityRequestDTO saveCity(CityRequestDTO cityDTO){
         CityModel city = createCityEntity(cityDTO, new CityModel());
         if (cityRepository.existsByNameAndCountry(city.getName(), city.getCountry())) {
@@ -37,21 +49,11 @@ public class CityService {
         return countryRepository.findByName(name).orElseThrow(() -> new NoExistData("This country don't exist"));
     }
 
+    @Transactional
     public void updateCity(UUID uuid, CityRequestDTO cityDTO){
         CityModel city = loadCity(uuid);
         createCityEntity(cityDTO, city);
         cityRepository.save(city);
-    }
-
-    private CityRequestDTO createCityDTO(CityModel city){
-        return cityMapper.createCityDTO(city);
-    }
-
-    private CityModel createCityEntity(CityRequestDTO cityDTO, CityModel city){
-        city.setName(cityDTO.getName());
-        city.setDeleted(cityDTO.getIsDeleted());
-        city.setCountry(findCountry(cityDTO.getCountryName()));
-        return city;
     }
 
     @Transactional(readOnly = true)

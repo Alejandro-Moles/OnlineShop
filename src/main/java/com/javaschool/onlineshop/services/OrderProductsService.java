@@ -20,14 +20,27 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class OrderProductsService {
+
     private final OrderRepository orderRepository;
     private final ProductsRepository productsRepository;
     private final OrderProductsRepository orderProductsRepository;
     private final OrderProductsMapper orderProductsMapper;
 
 
+    private OrderProductsRequestDTO createOrderProductsDTO(OrderProductsModel orderProducts){
+        return orderProductsMapper.createOrderProductsDTO(orderProducts);
+    }
+
+    private OrderProductsModel createOrderProductsEntity(OrderProductsRequestDTO orderProductsDTO, OrderProductsModel orderProducts){
+        orderProducts.setOrder(findOrderByUUID(orderProductsDTO.getOrderUUID()));
+        orderProducts.setQuantity(orderProductsDTO.getQuantity());
+        orderProducts.setIsDeleted(false);
+        orderProducts.setProduct(findProducts(orderProductsDTO.getProductTitle()));
+        return orderProducts;
+    }
+
+    @Transactional
     public OrderProductsRequestDTO saveOrderProducts(OrderProductsRequestDTO orderProductsDTO){
         OrderProductsModel orderProducts = createOrderProductsEntity(orderProductsDTO,new OrderProductsModel());
         if(orderProductsRepository.existsByOrderAndProduct(orderProducts.getOrder(), orderProducts.getProduct())){
@@ -45,18 +58,6 @@ public class OrderProductsService {
     @Transactional(readOnly = true)
     private ProductsModel findProducts(String title){
         return productsRepository.findByTitle(title).orElseThrow(() -> new NoExistData("This product don't exist"));
-    }
-
-    private OrderProductsRequestDTO createOrderProductsDTO(OrderProductsModel orderProducts){
-        return orderProductsMapper.createOrderProductsDTO(orderProducts);
-    }
-
-    private OrderProductsModel createOrderProductsEntity(OrderProductsRequestDTO orderProductsDTO, OrderProductsModel orderProducts){
-        orderProducts.setOrder(findOrderByUUID(orderProductsDTO.getOrderUUID()));
-        orderProducts.setQuantity(orderProductsDTO.getQuantity());
-        orderProducts.setIsDeleted(false);
-        orderProducts.setProduct(findProducts(orderProductsDTO.getProductTitle()));
-        return orderProducts;
     }
 
     @Transactional(readOnly = true)

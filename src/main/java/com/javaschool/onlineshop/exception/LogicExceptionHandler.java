@@ -20,4 +20,9 @@ public class LogicExceptionHandler {
     public ResponseEntity<?> handleConflict(PasswordNoMatches e){
         return ResponseEntity.status(500).body(e.getMessage());
     }
+
+    @ExceptionHandler(OldPasswordNotSame.class)
+    public ResponseEntity<?> handleConflict(OldPasswordNotSame e){
+        return ResponseEntity.status(500).body(e.getMessage());
+    }
 }

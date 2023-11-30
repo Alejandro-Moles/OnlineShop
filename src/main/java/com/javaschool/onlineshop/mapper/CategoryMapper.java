@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class CategoryMapper {
     public CategoryRequestDTO createCategoryDTO(CategoryModel category){
+        if (category == null) {
+            return null;
+        }
+
         CategoryRequestDTO categoryDTO = new CategoryRequestDTO();
         categoryDTO.setUuid(category.getCategoryUuid());
         categoryDTO.setType(category.getType());

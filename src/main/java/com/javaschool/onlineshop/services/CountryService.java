@@ -15,28 +15,13 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class CountryService {
+
     private final CountryRepository countryRepository;
     private final CountyMapper countyMapper;
 
-    public CountryRequestDTO saveCountry(CountryRequestDTO countryDTO){
-        CountryModel country = createCountryEntity(countryDTO, new CountryModel());
-        if (countryRepository.existsByName(country.getName())) {
-            throw new ResourceDuplicate("Country already exists");
-        }
-        countryRepository.save(country);
-        return createCountryDTO(country);
-    }
-
     private CountryRequestDTO createCountryDTO(CountryModel country){
         return countyMapper.createCountryDTO(country);
-    }
-
-    public void updateCountry(UUID uuid, CountryRequestDTO countryDTO){
-        CountryModel country = loadCountry(uuid);
-        createCountryEntity(countryDTO, country);
-        countryRepository.save(country);
     }
 
     private CountryModel createCountryEntity(CountryRequestDTO countryDTO, CountryModel country){
@@ -54,4 +39,22 @@ public class CountryService {
     private CountryModel loadCountry(UUID uuid){
         return countryRepository.findById(uuid).orElseThrow(() -> new NoExistData("Country don't exist"));
     }
+
+    @Transactional
+    public CountryRequestDTO saveCountry(CountryRequestDTO countryDTO){
+        CountryModel country = createCountryEntity(countryDTO, new CountryModel());
+        if (countryRepository.existsByName(country.getName())) {
+            throw new ResourceDuplicate("Country already exists");
+        }
+        countryRepository.save(country);
+        return createCountryDTO(country);
+    }
+
+    @Transactional
+    public void updateCountry(UUID uuid, CountryRequestDTO countryDTO){
+        CountryModel country = loadCountry(uuid);
+        createCountryEntity(countryDTO, country);
+        countryRepository.save(country);
+    }
 }
+

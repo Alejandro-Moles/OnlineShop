@@ -1,18 +1,10 @@
 package com.javaschool.onlineshop.models;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
+
+import jakarta.persistence.*;
 import lombok.Data;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import lombok.NoArgsConstructor;
 
 
@@ -34,15 +26,12 @@ public class ProductsModel {
 	@JoinColumn(name = "product_platform_uuid")
 	private PlatformsModel platform;
 
-	@Column(name = "product_title", unique = true)
+	@Column(name = "product_title")
 	private String title;
 	
 	@Column(name = "product_price")
 	private Double price;
-	
-	@Column(name = "product_weight")
-	private Double weight;
-	
+
 	@Column(name = "product_stock")
 	private Integer stock;
 	
@@ -62,8 +51,10 @@ public class ProductsModel {
 	private Boolean isDeleted;
 	
 	//RELATIONS
-	@OneToMany(mappedBy = "product", cascade= CascadeType.ALL)
-	private List<ProductsGenreModel> products_genre;
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinTable(name="product_genres", joinColumns = @JoinColumn(name="product_uuid", referencedColumnName = "productUuid"),
+			inverseJoinColumns = @JoinColumn(name = "genre_uuid", referencedColumnName = "genreUuid"))
+	private List<GenreModel> genres = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "product", cascade= CascadeType.ALL)
 	private List<OrderProductsModel> product_orders;

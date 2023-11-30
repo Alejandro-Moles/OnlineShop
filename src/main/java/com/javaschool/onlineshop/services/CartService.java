@@ -17,20 +17,12 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class CartService {
 
     private final ProductsService productsService;
     @Getter
     @Setter
     private String userLoggedMail;
-
-    public void addProductToCart(CartDTO cartRequestDTO , HttpSession session){
-        UUID productUuid = cartRequestDTO.getProductUuid();
-        ProductRequestDTO product = productsService.getProductsbyUuid(productUuid);
-        List<CartItemModel> productCart = getCart(session);
-        updateCartWithProduct(productCart, productUuid, product);
-    }
 
     public List<CartItemModel> createCart(HttpSession session){
         List<CartItemModel> cart = (List<CartItemModel>) session.getAttribute("cart");
@@ -54,7 +46,7 @@ public class CartService {
     public List<CartItemModel> getCart(HttpSession session){
         List<CartItemModel> cart = (List<CartItemModel>) session.getAttribute("cart");
         if (cart == null) {
-            System.out.println("No se encuentra el carro");
+            System.out.println("Cart not found");
         }
         return cart;
     }
@@ -62,7 +54,7 @@ public class CartService {
     public List<CartItemModel> getCartToUser(HttpSession session, String userMail){
         List<CartItemModel> cart = (List<CartItemModel>) session.getAttribute("cart_" + userMail);
         if (cart == null) {
-            System.out.println("No se encuentra el carro");
+            System.out.println("Cart not found");
         }
         return cart;
     }
@@ -74,13 +66,6 @@ public class CartService {
             session.setAttribute("cart_" + userMail, cartForUser);
         }
         return cartForUser;
-    }
-
-    public void addProductToCartToUser(CartDTO cartRequestDTO , HttpSession session, String mail){
-        UUID productUuid = cartRequestDTO.getProductUuid();
-        ProductRequestDTO product = productsService.getProductsbyUuid(productUuid);
-        List<CartItemModel> productCart = getCartToUser(session, mail);
-        updateCartWithProduct(productCart, productUuid, product);
     }
 
     public void syncCartToUser(HttpSession session, String mail){
@@ -127,4 +112,21 @@ public class CartService {
         session.setAttribute("cart_" + userMail, cart);
         session.removeAttribute("cart_" + userMail);
     }
+
+    @Transactional(readOnly = true)
+    public void addProductToCart(CartDTO cartRequestDTO , HttpSession session){
+        UUID productUuid = cartRequestDTO.getProductUuid();
+        ProductRequestDTO product = productsService.getProductsbyUuid(productUuid);
+        List<CartItemModel> productCart = getCart(session);
+        updateCartWithProduct(productCart, productUuid, product);
+    }
+
+    @Transactional(readOnly = true)
+    public void addProductToCartToUser(CartDTO cartRequestDTO , HttpSession session, String mail){
+        UUID productUuid = cartRequestDTO.getProductUuid();
+        ProductRequestDTO product = productsService.getProductsbyUuid(productUuid);
+        List<CartItemModel> productCart = getCartToUser(session, mail);
+        updateCartWithProduct(productCart, productUuid, product);
+    }
+
 }

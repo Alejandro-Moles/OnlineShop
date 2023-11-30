@@ -15,19 +15,10 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class PaymentService {
+
     private final PaymentRepository paymentRepository;
     private final PaymentMapper paymentMapper;
-
-    public PaymentRequestDTO savePayment(PaymentRequestDTO paymentDTO){
-        PaymentModel payment = createPaymentEntity(paymentDTO, new PaymentModel());
-        if (paymentRepository.existsByType(payment.getType())) {
-            throw new ResourceDuplicate("Payment already exists");
-        }
-        paymentRepository.save(payment);
-        return createPaymentDTO(payment);
-    }
 
     private PaymentRequestDTO createPaymentDTO(PaymentModel payment){
         return paymentMapper.createPaymentDTO(payment);
@@ -39,6 +30,17 @@ public class PaymentService {
         return payment;
     }
 
+    @Transactional
+    public PaymentRequestDTO savePayment(PaymentRequestDTO paymentDTO){
+        PaymentModel payment = createPaymentEntity(paymentDTO, new PaymentModel());
+        if (paymentRepository.existsByType(payment.getType())) {
+            throw new ResourceDuplicate("Payment already exists");
+        }
+        paymentRepository.save(payment);
+        return createPaymentDTO(payment);
+    }
+
+    @Transactional
     public void updatePayment(UUID uuid, PaymentRequestDTO paymentDTO){
         PaymentModel payment = loadPayment(uuid);
         createPaymentEntity(paymentDTO, payment);

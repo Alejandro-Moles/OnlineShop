@@ -1,16 +1,13 @@
 package com.javaschool.onlineshop.models;
 import java.util.UUID;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name="Category")

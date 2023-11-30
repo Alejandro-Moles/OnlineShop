@@ -28,8 +28,4 @@ public class GenreModel {
 			
 	@Column(name = "genre_isDeleted")
 	private Boolean isDeleted;
-	
-	//RELATIONS
-	@OneToMany(mappedBy = "genre", cascade= CascadeType.ALL)
-	private List<ProductsGenreModel> products_genre;
 }

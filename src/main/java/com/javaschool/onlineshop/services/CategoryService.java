@@ -15,29 +15,10 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class CategoryService {
+
 	private final CategoryRepository categoryRepository;
 	private final CategoryMapper categoryMapper;
-
-
-	public CategoryRequestDTO saveCategory(CategoryRequestDTO categoryDTO) {
-		CategoryModel category = createCategoryEntity(categoryDTO, new CategoryModel());
-		if (categoryRepository.existsByType(category.getType())) {
-			throw new ResourceDuplicate("Category already exists");
-		}
-		categoryRepository.save(category);
-		return createCategoryDTO(category);
-	}
-
-	@Transactional(readOnly = true)
-	public CategoryModel getCategoryById(UUID id) {
-		return categoryRepository.findById(id).orElseThrow(() -> new NoExistData("This category don't exist"));
-	}
-
-	public void deleteCategory(UUID id) {
-		categoryRepository.deleteById(id);
-	}
 
 	private CategoryRequestDTO createCategoryDTO(CategoryModel category){
 		return categoryMapper.createCategoryDTO(category);
@@ -49,15 +30,26 @@ public class CategoryService {
 		return category;
 	}
 
-	@Transactional(readOnly = true)
-	public List<CategoryRequestDTO> getAllCategories(){
-		return categoryRepository.findAll().stream().map(this::createCategoryDTO).toList();
+	@Transactional
+	public CategoryRequestDTO saveCategory(CategoryRequestDTO categoryDTO) {
+		CategoryModel category = createCategoryEntity(categoryDTO, new CategoryModel());
+		if (categoryRepository.existsByType(category.getType())) {
+			throw new ResourceDuplicate("Category already exists");
+		}
+		categoryRepository.save(category);
+		return createCategoryDTO(category);
 	}
 
+	@Transactional
 	public void updateCategory(UUID uuid, CategoryRequestDTO categoryDTO){
 		CategoryModel category = loadCategory(uuid);
 		createCategoryEntity(categoryDTO, category);
 		categoryRepository.save(category);
+	}
+
+	@Transactional(readOnly = true)
+	public List<CategoryRequestDTO> getAllCategories(){
+		return categoryRepository.findAll().stream().map(this::createCategoryDTO).toList();
 	}
 
 	@Transactional(readOnly = true)

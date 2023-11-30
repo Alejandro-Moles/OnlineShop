@@ -15,21 +15,11 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class GenreService {
+
     private final GenreRepository genreRepository;
     private final GenreMapper genreMapper;
 
-    public GenreRequestDTO saveGenre(GenreRequestDTO genreDTO) {
-        GenreModel genre = createGenreEntity(genreDTO, new GenreModel());
-        if (genreRepository.existsByType(genre.getType())) {
-            throw new ResourceDuplicate("Genre already exists");
-        }
-        genreRepository.save(genre);
-        return createGenreDTO(genre);
-    }
-
-    @Transactional(readOnly = true)
     private GenreRequestDTO createGenreDTO(GenreModel genre){
         return genreMapper.createGenreDTO(genre);
     }
@@ -40,6 +30,17 @@ public class GenreService {
         return genre;
     }
 
+    @Transactional
+    public GenreRequestDTO saveGenre(GenreRequestDTO genreDTO) {
+        GenreModel genre = createGenreEntity(genreDTO, new GenreModel());
+        if (genreRepository.existsByType(genre.getType())) {
+            throw new ResourceDuplicate("Genre already exists");
+        }
+        genreRepository.save(genre);
+        return createGenreDTO(genre);
+    }
+
+    @Transactional
     public void updateGenre(UUID uuid, GenreRequestDTO genreDTO){
         GenreModel genre = loadGenre(uuid);
         createGenreEntity(genreDTO, genre);
@@ -54,5 +55,10 @@ public class GenreService {
     @Transactional(readOnly = true)
     private GenreModel loadGenre(UUID uuid){
         return genreRepository.findById(uuid).orElseThrow(() -> new NoExistData("Genre don't exist"));
+    }
+
+    @Transactional(readOnly = true)
+    public List<GenreRequestDTO> getAllAvailableGenres(){
+        return genreRepository.findAllByIsDeletedFalse().stream().map(this::createGenreDTO).toList();
     }
 }

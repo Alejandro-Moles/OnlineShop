@@ -20,8 +20,8 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class OrderService {
+
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
     private final PaymentRepository paymentRepository;
@@ -30,6 +30,28 @@ public class OrderService {
     private final ShopUserRepository shopUserRepository;
     private final UserAddressRepository userAddressRepository;
 
+    private OrderRequestDTO createOrderDTO(OrderModel order){
+        return orderMapper.createOrderDTO(order);
+    }
+
+    private OrderModel createOrderEntity(OrderRequestDTO orderDTO, OrderModel order){
+        order.setPayment(findPayment(orderDTO.getPayment()));
+        order.setStatus(findStatus(orderDTO.getStatus()));
+        order.setDelivery(findDelivery(orderDTO.getDelivery()));
+        order.setShopUser(findShopUser(orderDTO.getMail()));
+        order.setPay_status(orderDTO.getPayStatus());
+        order.setIsDeleted(orderDTO.getIsDeleted());
+        order.setUserAddress(findUserAddress(orderDTO.getApartament(), orderDTO.getHome(), orderDTO.getStreet()));
+        order.setDate(orderDTO.getOrderDate());
+        return order;
+    }
+
+    public OrderRequestDTO getOrderUuid(UUID uuid){
+        OrderModel order = loadOrder(uuid);
+        return createOrderDTO(order);
+    }
+
+    @Transactional
     public OrderRequestDTO saveOrder(OrderRequestDTO orderDTO){
         OrderModel order = createOrderEntity(orderDTO, new OrderModel());
         orderRepository.save(order);
@@ -61,22 +83,6 @@ public class OrderService {
         return userAddressRepository.findByApartamentAndHomeAndStreet(apartament, home, street).orElseThrow(() -> new NoExistData("This user address don't exist"));
     }
 
-    private OrderRequestDTO createOrderDTO(OrderModel order){
-        return orderMapper.createOrderDTO(order);
-    }
-
-    private OrderModel createOrderEntity(OrderRequestDTO orderDTO, OrderModel order){
-        order.setPayment(findPayment(orderDTO.getPayment()));
-        order.setStatus(findStatus(orderDTO.getStatus()));
-        order.setDelivery(findDelivery(orderDTO.getDelivery()));
-        order.setShopUser(findShopUser(orderDTO.getMail()));
-        order.setPay_status(orderDTO.getPayStatus());
-        order.setIsDeleted(orderDTO.getIsDeleted());
-        order.setUserAddress(findUserAddress(orderDTO.getApartament(), orderDTO.getHome(), orderDTO.getStreet()));
-        order.setDate(orderDTO.getOrderDate());
-        return order;
-    }
-
     @Transactional(readOnly = true)
     public List<OrderRequestDTO> getAllOrders(){
         return orderRepository.findAll().stream().map(this::createOrderDTO).toList();
@@ -92,11 +98,7 @@ public class OrderService {
         return orderRepository.findById(uuid).orElseThrow(() -> new NoExistData("Product don't exist"));
     }
 
-    public OrderRequestDTO getOrderUuid(UUID uuid){
-        OrderModel order = loadOrder(uuid);
-        return createOrderDTO(order);
-    }
-
+    @Transactional
     public void updateOrder(UUID uuid, String status){
         OrderModel orderModel = loadOrder(uuid);
         if(Objects.equals(status, "PENDING_PAYMENT")){

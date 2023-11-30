@@ -34,7 +34,13 @@ public class ProductsController {
         return ResponseEntity.ok(result);
     }
 
-    @PutMapping("/{uuid}")
+    @PutMapping("deleteProduct/{uuid}")
+    public ResponseEntity<String> deleteProduct(@PathVariable UUID uuid){
+        productsService.deleteProduct(uuid);
+        return ResponseEntity.ok("Product changed succesfully");
+    }
+
+    @PutMapping("updateProduct/{uuid}")
     public ResponseEntity<String> updateProduct(@PathVariable UUID uuid, @RequestBody ProductRequestDTO productDTO){
         productsService.updateProduct(uuid, productDTO);
         return ResponseEntity.ok("Product changed succesfully");
@@ -57,5 +63,15 @@ public class ProductsController {
         List<ProductRequestDTO> result = productsService.getAvailableTopProducts();
         return ResponseEntity.ok(result);
     }
+
+    @PutMapping("/assignGenres/{uuid}")
+    public ResponseEntity<String> assignRolesToUser(
+            @PathVariable UUID uuid,
+            @RequestBody List<String> genresTypes
+    ) {
+        productsService.assignGenresToProducts(uuid, genresTypes);
+        return ResponseEntity.ok("Roles assigned successfully to user with UUID: " + uuid);
+    }
+
 
 }

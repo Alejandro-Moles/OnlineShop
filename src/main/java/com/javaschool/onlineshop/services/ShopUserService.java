@@ -5,6 +5,7 @@ import com.javaschool.onlineshop.dto.RegisterRequestDTO;
 import com.javaschool.onlineshop.dto.ShopUserRequestDTO;
 import com.javaschool.onlineshop.dto.UserStatisticsDTO;
 import com.javaschool.onlineshop.exception.NoExistData;
+import com.javaschool.onlineshop.exception.OldPasswordNotSame;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.ShopUserMapper;
 import com.javaschool.onlineshop.models.RoleModel;
@@ -26,26 +27,12 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class ShopUserService {
+
     private final ShopUserRepository shopUserRepository;
     private final ShopUserMapper shopUserMapper;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-
-    public ShopUserRequestDTO saveShopUser(ShopUserRequestDTO shopUserDTO){
-        ShopUserModel shopUser = createShopUserEntity(shopUserDTO, new ShopUserModel());
-        if (shopUserRepository.existsByMail(shopUser.getMail())) {
-            throw new ResourceDuplicate("Shop User already exists with that mail");
-        }
-        shopUserRepository.save(shopUser);
-        return createShopUserDTO(shopUser);
-    }
-
-    @Transactional(readOnly = true)
-    private RoleModel findRole(String type){
-        return roleRepository.findByType(type).orElseThrow(() -> new NoExistData("This rol don't exist"));
-    }
 
     private ShopUserRequestDTO createShopUserDTO(ShopUserModel shopUser){
         return shopUserMapper.createShopUserDTO(shopUser);
@@ -60,48 +47,6 @@ public class ShopUserService {
         return shopUser;
     }
 
-    public void updateShopUser(UUID uuid, NewPasswordDTO passwordDTO){
-        ShopUserModel shopUser = loadShopUser(uuid);
-        if(checkNewPassword(uuid, passwordDTO)){
-            String newPassword = passwordEncoder.encode(passwordDTO.getNewPassword());
-            shopUser.setPassword(newPassword);
-            shopUserRepository.save(shopUser);
-        }else{
-            System.out.println("La antigua contraseña no es la misma");
-        }
-    }
-
-    @Transactional(readOnly = true)
-    public List<ShopUserRequestDTO> getAllShopUser(){
-        return shopUserRepository.findAll().stream().map(this::createShopUserDTO).toList();
-    }
-    @Transactional(readOnly = true)
-    private ShopUserModel loadShopUser(UUID uuid){
-        return shopUserRepository.findById(uuid).orElseThrow(() -> new NoExistData("Shop user don't exist"));
-    }
-
-    public ShopUserRequestDTO registerShopUser(RegisterRequestDTO registerDTO){
-        if(shopUserRepository.existsByMail(registerDTO.getMail())){
-            throw new ResourceDuplicate("Shop User already exists with that mail");
-        }
-
-        ShopUserModel user = shopUserMapper.createShopUserEntity(registerDTO, new ShopUserModel());
-        RoleModel roles = roleRepository.findByType("USER").get();
-        user.setRoles(Collections.singletonList(roles));
-        shopUserRepository.save(user);
-        return createShopUserDTO(user);
-    }
-
-    public ShopUserRequestDTO getCurrentUser(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication == null || !authentication.isAuthenticated()){
-            throw new NoExistData("User not found");
-        }
-        String mail = authentication.getName();
-        ShopUserModel user = shopUserRepository.findByMail(mail).orElseThrow(() -> new NoExistData("User not found"));
-        return shopUserMapper.createShopUserDTO(user);
-    }
-
     public ShopUserRequestDTO getShopUserbyUuid(UUID uuid){
         ShopUserModel shopUser = loadShopUser(uuid);
         return createShopUserDTO(shopUser);
@@ -114,6 +59,62 @@ public class ShopUserService {
         } else {
             return false;
         }
+    }
+
+    @Transactional
+    public ShopUserRequestDTO saveShopUser(ShopUserRequestDTO shopUserDTO){
+        ShopUserModel shopUser = createShopUserEntity(shopUserDTO, new ShopUserModel());
+        if (shopUserRepository.existsByMail(shopUser.getMail())) {
+            throw new ResourceDuplicate("Shop User already exists with that mail");
+        }
+        shopUserRepository.save(shopUser);
+        return createShopUserDTO(shopUser);
+    }
+
+    @Transactional
+    public void updateShopUser(UUID uuid, NewPasswordDTO passwordDTO){
+        ShopUserModel shopUser = loadShopUser(uuid);
+        if(checkNewPassword(uuid, passwordDTO)){
+            String newPassword = passwordEncoder.encode(passwordDTO.getNewPassword());
+            shopUser.setPassword(newPassword);
+            shopUserRepository.save(shopUser);
+        }else{
+            throw new OldPasswordNotSame("The old password is not the same");
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List<ShopUserRequestDTO> getAllShopUser(){
+        return shopUserRepository.findAll().stream().map(this::createShopUserDTO).toList();
+    }
+
+    @Transactional(readOnly = true)
+    private ShopUserModel loadShopUser(UUID uuid){
+        return shopUserRepository.findById(uuid).orElseThrow(() -> new NoExistData("Shop user don't exist"));
+    }
+
+    @Transactional
+    public ShopUserRequestDTO registerShopUser(RegisterRequestDTO registerDTO){
+        if(shopUserRepository.existsByMail(registerDTO.getMail())){
+            throw new ResourceDuplicate("Shop User already exists with that mail");
+        }
+
+        ShopUserModel user = shopUserMapper.createShopUserEntity(registerDTO, new ShopUserModel());
+        RoleModel roles = roleRepository.findByType("USER").get();
+        user.setRoles(Collections.singletonList(roles));
+        shopUserRepository.save(user);
+        return createShopUserDTO(user);
+    }
+
+    @Transactional(readOnly = true)
+    public ShopUserRequestDTO getCurrentUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null || !authentication.isAuthenticated()){
+            throw new NoExistData("User not found");
+        }
+        String mail = authentication.getName();
+        ShopUserModel user = shopUserRepository.findByMail(mail).orElseThrow(() -> new NoExistData("User not found"));
+        return shopUserMapper.createShopUserDTO(user);
     }
 
     @Transactional(readOnly = true)
@@ -131,9 +132,9 @@ public class ShopUserService {
         }
     }
 
-    public ShopUserRequestDTO assignRolesToUser(UUID userUuid, List<String> roleTypes) {
+    @Transactional
+    public void assignRolesToUser(UUID userUuid, List<String> roleTypes) {
         ShopUserModel shopUser = loadShopUser(userUuid);
-
         List<RoleModel> roles = roleRepository.findByTypeIn(roleTypes);
         if (roles.isEmpty()) {
             throw new NoExistData("No roles found with the provided types");
@@ -142,6 +143,6 @@ public class ShopUserService {
         shopUser.setRoles(roles);
         shopUserRepository.save(shopUser);
 
-        return createShopUserDTO(shopUser);
+        createShopUserDTO(shopUser);
     }
 }

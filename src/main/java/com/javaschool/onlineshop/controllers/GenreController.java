@@ -1,5 +1,6 @@
 package com.javaschool.onlineshop.controllers;
 
+import com.javaschool.onlineshop.dto.CategoryRequestDTO;
 import com.javaschool.onlineshop.dto.GenreRequestDTO;
 import com.javaschool.onlineshop.services.GenreService;
 import lombok.RequiredArgsConstructor;
@@ -31,5 +32,11 @@ public class GenreController {
     public ResponseEntity<String> updateGenre(@PathVariable UUID uuid, @RequestBody GenreRequestDTO genreDTO){
         genreService.updateGenre(uuid, genreDTO);
         return ResponseEntity.ok("Genre changed successfully");
+    }
+
+    @GetMapping("/availableGenres")
+    public ResponseEntity<List<GenreRequestDTO>> getAllAvailableGenres(){
+        List<GenreRequestDTO> result = genreService.getAllAvailableGenres();
+        return ResponseEntity.ok(result);
     }
 }
