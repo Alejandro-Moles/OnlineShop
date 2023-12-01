@@ -53,7 +53,7 @@ public class PaymentService {
     }
 
     @Transactional(readOnly = true)
-    private PaymentModel loadPayment(UUID uuid){
+    public PaymentModel loadPayment(UUID uuid){
         return paymentRepository.findById(uuid).orElseThrow(() -> new NoExistData("Payment don't exist"));
     }
 }

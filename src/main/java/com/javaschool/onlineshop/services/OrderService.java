@@ -59,27 +59,27 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    private PaymentModel findPayment(String type){
+    public PaymentModel findPayment(String type){
         return paymentRepository.findByType(type).orElseThrow(() -> new NoExistData("This payment method don't exist"));
     }
 
     @Transactional(readOnly = true)
-    private StatusModel findStatus(String type){
+    public StatusModel findStatus(String type){
         return statusRepository.findByType(type).orElseThrow(() -> new NoExistData("This status don't exist"));
     }
 
     @Transactional(readOnly = true)
-    private DeliveryModel findDelivery(String type){
+    public DeliveryModel findDelivery(String type){
         return deliveryRepository.findByType(type).orElseThrow(() -> new NoExistData("This delivery don't exist"));
     }
 
     @Transactional(readOnly = true)
-    private ShopUserModel findShopUser(String mail){
+    public ShopUserModel findShopUser(String mail){
         return shopUserRepository.findByMail(mail).orElseThrow(() -> new NoExistData("This shop user don't exist"));
     }
 
     @Transactional(readOnly = true)
-    private UserAddressModel findUserAddress(String apartament, String home, String street){
+    public UserAddressModel findUserAddress(String apartament, String home, String street){
         return userAddressRepository.findByApartamentAndHomeAndStreet(apartament, home, street).orElseThrow(() -> new NoExistData("This user address don't exist"));
     }
 

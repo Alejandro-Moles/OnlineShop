@@ -36,7 +36,7 @@ public class CountryService {
     }
 
     @Transactional(readOnly = true)
-    private CountryModel loadCountry(UUID uuid){
+    public CountryModel loadCountry(UUID uuid){
         return countryRepository.findById(uuid).orElseThrow(() -> new NoExistData("Country don't exist"));
     }
 

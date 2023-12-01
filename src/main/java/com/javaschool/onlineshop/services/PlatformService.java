@@ -54,7 +54,7 @@ public class PlatformService {
     }
 
     @Transactional(readOnly = true)
-    private PlatformsModel loadPlatform(UUID uuid){
+    public PlatformsModel loadPlatform(UUID uuid){
         return platformsRepository.findById(uuid).orElseThrow(() -> new NoExistData("Platform don't exist"));
     }
 

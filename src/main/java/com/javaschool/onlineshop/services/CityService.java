@@ -37,9 +37,12 @@ public class CityService {
     @Transactional
     public CityRequestDTO saveCity(CityRequestDTO cityDTO){
         CityModel city = createCityEntity(cityDTO, new CityModel());
+        CountryModel country = findCountry(cityDTO.getCountryName());
+
         if (cityRepository.existsByNameAndCountry(city.getName(), city.getCountry())) {
             throw new ResourceDuplicate("City already exists within country");
         }
+        city.setCountry(country);
         cityRepository.save(city);
         return createCityDTO(city);
     }
@@ -62,7 +65,7 @@ public class CityService {
     }
 
     @Transactional(readOnly = true)
-    private CityModel loadCity(UUID uuid){
+    public CityModel loadCity(UUID uuid){
         return cityRepository.findById(uuid).orElseThrow(() -> new NoExistData("City don't exist"));
     }
 }

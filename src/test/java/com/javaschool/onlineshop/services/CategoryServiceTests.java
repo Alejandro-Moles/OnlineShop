@@ -1,17 +1,21 @@
 package com.javaschool.onlineshop.services;
 
 import com.javaschool.onlineshop.dto.CategoryRequestDTO;
+import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.CategoryMapper;
+import com.javaschool.onlineshop.models.CategoryModel;
 import com.javaschool.onlineshop.repositories.CategoryRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -43,5 +47,52 @@ class CategoryServiceTests {
         categoryDTO.setType("Existing Category");
 
         assertThrows(ResourceDuplicate.class, () -> categoryService.saveCategory(categoryDTO));
+    }
+
+    @Test
+    void updateCategory_WhenCategoryExists_ShouldUpdateCategory() {
+        UUID existingCategoryUUID = UUID.randomUUID();
+        CategoryRequestDTO updatedCategoryDTO = new CategoryRequestDTO();
+        updatedCategoryDTO.setType("Updated Category");
+        updatedCategoryDTO.setUuid(existingCategoryUUID);
+        updatedCategoryDTO.setIsDeleted(false);
+
+        CategoryModel existingCategory = new CategoryModel();
+        existingCategory.setCategoryUuid(existingCategoryUUID);
+        existingCategory.setType("Existing Category");
+        existingCategory.setIsDeleted(false);
+
+        when(categoryRepositoryMock.findById(existingCategoryUUID)).thenReturn(Optional.of(existingCategory));
+
+        categoryService.updateCategory(existingCategoryUUID, updatedCategoryDTO);
+
+        verify(categoryRepositoryMock).save(any(CategoryModel.class));
+
+        assertEquals("Updated Category", existingCategory.getType());
+    }
+
+    @Test
+    void loadCategory_WhenCategoryExists_ShouldReturnCategory() {
+        UUID existingCategoryUUID = UUID.randomUUID();
+
+        CategoryModel existingCategory = new CategoryModel();
+        existingCategory.setCategoryUuid(existingCategoryUUID);
+        existingCategory.setType("Existing Category");
+        existingCategory.setIsDeleted(false);
+
+        when(categoryRepositoryMock.findById(existingCategoryUUID)).thenReturn(Optional.of(existingCategory));
+
+        CategoryModel loadedCategory = categoryService.loadCategory(existingCategoryUUID);
+
+        assertEquals(existingCategory, loadedCategory);
+    }
+
+    @Test
+    void loadCategory_WhenCategoryDoesNotExist_ShouldThrowNoExistDataException() {
+        UUID nonExistentCategoryUUID = UUID.randomUUID();
+
+        when(categoryRepositoryMock.findById(nonExistentCategoryUUID)).thenReturn(Optional.empty());
+
+        assertThrows(NoExistData.class, () -> categoryService.loadCategory(nonExistentCategoryUUID));
     }
 }

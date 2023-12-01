@@ -46,7 +46,7 @@ public class PostalCodeService {
     }
 
     @Transactional(readOnly = true)
-    private CityModel findCity(PostalCodeRequestDTO postalCodeDTO){
+    CityModel findCity(PostalCodeRequestDTO postalCodeDTO){
        return cityRepository.findById(cityRepository.findCityUuidByCityAndCountry(postalCodeDTO.getCityName(), postalCodeDTO.getCountryName())).orElseThrow(() -> new NoExistData("This city don't exist"));
     }
 
@@ -63,7 +63,7 @@ public class PostalCodeService {
     }
 
     @Transactional(readOnly = true)
-    private PostalCodeModel loadPostalCode(UUID uuid){
+    public PostalCodeModel loadPostalCode(UUID uuid){
         return postalCodeRepository.findById(uuid).orElseThrow(() -> new NoExistData("Postal code don't exist"));
     }
 

@@ -53,7 +53,7 @@ public class CategoryService {
 	}
 
 	@Transactional(readOnly = true)
-	private CategoryModel loadCategory(UUID uuid){
+	public CategoryModel loadCategory(UUID uuid){
 		return categoryRepository.findById(uuid).orElseThrow(() -> new NoExistData("Category don't exist"));
 	}
 

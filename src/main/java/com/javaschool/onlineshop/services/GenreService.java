@@ -53,7 +53,7 @@ public class GenreService {
     }
 
     @Transactional(readOnly = true)
-    private GenreModel loadGenre(UUID uuid){
+    public GenreModel loadGenre(UUID uuid){
         return genreRepository.findById(uuid).orElseThrow(() -> new NoExistData("Genre don't exist"));
     }
 

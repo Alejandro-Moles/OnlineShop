@@ -43,7 +43,7 @@ public class DeliveryService {
     }
 
     @Transactional(readOnly = true)
-    private DeliveryModel loadDelivery(UUID uuid){
+    public DeliveryModel loadDelivery(UUID uuid){
         return deliveryRepository.findById(uuid).orElseThrow(() -> new NoExistData("Delivery don't exist"));
     }
 
