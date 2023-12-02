@@ -33,51 +33,69 @@ public class OrderProductsServiceTests {
             orderRepositoryMock, productsRepositoryMock, orderProductsRepositoryMock, orderProductsMapperMock
     );
 
+    /**
+     * Test for saving order products when the order products do not exist, checking if it successfully saves order products.
+     */
     @Test
     void saveOrderProducts_WhenOrderProductsDoesNotExist_ShouldSaveOrderProducts() {
+        // Mocking data
         when(orderProductsMapperMock.createOrderProductsDTO(any())).thenReturn(new OrderProductsRequestDTO());
         when(orderRepositoryMock.findById(any())).thenReturn(Optional.of(new OrderModel()));
         when(productsRepositoryMock.findByTitle(any())).thenReturn(Optional.of(new ProductsModel()));
         when(orderProductsRepositoryMock.existsByOrderAndProduct(any(OrderModel.class), any(ProductsModel.class)))
                 .thenReturn(false);
 
+        // Creating an OrderProductsDTO
         OrderProductsRequestDTO orderProductsDTO = new OrderProductsRequestDTO();
         orderProductsDTO.setOrderUUID(UUID.randomUUID());
         orderProductsDTO.setProductTitle("Product");
         orderProductsDTO.setQuantity(2);
 
+        // Calling the service method
         OrderProductsRequestDTO savedOrderProductsDTO = orderProductsService.saveOrderProducts(orderProductsDTO);
 
+        // Assertions
         assertNotNull(savedOrderProductsDTO);
     }
 
+    /**
+     * Test for saving order products when the order products exist, checking if it throws a ResourceDuplicate exception.
+     */
     @Test
     void saveOrderProducts_WhenOrderProductsExists_ShouldThrowResourceDuplicateException() {
+        // Mocking data
         when(orderRepositoryMock.findById(any())).thenReturn(Optional.of(new OrderModel()));
         when(productsRepositoryMock.findByTitle(any())).thenReturn(Optional.of(new ProductsModel()));
         when(orderProductsRepositoryMock.existsByOrderAndProduct(any(OrderModel.class), any(ProductsModel.class)))
                 .thenReturn(true);
 
+        // Creating an OrderProductsDTO
         OrderProductsRequestDTO orderProductsDTO = new OrderProductsRequestDTO();
         orderProductsDTO.setOrderUUID(UUID.randomUUID());
         orderProductsDTO.setProductTitle("Existing Product");
         orderProductsDTO.setQuantity(1);
 
+        // Assertions
         assertThrows(ResourceDuplicate.class, () -> orderProductsService.saveOrderProducts(orderProductsDTO));
     }
 
+    /**
+     * Test for finding all order products by order, checking if it returns a list of OrderProductsRequestDTO.
+     */
     @Test
     void findAllOrdersProductByOrder_ShouldReturnOrderProductsList() {
+        // Mocking data
         UUID orderUUID = UUID.randomUUID();
         OrderModel orderModel = new OrderModel();
         orderModel.setOrderUuid(orderUUID);
-
         when(orderRepositoryMock.findById(orderUUID)).thenReturn(Optional.of(orderModel));
         when(orderProductsRepositoryMock.findOrderProductsByOrder(orderModel))
                 .thenReturn(List.of(new OrderProductsModel(), new OrderProductsModel()));
 
+        // Calling the service method
         List<OrderProductsRequestDTO> orderProductsList = orderProductsService.findAllOrdersProductByOrder(orderUUID);
 
+        // Assertions
         assertEquals(2, orderProductsList.size());
     }
 }

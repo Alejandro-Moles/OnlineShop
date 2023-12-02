@@ -12,4 +12,8 @@ public class UserStatisticsDTO {
         this.totalSpent = totalSpent;
         this.totalProductsBought = totalProductsBought;
     }
+
+    public UserStatisticsDTO() {
+
+    }
 }

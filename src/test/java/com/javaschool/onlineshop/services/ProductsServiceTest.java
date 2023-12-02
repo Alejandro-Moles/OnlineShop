@@ -40,7 +40,9 @@ public class ProductsServiceTest {
             productsRepositoryMock, productsMapperMock, categoryRepositoryMock, platformsRepositoryMock, genreRepositoryMock
     );
 
-
+    /**
+     * Test for retrieving a ProductDTO by UUID, checking if it returns a ProductDTO.
+     */
     @Test
     void getProductsbyUuid_ShouldReturnProductDTO() {
         UUID productUUID = UUID.randomUUID();
@@ -53,6 +55,9 @@ public class ProductsServiceTest {
         verify(productsRepositoryMock).findById(productUUID);
     }
 
+    /**
+     * Test for retrieving a ProductDTO by UUID, checking if it throws NoExistData when the product is not found.
+     */
     @Test
     void getProductsbyUuid_ShouldThrowException_ProductNotFound() {
         UUID nonExistingProductUUID = UUID.randomUUID();
@@ -66,6 +71,9 @@ public class ProductsServiceTest {
         verify(productsRepositoryMock).findById(nonExistingProductUUID);
     }
 
+    /**
+     * Test for updating a product, checking if it successfully updates the product.
+     */
     @Test
     void updateProduct_ShouldUpdateProduct() {
         UUID productUUID = UUID.randomUUID();
@@ -99,6 +107,9 @@ public class ProductsServiceTest {
         assertDoesNotThrow(() -> productsService.updateProduct(productUUID, productDTO));
     }
 
+    /**
+     * Test for updating a product, checking if it throws NoExistData when the product is not found.
+     */
     @Test
     void updateProduct_ShouldThrowException_ProductNotFound() {
         UUID nonExistingProductUUID = UUID.randomUUID();
@@ -116,6 +127,9 @@ public class ProductsServiceTest {
         verify(productsRepositoryMock, never()).save(any(ProductsModel.class));
     }
 
+    /**
+     * Test for saving a new product, checking if it successfully creates the product.
+     */
     @Test
     void saveProduct_ShouldCreateProduct() {
         ProductRequestDTO productDTO = new ProductRequestDTO();
@@ -153,6 +167,9 @@ public class ProductsServiceTest {
         assertNotNull(savedProductDTO);
     }
 
+    /**
+     * Test for saving a new product, checking if it throws ResourceDuplicate when the product already exists.
+     */
     @Test
     void saveProduct_ShouldThrowException_ProductAlreadyExists() {
         CategoryModel categoryModel = new CategoryModel();

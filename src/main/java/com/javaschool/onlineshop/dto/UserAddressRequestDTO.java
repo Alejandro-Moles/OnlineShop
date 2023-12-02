@@ -14,4 +14,10 @@ public class UserAddressRequestDTO {
     private String postalCode;
     private String userMail;
 
+    public UserAddressRequestDTO(UUID addressUuid, String apartament, String street, String home) {
+    }
+
+    public UserAddressRequestDTO() {
+
+    }
 }
