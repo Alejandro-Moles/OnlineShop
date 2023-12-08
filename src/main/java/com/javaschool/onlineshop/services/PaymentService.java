@@ -20,18 +20,21 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final PaymentMapper paymentMapper;
 
-    private PaymentRequestDTO createPaymentDTO(PaymentModel payment){
+    // Maps a PaymentModel to a PaymentRequestDTO
+    private PaymentRequestDTO createPaymentDTO(PaymentModel payment) {
         return paymentMapper.createPaymentDTO(payment);
     }
 
-    private PaymentModel createPaymentEntity(PaymentRequestDTO paymentDTO, PaymentModel payment){
+    // Creates a PaymentModel entity from a PaymentRequestDTO
+    private PaymentModel createPaymentEntity(PaymentRequestDTO paymentDTO, PaymentModel payment) {
         payment.setType(paymentDTO.getType());
         payment.setIsDeleted(paymentDTO.getIsDeleted());
         return payment;
     }
 
+    // Saves a PaymentRequestDTO to the database
     @Transactional
-    public PaymentRequestDTO savePayment(PaymentRequestDTO paymentDTO){
+    public PaymentRequestDTO savePayment(PaymentRequestDTO paymentDTO) {
         PaymentModel payment = createPaymentEntity(paymentDTO, new PaymentModel());
         if (paymentRepository.existsByType(payment.getType())) {
             throw new ResourceDuplicate("Payment already exists");
@@ -40,20 +43,26 @@ public class PaymentService {
         return createPaymentDTO(payment);
     }
 
+    // Updates a payment based on UUID
     @Transactional
-    public void updatePayment(UUID uuid, PaymentRequestDTO paymentDTO){
+    public void updatePayment(UUID uuid, PaymentRequestDTO paymentDTO) {
         PaymentModel payment = loadPayment(uuid);
+        if (paymentRepository.existsByType(paymentDTO.getType())) {
+            throw new ResourceDuplicate("Payment already exists in the database");
+        }
         createPaymentEntity(paymentDTO, payment);
         paymentRepository.save(payment);
     }
 
+    // Retrieves all payments from the database
     @Transactional(readOnly = true)
-    public List<PaymentRequestDTO> getAllPayment(){
+    public List<PaymentRequestDTO> getAllPayment() {
         return paymentRepository.findAll().stream().map(this::createPaymentDTO).toList();
     }
 
+    // Retrieves a payment by UUID
     @Transactional(readOnly = true)
-    public PaymentModel loadPayment(UUID uuid){
-        return paymentRepository.findById(uuid).orElseThrow(() -> new NoExistData("Payment don't exist"));
+    public PaymentModel loadPayment(UUID uuid) {
+        return paymentRepository.findById(uuid).orElseThrow(() -> new NoExistData("Payment doesn't exist"));
     }
 }

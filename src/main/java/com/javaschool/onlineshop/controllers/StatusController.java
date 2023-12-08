@@ -15,12 +15,14 @@ import java.util.List;
 public class StatusController {
     private final StatusService statusService;
 
+    // Endpoint to create a new order status
     @PostMapping
     public ResponseEntity<String> createStatus(@RequestBody StatusRequestDTO statusDTO) {
         StatusRequestDTO result = statusService.saveStatus(statusDTO);
         return ResponseEntity.ok("Status created : " + result.getType());
     }
 
+    // Endpoint to get all order statuses
     @GetMapping
     public ResponseEntity<List<StatusRequestDTO>> getAllStatus(){
         List<StatusRequestDTO> result = statusService.getAllStatus();

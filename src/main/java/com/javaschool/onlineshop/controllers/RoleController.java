@@ -15,14 +15,16 @@ import java.util.List;
 public class RoleController {
     private final RoleService roleService;
 
+    // Endpoint to create a role
     @PostMapping
     public ResponseEntity<String> createRole(@RequestBody RoleRequestDTO roleDTO) {
         RoleRequestDTO result = roleService.saveRole(roleDTO);
-        return ResponseEntity.ok("Role created : " + result.getType());
+        return ResponseEntity.ok("Role created: " + result.getType());
     }
 
+    // Endpoint to get all roles
     @GetMapping
-    public ResponseEntity<List<RoleRequestDTO>> getAllRoles(){
+    public ResponseEntity<List<RoleRequestDTO>> getAllRoles() {
         List<RoleRequestDTO> result = roleService.getAllRoles();
         return ResponseEntity.ok(result);
     }

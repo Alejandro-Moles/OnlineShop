@@ -1,9 +1,6 @@
 package com.javaschool.onlineshop.services;
 
-import com.javaschool.onlineshop.dto.NewPasswordDTO;
-import com.javaschool.onlineshop.dto.RegisterRequestDTO;
-import com.javaschool.onlineshop.dto.ShopUserRequestDTO;
-import com.javaschool.onlineshop.dto.UserStatisticsDTO;
+import com.javaschool.onlineshop.dto.*;
 import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.exception.OldPasswordNotSame;
 import com.javaschool.onlineshop.exception.ResourceDuplicate;
@@ -34,11 +31,13 @@ public class ShopUserService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
-    private ShopUserRequestDTO createShopUserDTO(ShopUserModel shopUser){
+    // Maps a ShopUserModel to a ShopUserRequestDTO
+    private ShopUserRequestDTO createShopUserDTO(ShopUserModel shopUser) {
         return shopUserMapper.createShopUserDTO(shopUser);
     }
 
-    public ShopUserModel createShopUserEntity(ShopUserRequestDTO shopUserDTO, ShopUserModel shopUser){
+    // Creates a ShopUserModel entity from a ShopUserRequestDTO
+    public ShopUserModel createShopUserEntity(ShopUserRequestDTO shopUserDTO, ShopUserModel shopUser) {
         shopUser.setName(shopUserDTO.getName());
         shopUser.setDeleted(shopUserDTO.getIsDeleted());
         shopUser.setMail(shopUserDTO.getMail());
@@ -47,22 +46,21 @@ public class ShopUserService {
         return shopUser;
     }
 
-    public ShopUserRequestDTO getShopUserbyUuid(UUID uuid){
+    // Retrieves a ShopUser by UUID and maps it to a ShopUserRequestDTO
+    public ShopUserRequestDTO getShopUserbyUuid(UUID uuid) {
         ShopUserModel shopUser = loadShopUser(uuid);
         return createShopUserDTO(shopUser);
     }
 
-    private boolean checkNewPassword(UUID uuid, NewPasswordDTO passwordDTO){
+    // Checks if the provided old password matches the current password for the user
+    private boolean checkNewPassword(UUID uuid, NewPasswordDTO passwordDTO) {
         ShopUserModel userModel = loadShopUser(uuid);
-        if(passwordEncoder.matches(passwordDTO.getOldPassword(), userModel.getPassword())){
-            return true;
-        } else {
-            return false;
-        }
+        return passwordEncoder.matches(passwordDTO.getOldPassword(), userModel.getPassword());
     }
 
+    // Saves a new ShopUser to the database
     @Transactional
-    public ShopUserRequestDTO saveShopUser(ShopUserRequestDTO shopUserDTO){
+    public ShopUserRequestDTO saveShopUser(ShopUserRequestDTO shopUserDTO) {
         ShopUserModel shopUser = createShopUserEntity(shopUserDTO, new ShopUserModel());
         if (shopUserRepository.existsByMail(shopUser.getMail())) {
             throw new ResourceDuplicate("Shop User already exists with that mail");
@@ -71,31 +69,47 @@ public class ShopUserService {
         return createShopUserDTO(shopUser);
     }
 
+    // Updates the password for a ShopUser
     @Transactional
-    public void updateShopUser(UUID uuid, NewPasswordDTO passwordDTO){
+    public void updateShopUserPassword(UUID uuid, NewPasswordDTO passwordDTO) {
         ShopUserModel shopUser = loadShopUser(uuid);
-        if(checkNewPassword(uuid, passwordDTO)){
+        if (checkNewPassword(uuid, passwordDTO)) {
             String newPassword = passwordEncoder.encode(passwordDTO.getNewPassword());
             shopUser.setPassword(newPassword);
             shopUserRepository.save(shopUser);
-        }else{
+        } else {
             throw new OldPasswordNotSame("The old password is not the same");
         }
     }
 
+    @Transactional
+    public void updateShopUserData(UUID uuid, ProfileDataDTO profileDataDTO) {
+        ShopUserModel shopUser = loadShopUser(uuid);
+        if (shopUserRepository.existsByMail(profileDataDTO.getMail())) {
+            throw new ResourceDuplicate("Shop User already exists with that mail");
+        }
+        shopUser.setMail(profileDataDTO.getMail());
+        shopUser.setName(profileDataDTO.getName());
+        shopUser.setSurname(profileDataDTO.getSurName());
+        shopUserRepository.save(shopUser);
+    }
+
+    // Retrieves all ShopUsers from the database
     @Transactional(readOnly = true)
-    public List<ShopUserRequestDTO> getAllShopUser(){
+    public List<ShopUserRequestDTO> getAllShopUser() {
         return shopUserRepository.findAll().stream().map(this::createShopUserDTO).toList();
     }
 
+    // Retrieves a ShopUser by UUID
     @Transactional(readOnly = true)
-    private ShopUserModel loadShopUser(UUID uuid){
+    private ShopUserModel loadShopUser(UUID uuid) {
         return shopUserRepository.findById(uuid).orElseThrow(() -> new NoExistData("Shop user don't exist"));
     }
 
+    // Registers a new ShopUser with the provided details
     @Transactional
-    public ShopUserRequestDTO registerShopUser(RegisterRequestDTO registerDTO){
-        if(shopUserRepository.existsByMail(registerDTO.getMail())){
+    public ShopUserRequestDTO registerShopUser(RegisterRequestDTO registerDTO) {
+        if (shopUserRepository.existsByMail(registerDTO.getMail())) {
             throw new ResourceDuplicate("Shop User already exists with that mail");
         }
 
@@ -106,10 +120,11 @@ public class ShopUserService {
         return createShopUserDTO(user);
     }
 
+    // Retrieves the currently authenticated user
     @Transactional(readOnly = true)
-    public ShopUserRequestDTO getCurrentUser(){
+    public ShopUserRequestDTO getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication == null || !authentication.isAuthenticated()){
+        if (authentication == null || !authentication.isAuthenticated()) {
             throw new NoExistData("User not found");
         }
         String mail = authentication.getName();
@@ -117,8 +132,9 @@ public class ShopUserService {
         return shopUserMapper.createShopUserDTO(user);
     }
 
+    // Retrieves user statistics for the provided mail
     @Transactional(readOnly = true)
-    public UserStatisticsDTO getUserStatistic(String userMail){
+    public UserStatisticsDTO getUserStatistic(String userMail) {
         Optional<ShopUserModel> shopUserModel = shopUserRepository.findByMail(userMail);
         if (shopUserModel.isPresent()) {
             ShopUserModel userModel = shopUserModel.get();
@@ -132,6 +148,7 @@ public class ShopUserService {
         }
     }
 
+    // Assigns roles to a user
     @Transactional
     public void assignRolesToUser(UUID userUuid, List<String> roleTypes) {
         ShopUserModel shopUser = loadShopUser(userUuid);

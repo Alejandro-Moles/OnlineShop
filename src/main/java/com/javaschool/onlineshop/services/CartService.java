@@ -19,12 +19,16 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CartService {
 
+    // ProductService is used to retrieve product details
     private final ProductsService productsService;
+
+    // The logged-in user's email, set by the controller
     @Getter
     @Setter
     private String userLoggedMail;
 
-    public List<CartItemModel> createCart(HttpSession session){
+    // This method creates a new cart in the session if it doesn't exist
+    public List<CartItemModel> createCart(HttpSession session) {
         List<CartItemModel> cart = (List<CartItemModel>) session.getAttribute("cart");
         if (cart == null) {
             cart = new ArrayList<>();
@@ -33,17 +37,18 @@ public class CartService {
         return cart;
     }
 
-    private CartItemModel addCartItem(ProductRequestDTO productDTO){
+    // This method creates a new CartItemModel for a product
+    private CartItemModel addCartItem(ProductRequestDTO productDTO) {
         CartItemModel cartItem = new CartItemModel();
         cartItem.setProductUuid(productDTO.getUuid());
         cartItem.setTitle(productDTO.getTitle());
         cartItem.setPrice(productDTO.getPrice());
         cartItem.setQuantity(1);
-
         return cartItem;
     }
 
-    public List<CartItemModel> getCart(HttpSession session){
+    // This method retrieves the general cart from the session
+    public List<CartItemModel> getCart(HttpSession session) {
         List<CartItemModel> cart = (List<CartItemModel>) session.getAttribute("cart");
         if (cart == null) {
             System.out.println("Cart not found");
@@ -51,7 +56,8 @@ public class CartService {
         return cart;
     }
 
-    public List<CartItemModel> getCartToUser(HttpSession session, String userMail){
+    // This method retrieves the user-specific cart from the session
+    public List<CartItemModel> getCartToUser(HttpSession session, String userMail) {
         List<CartItemModel> cart = (List<CartItemModel>) session.getAttribute("cart_" + userMail);
         if (cart == null) {
             System.out.println("Cart not found");
@@ -59,7 +65,8 @@ public class CartService {
         return cart;
     }
 
-    public List<CartItemModel> createCartToUser(HttpSession session, String userMail){
+    // This method creates a new user-specific cart in the session if it doesn't exist
+    public List<CartItemModel> createCartToUser(HttpSession session, String userMail) {
         List<CartItemModel> cartForUser = (List<CartItemModel>) session.getAttribute("cart_" + userMail);
         if (cartForUser == null) {
             cartForUser = new ArrayList<>();
@@ -68,7 +75,8 @@ public class CartService {
         return cartForUser;
     }
 
-    public void syncCartToUser(HttpSession session, String mail){
+    // This method synchronizes the general cart to the user-specific cart in the session
+    public void syncCartToUser(HttpSession session, String mail) {
         List<CartItemModel> cart = createCart(session);
         List<CartItemModel> userCart = createCartToUser(session, mail);
         if (cart.size() != 0) {
@@ -86,6 +94,7 @@ public class CartService {
         session.setAttribute("cart_" + mail, userCart);
     }
 
+    // This method updates the general cart with a product
     private void updateCartWithProduct(List<CartItemModel> cart, UUID productUuid, ProductRequestDTO product) {
         Optional<CartItemModel> existingCartItem = cart.stream()
                 .filter(item -> item.getProductUuid().equals(productUuid))
@@ -99,34 +108,38 @@ public class CartService {
         }
     }
 
-    public void updateProductCart (List<CartItemModel>  cartItemModels, HttpSession session){
+    // This method updates the general cart in the session
+    public void updateProductCart(List<CartItemModel> cartItemModels, HttpSession session) {
         session.setAttribute("cart", cartItemModels);
     }
 
-    public void updateProductCartForUser (List<CartItemModel>  cartItemModels, String mail, HttpSession session){
+    // This method updates the user-specific cart in the session
+    public void updateProductCartForUser(List<CartItemModel> cartItemModels, String mail, HttpSession session) {
         session.setAttribute("cart_" + mail, cartItemModels);
     }
 
+    // This method clears the user-specific cart in the session
     public void clearUserCart(HttpSession session, String userMail) {
         List<CartItemModel> cart = new ArrayList<>();
         session.setAttribute("cart_" + userMail, cart);
         session.removeAttribute("cart_" + userMail);
     }
 
+    // This method adds a product to the general cart in the session
     @Transactional(readOnly = true)
-    public void addProductToCart(CartDTO cartRequestDTO , HttpSession session){
+    public void addProductToCart(CartDTO cartRequestDTO, HttpSession session) {
         UUID productUuid = cartRequestDTO.getProductUuid();
         ProductRequestDTO product = productsService.getProductsbyUuid(productUuid);
         List<CartItemModel> productCart = getCart(session);
         updateCartWithProduct(productCart, productUuid, product);
     }
 
+    // This method adds a product to the user-specific cart in the session
     @Transactional(readOnly = true)
-    public void addProductToCartToUser(CartDTO cartRequestDTO , HttpSession session, String mail){
+    public void addProductToCartToUser(CartDTO cartRequestDTO, HttpSession session, String mail) {
         UUID productUuid = cartRequestDTO.getProductUuid();
         ProductRequestDTO product = productsService.getProductsbyUuid(productUuid);
         List<CartItemModel> productCart = getCartToUser(session, mail);
         updateCartWithProduct(productCart, productUuid, product);
     }
-
 }

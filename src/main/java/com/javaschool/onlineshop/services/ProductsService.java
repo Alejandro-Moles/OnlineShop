@@ -27,17 +27,19 @@ public class ProductsService {
     private final PlatformsRepository platformsRepository;
     private final GenreRepository genreRepository;
 
-
-    public ProductRequestDTO getProductsbyUuid(UUID uuid){
+    // Retrieves product details by UUID
+    public ProductRequestDTO getProductsbyUuid(UUID uuid) {
         ProductsModel products = loadProduct(uuid);
         return createProductDTO(products);
     }
 
-    private ProductRequestDTO createProductDTO(ProductsModel products){
+    // Maps a ProductsModel to a ProductRequestDTO
+    private ProductRequestDTO createProductDTO(ProductsModel products) {
         return productsMapper.createProductDTO(products);
     }
 
-    private ProductsModel createProductEntity(ProductRequestDTO productDTO, ProductsModel products){
+    // Creates a ProductsModel entity from a ProductRequestDTO
+    private ProductsModel createProductEntity(ProductRequestDTO productDTO, ProductsModel products) {
         products.setTitle(productDTO.getTitle());
         products.setPrice(productDTO.getPrice());
         products.setPEGI(productDTO.getPegi());
@@ -52,82 +54,104 @@ public class ProductsService {
         return products;
     }
 
+    // Updates product details based on UUID
     @Transactional
-    public void updateProduct(UUID uuid, ProductRequestDTO productDTO){
+    public void updateProduct(UUID uuid, ProductRequestDTO productDTO) {
         ProductsModel products = loadProduct(uuid);
+        if (productsRepository.existsByTitleAndPlatformAndCategoryAndIsDigital(productDTO.getTitle(), findPlatform(productDTO.getPlatform()), findCategory(productDTO.getCategory()), productDTO.getIsDigital())) {
+            throw new ResourceDuplicate("Product already exists with that platform, category and format");
+        }
         createProductEntity(productDTO, products);
         productsRepository.save(products);
     }
 
+    // Saves a new product to the database
     @Transactional
-    public ProductRequestDTO saveProduct(ProductRequestDTO productDTO){
+    public ProductRequestDTO saveProduct(ProductRequestDTO productDTO) {
         ProductsModel products = createProductEntity(productDTO, new ProductsModel());
-        if (productsRepository.existsByTitleAndPlatform(products.getTitle(), products.getPlatform())) {
-            throw new ResourceDuplicate("Product already exists with that platform");
+        if (productsRepository.existsByTitleAndPlatformAndCategoryAndIsDigital(products.getTitle(), products.getPlatform(), products.getCategory(), products.getIsDigital())) {
+            throw new ResourceDuplicate("Product already exists with that platform, category and format");
         }
         products.setGenres(getListGenres(productDTO.getGenres()));
         productsRepository.save(products);
         return createProductDTO(products);
     }
 
+    // Deletes a product based on UUID
     @Transactional
-    public void deleteProduct(UUID uuid){
+    public void deleteProduct(UUID uuid) {
         ProductsModel products = loadProduct(uuid);
         products.setIsDeleted(true);
         productsRepository.save(products);
     }
 
+    // Assigns genres to a product based on UUID
     @Transactional
     public void assignGenresToProducts(UUID productUuid, List<String> genresTypes) {
         ProductsModel productsModel = loadProduct(productUuid);
         List<GenreModel> genres = genreRepository.findByTypeIn(genresTypes);
         if (genres.isEmpty()) {
-            throw new NoExistData("No roles found with the provided types");
+            throw new NoExistData("No Genres found with the provided types");
         }
         productsModel.setGenres(genres);
         productsRepository.save(productsModel);
         createProductDTO(productsModel);
     }
 
+    // Finds a platform based on type
     @Transactional(readOnly = true)
-    private PlatformsModel findPlatform(String type){
-        return platformsRepository.findByType(type).orElseThrow(() -> new NoExistData("This platform don't exist"));
+    private PlatformsModel findPlatform(String type) {
+        return platformsRepository.findByType(type).orElseThrow(() -> new NoExistData("This platform doesn't exist"));
     }
 
+    // Retrieves a product by UUID
     @Transactional(readOnly = true)
-    private ProductsModel loadProduct(UUID uuid){
-        return productsRepository.findById(uuid).orElseThrow(() -> new NoExistData("Product don't exist"));
+    private ProductsModel loadProduct(UUID uuid) {
+        return productsRepository.findById(uuid).orElseThrow(() -> new NoExistData("Product doesn't exist"));
     }
 
+    // Retrieves the top 10 sold products
     @Transactional(readOnly = true)
     public List<TotalSaleProductDTO> getTopSaleProducts() {
         return productsRepository.findTop10SoldProducts();
     }
 
+    // Retrieves all available products with stock greater than 0
     @Transactional(readOnly = true)
     public List<ProductRequestDTO> getAvailableProducts() {
         List<ProductsModel> availableProducts = productsRepository.findByIsDeletedFalseAndStockGreaterThan(0);
         return availableProducts.stream().map(this::createProductDTO).toList();
     }
 
+    // Retrieves the top 10 available products with the highest sales
     @Transactional(readOnly = true)
     public List<ProductRequestDTO> getAvailableTopProducts() {
         List<ProductsModel> availableProducts = productsRepository.findTop10SoldProductsByStock();
         return availableProducts.stream().map(this::createProductDTO).toList();
     }
 
+    // Retrieves all products from the database
     @Transactional(readOnly = true)
-    public List<ProductRequestDTO> getAllProducts(){
+    public List<ProductRequestDTO> getAllProducts() {
         return productsRepository.findAll().stream().map(this::createProductDTO).toList();
     }
 
+    // Finds a category based on type
     @Transactional(readOnly = true)
-    private CategoryModel findCategory(String type){
-        return categoryRepository.findByType(type).orElseThrow(() -> new NoExistData("This category don't exist"));
+    private CategoryModel findCategory(String type) {
+        return categoryRepository.findByType(type).orElseThrow(() -> new NoExistData("This category doesn't exist"));
     }
 
+    // Retrieves a list of genres based on types
     @Transactional(readOnly = true)
-    private List<GenreModel> getListGenres(List<String> genres){
+    private List<GenreModel> getListGenres(List<String> genres) {
         return genreRepository.findByTypeIn(genres);
+    }
+
+    @Transactional
+    public void updateProductStock(UUID uuid, ProductRequestDTO productDTO){
+        ProductsModel products = loadProduct(uuid);
+        products.setStock(productDTO.getStock());
+        productsRepository.save(products);
     }
 }

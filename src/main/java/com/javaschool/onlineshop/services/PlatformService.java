@@ -21,16 +21,19 @@ public class PlatformService {
     private final PlatformsRepository platformsRepository;
     private final PlatformMapper platformMapper;
 
-    private PlatformsModel createPlatformEntity(PlatformsRequestDTO platformsDTO, PlatformsModel platforms){
+    // Creates a PlatformsModel entity from a PlatformsRequestDTO
+    private PlatformsModel createPlatformEntity(PlatformsRequestDTO platformsDTO, PlatformsModel platforms) {
         platforms.setType(platformsDTO.getType());
         platforms.setIsDeleted(platformsDTO.getIsDeleted());
         return platforms;
     }
 
-    private PlatformsRequestDTO createPlatformsDTO(PlatformsModel platforms){
+    // Maps a PlatformsModel to a PlatformsRequestDTO
+    private PlatformsRequestDTO createPlatformsDTO(PlatformsModel platforms) {
         return platformMapper.createPlatformDTO(platforms);
     }
 
+    // Saves a PlatformsRequestDTO to the database
     @Transactional
     public PlatformsRequestDTO savePlatform(PlatformsRequestDTO platformsDTO) {
         PlatformsModel platforms = createPlatformEntity(platformsDTO,  new PlatformsModel());
@@ -41,25 +44,32 @@ public class PlatformService {
         return createPlatformsDTO(platforms);
     }
 
+    // Updates a platform based on UUID
     @Transactional
-    public void updatePlatform(UUID uuid, PlatformsRequestDTO platformsDTO){
+    public void updatePlatform(UUID uuid, PlatformsRequestDTO platformsDTO) {
         PlatformsModel platforms = loadPlatform(uuid);
+        if (platformsRepository.existsByType(platformsDTO.getType())) {
+            throw new ResourceDuplicate("This platform already exists in the database");
+        }
         createPlatformEntity(platformsDTO, platforms);
         platformsRepository.save(platforms);
     }
 
+    // Retrieves all platforms from the database
     @Transactional(readOnly = true)
-    public List<PlatformsRequestDTO> getAllPlatforms(){
+    public List<PlatformsRequestDTO> getAllPlatforms() {
         return platformsRepository.findAll().stream().map(this::createPlatformsDTO).toList();
     }
 
+    // Retrieves a platform by UUID
     @Transactional(readOnly = true)
-    public PlatformsModel loadPlatform(UUID uuid){
-        return platformsRepository.findById(uuid).orElseThrow(() -> new NoExistData("Platform don't exist"));
+    public PlatformsModel loadPlatform(UUID uuid) {
+        return platformsRepository.findById(uuid).orElseThrow(() -> new NoExistData("Platform doesn't exist"));
     }
 
+    // Retrieves all available platforms from the database
     @Transactional(readOnly = true)
-    public List<PlatformsRequestDTO> getAllAvailablePlatforms(){
+    public List<PlatformsRequestDTO> getAllAvailablePlatforms() {
         return platformsRepository.findAllByIsDeletedFalse().stream().map(this::createPlatformsDTO).toList();
     }
 }

@@ -2,11 +2,8 @@ package com.javaschool.onlineshop.services;
 
 
 import com.javaschool.onlineshop.dto.*;
-import com.javaschool.onlineshop.exception.NoExistData;
 import com.javaschool.onlineshop.exception.OldPasswordNotSame;
-import com.javaschool.onlineshop.exception.ResourceDuplicate;
 import com.javaschool.onlineshop.mapper.ShopUserMapper;
-import com.javaschool.onlineshop.models.RoleModel;
 import com.javaschool.onlineshop.models.ShopUserModel;
 import com.javaschool.onlineshop.repositories.RoleRepository;
 import com.javaschool.onlineshop.repositories.ShopUserRepository;
@@ -75,7 +72,7 @@ public class ShopUserServiceTests {
 
         // Assertions
         OldPasswordNotSame exception = assertThrows(OldPasswordNotSame.class, () ->
-                shopUserService.updateShopUser(UUID.randomUUID(), new NewPasswordDTO()));
+                shopUserService.updateShopUserPassword(UUID.randomUUID(), new NewPasswordDTO()));
 
         assertEquals("The old password is not the same", exception.getMessage());
         verify(shopUserRepositoryMock, never()).save(any(ShopUserModel.class));  // Verifying that repository method was NOT called

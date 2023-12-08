@@ -10,7 +10,7 @@ public class OrderProductsMapper {
         OrderProductsRequestDTO orderProductDTO = new OrderProductsRequestDTO();
         orderProductDTO.setUuid(orderProducts.getOrderProductsUuid());
         orderProductDTO.setOrderUUID(orderProducts.getOrder().getOrderUuid());
-        orderProductDTO.setProductTitle(orderProducts.getProduct().getTitle());
+        orderProductDTO.setProductUUID(orderProducts.getProduct().getProductUuid());
         orderProductDTO.setQuantity(orderProducts.getQuantity());
         orderProductDTO.setIsDeleted(orderProducts.getIsDeleted());
 

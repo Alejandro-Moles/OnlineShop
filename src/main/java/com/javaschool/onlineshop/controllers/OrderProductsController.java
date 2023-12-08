@@ -16,14 +16,16 @@ import java.util.UUID;
 public class OrderProductsController {
     private final OrderProductsService orderProductsService;
 
+    // Endpoint to create order products
     @PostMapping
     public ResponseEntity<String> createOrderProducts(@RequestBody OrderProductsRequestDTO orderProductsDTO) {
         OrderProductsRequestDTO result = orderProductsService.saveOrderProducts(orderProductsDTO);
-        return ResponseEntity.ok("Order Products created for: " + result.getOrderUUID());
+        return ResponseEntity.ok("Order Products created for order UUID: " + result.getOrderUUID());
     }
 
+    // Endpoint to get order products by order UUID
     @GetMapping("/{uuid}")
-    public ResponseEntity<List<OrderProductsRequestDTO>> getOrdersProductbyUuid(@PathVariable UUID uuid){
+    public ResponseEntity<List<OrderProductsRequestDTO>> getOrdersProductbyUuid(@PathVariable UUID uuid) {
         List<OrderProductsRequestDTO> result = orderProductsService.findAllOrdersProductByOrder(uuid);
         return ResponseEntity.ok(result);
     }

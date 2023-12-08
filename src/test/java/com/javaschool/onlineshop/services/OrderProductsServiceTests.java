@@ -48,7 +48,7 @@ public class OrderProductsServiceTests {
         // Creating an OrderProductsDTO
         OrderProductsRequestDTO orderProductsDTO = new OrderProductsRequestDTO();
         orderProductsDTO.setOrderUUID(UUID.randomUUID());
-        orderProductsDTO.setProductTitle("Product");
+        orderProductsDTO.setProductUUID(UUID.randomUUID());
         orderProductsDTO.setQuantity(2);
 
         // Calling the service method
@@ -72,7 +72,7 @@ public class OrderProductsServiceTests {
         // Creating an OrderProductsDTO
         OrderProductsRequestDTO orderProductsDTO = new OrderProductsRequestDTO();
         orderProductsDTO.setOrderUUID(UUID.randomUUID());
-        orderProductsDTO.setProductTitle("Existing Product");
+        orderProductsDTO.setProductUUID(UUID.randomUUID());
         orderProductsDTO.setQuantity(1);
 
         // Assertions

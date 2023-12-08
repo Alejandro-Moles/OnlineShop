@@ -8,7 +8,7 @@ import java.util.UUID;
 public class OrderProductsRequestDTO {
     private UUID uuid;
     private UUID orderUUID;
-    private String productTitle;
+    private UUID productUUID;
     private Integer quantity;
     private Boolean isDeleted;
 }

@@ -1,6 +1,7 @@
 package com.javaschool.onlineshop.repositories;
 
 import com.javaschool.onlineshop.dto.TotalSaleProductDTO;
+import com.javaschool.onlineshop.models.CategoryModel;
 import com.javaschool.onlineshop.models.PlatformsModel;
 import com.javaschool.onlineshop.models.ProductsModel;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,12 +13,12 @@ import java.util.UUID;
 
 public interface ProductsRepository  extends JpaRepository<ProductsModel, UUID> {
     Optional<ProductsModel>findByTitle(String title);
-    boolean existsByTitleAndPlatform(String title, PlatformsModel platforms);
+    boolean existsByTitleAndPlatformAndCategoryAndIsDigital(String title, PlatformsModel platforms, CategoryModel category, Boolean isDigital);
 
-    @Query("SELECT new com.javaschool.onlineshop.dto.TotalSaleProductDTO(p.productUuid, p.title, SUM(op.quantity) AS totalSold) " +
+    @Query("SELECT new com.javaschool.onlineshop.dto.TotalSaleProductDTO(p.productUuid, p.title, p.category.type, p.platform.type, p.isDigital, SUM(op.quantity) AS totalSold) " +
             "FROM ProductsModel p " +
             "JOIN p.product_orders op " +
-            "GROUP BY p.productUuid, p.title " +
+            "GROUP BY p.productUuid, p.title, p.category.type, p.platform.type, p.isDigital " +
             "ORDER BY totalSold DESC " +
             "LIMIT 10")
     List<TotalSaleProductDTO> findTop10SoldProducts();

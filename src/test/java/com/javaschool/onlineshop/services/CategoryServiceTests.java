@@ -42,6 +42,7 @@ class CategoryServiceTests {
 
         // Calling the service method
         CategoryRequestDTO savedCategoryDTO = categoryService.saveCategory(categoryDTO);
+        System.out.println(savedCategoryDTO);
 
         // Assertions
         assertNotNull(savedCategoryDTO);

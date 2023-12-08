@@ -18,23 +18,27 @@ public class RoleService {
     private final RoleRepository roleRepository;
     private final RoleMapper roleMapper;
 
-    private RoleRequestDTO createRoleDTO(RoleModel role){
+    // Maps a RoleModel to a RoleRequestDTO
+    private RoleRequestDTO createRoleDTO(RoleModel role) {
         return roleMapper.createRoleDTO(role);
     }
 
-    private RoleModel createRoleEntity(RoleRequestDTO roleDTO, RoleModel role){
+    // Creates a RoleModel entity from a RoleRequestDTO
+    private RoleModel createRoleEntity(RoleRequestDTO roleDTO, RoleModel role) {
         role.setType(roleDTO.getType());
         role.setDeleted(false);
         return role;
     }
 
+    // Retrieves all roles from the database
     @Transactional(readOnly = true)
-    public List<RoleRequestDTO> getAllRoles(){
+    public List<RoleRequestDTO> getAllRoles() {
         return roleRepository.findAll().stream().map(this::createRoleDTO).toList();
     }
 
+    // Saves a new role to the database
     @Transactional
-    public RoleRequestDTO saveRole(RoleRequestDTO roleDTO){
+    public RoleRequestDTO saveRole(RoleRequestDTO roleDTO) {
         RoleModel role = createRoleEntity(roleDTO, new RoleModel());
         if (roleRepository.existsByType(role.getType())) {
             throw new ResourceDuplicate("Role already exists");

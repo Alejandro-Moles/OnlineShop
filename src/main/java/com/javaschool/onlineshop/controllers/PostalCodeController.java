@@ -16,26 +16,30 @@ import java.util.UUID;
 public class PostalCodeController {
     private final PostalCodeService postalCodeService;
 
+    // Endpoint to create a postal code
     @PostMapping
     public ResponseEntity<String> createPostalCode(@RequestBody PostalCodeRequestDTO postalCodeDTO) {
         PostalCodeRequestDTO result = postalCodeService.savePostalCode(postalCodeDTO);
-        return ResponseEntity.ok("Postalcode created with : " + result.getContent());
+        return ResponseEntity.ok("Postal code created with: " + result.getContent());
     }
 
+    // Endpoint to get all postal codes
     @GetMapping
-    public ResponseEntity<List<PostalCodeRequestDTO>> getAllPostalCode(){
+    public ResponseEntity<List<PostalCodeRequestDTO>> getAllPostalCode() {
         List<PostalCodeRequestDTO> result = postalCodeService.getAllPostalCodes();
         return ResponseEntity.ok(result);
     }
 
+    // Endpoint to update a postal code by UUID
     @PutMapping("/{uuid}")
-    public ResponseEntity<String> updatePostalCode(@PathVariable UUID uuid, @RequestBody PostalCodeRequestDTO postalCodeDTO){
+    public ResponseEntity<String> updatePostalCode(@PathVariable UUID uuid, @RequestBody PostalCodeRequestDTO postalCodeDTO) {
         postalCodeService.updatePostalCode(uuid, postalCodeDTO);
-        return ResponseEntity.ok("Postal Code changed succesfully");
+        return ResponseEntity.ok("Postal Code changed successfully");
     }
 
+    // Endpoint to get all available postal codes
     @GetMapping("/availablePostalCodes")
-    public ResponseEntity<List<PostalCodeRequestDTO>> getAllAvailablePostalCodes(){
+    public ResponseEntity<List<PostalCodeRequestDTO>> getAllAvailablePostalCodes() {
         List<PostalCodeRequestDTO> result = postalCodeService.getAllAvailablePostalCodes();
         return ResponseEntity.ok(result);
     }

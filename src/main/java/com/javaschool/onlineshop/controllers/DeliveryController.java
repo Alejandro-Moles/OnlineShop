@@ -15,21 +15,24 @@ import java.util.UUID;
 public class DeliveryController {
     private final DeliveryService deliveryService;
 
+    // Endpoint to create a new delivery
     @PostMapping
     public ResponseEntity<String> createDelivery(@RequestBody DeliveryRequestDTO deliveryDTO) {
         DeliveryRequestDTO result = deliveryService.saveDelivery(deliveryDTO);
         return ResponseEntity.ok("Delivery created : " + result.getType());
     }
 
+    // Endpoint to get all deliveries
     @GetMapping
-    public ResponseEntity<List<DeliveryRequestDTO>> getAllDeliveries(){
+    public ResponseEntity<List<DeliveryRequestDTO>> getAllDeliveries() {
         List<DeliveryRequestDTO> result = deliveryService.getAllDeliveries();
         return ResponseEntity.ok(result);
     }
 
+    // Endpoint to update an existing delivery by UUID
     @PutMapping("/{uuid}")
-    public ResponseEntity<String> updateDelivery(@PathVariable UUID uuid, @RequestBody DeliveryRequestDTO deliveryDTO){
+    public ResponseEntity<String> updateDelivery(@PathVariable UUID uuid, @RequestBody DeliveryRequestDTO deliveryDTO) {
         deliveryService.updateDelivery(uuid, deliveryDTO);
-        return ResponseEntity.ok("Delivery changed succesfully");
+        return ResponseEntity.ok("Delivery changed successfully");
     }
 }

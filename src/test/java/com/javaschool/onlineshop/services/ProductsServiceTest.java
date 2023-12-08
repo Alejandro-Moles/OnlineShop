@@ -66,7 +66,7 @@ public class ProductsServiceTest {
         NoExistData exception = assertThrows(NoExistData.class, () ->
                 productsService.getProductsbyUuid(nonExistingProductUUID));
 
-        assertEquals("Product don't exist", exception.getMessage());
+        assertEquals("Product doesn't exist", exception.getMessage());
 
         verify(productsRepositoryMock).findById(nonExistingProductUUID);
     }
@@ -122,7 +122,7 @@ public class ProductsServiceTest {
         NoExistData exception = assertThrows(NoExistData.class, () ->
                 productsService.updateProduct(nonExistingProductUUID, productDTO));
 
-        assertEquals("Product don't exist", exception.getMessage());
+        assertEquals("Product doesn't exist", exception.getMessage());
 
         verify(productsRepositoryMock, never()).save(any(ProductsModel.class));
     }
@@ -144,7 +144,7 @@ public class ProductsServiceTest {
         productDTO.setImage("new_image.jpg");
         productDTO.setIsDeleted(false);
 
-        when(productsRepositoryMock.existsByTitleAndPlatform(any(), any())).thenReturn(false);
+        when(productsRepositoryMock.existsByTitleAndPlatformAndCategoryAndIsDigital(any(), any(), any(), any())).thenReturn(false);
         when(productsMapperMock.createProductDTO(any())).thenReturn(new ProductRequestDTO());
 
         CategoryModel categoryModel = new CategoryModel();
@@ -183,7 +183,7 @@ public class ProductsServiceTest {
         List<String> genreTypes = Arrays.asList("Genre1", "Genre2", "Genre3");
         when(genreRepositoryMock.findByTypeIn(genreTypes)).thenReturn(Arrays.asList(new GenreModel(), new GenreModel(), new GenreModel()));
 
-        when(productsRepositoryMock.existsByTitleAndPlatform(any(), any())).thenReturn(true);
+        when(productsRepositoryMock.existsByTitleAndPlatformAndCategoryAndIsDigital(any(), any(), any(), any())).thenReturn(true);
 
         ProductRequestDTO productDTO = new ProductRequestDTO();
         productDTO.setTitle("Existing Title");

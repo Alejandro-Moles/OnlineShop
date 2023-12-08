@@ -16,21 +16,24 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
+    // Endpoint to create a payment
     @PostMapping
     public ResponseEntity<String> createPayment(@RequestBody PaymentRequestDTO paymentDTO) {
         PaymentRequestDTO result = paymentService.savePayment(paymentDTO);
-        return ResponseEntity.ok("Payment created : " + result.getType());
+        return ResponseEntity.ok("Payment created: " + result.getType());
     }
 
+    // Endpoint to get all payments
     @GetMapping
-    public ResponseEntity<List<PaymentRequestDTO>> getAllPayment(){
+    public ResponseEntity<List<PaymentRequestDTO>> getAllPayment() {
         List<PaymentRequestDTO> result = paymentService.getAllPayment();
         return ResponseEntity.ok(result);
     }
 
+    // Endpoint to update a payment by UUID
     @PutMapping("/{uuid}")
-    public ResponseEntity<String> updatePayment(@PathVariable UUID uuid, @RequestBody PaymentRequestDTO paymentDTO){
+    public ResponseEntity<String> updatePayment(@PathVariable UUID uuid, @RequestBody PaymentRequestDTO paymentDTO) {
         paymentService.updatePayment(uuid, paymentDTO);
-        return ResponseEntity.ok("Payment changed succesfully");
+        return ResponseEntity.ok("Payment changed successfully");
     }
 }

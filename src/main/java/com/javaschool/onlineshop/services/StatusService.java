@@ -18,18 +18,21 @@ public class StatusService {
     private final StatusRepository statusRepository;
     private final StatusMapper statusMapper;
 
-    private StatusRequestDTO createStatusDTO(StatusModel status){
+    // Maps a StatusModel to a StatusRequestDTO
+    private StatusRequestDTO createStatusDTO(StatusModel status) {
         return statusMapper.createStatusDTO(status);
     }
 
-    private StatusModel createStatusEntity(StatusRequestDTO statusDTO, StatusModel status){
+    // Creates a StatusModel entity from a StatusRequestDTO
+    private StatusModel createStatusEntity(StatusRequestDTO statusDTO, StatusModel status) {
         status.setType(statusDTO.getType());
         status.setIsDeleted(false);
         return status;
     }
 
+    // Saves a new Status to the database
     @Transactional
-    public StatusRequestDTO saveStatus(StatusRequestDTO statusDTO){
+    public StatusRequestDTO saveStatus(StatusRequestDTO statusDTO) {
         StatusModel status = createStatusEntity(statusDTO, new StatusModel());
         if (statusRepository.existsByType(status.getType())) {
             throw new ResourceDuplicate("Status already exists");
@@ -38,8 +41,9 @@ public class StatusService {
         return createStatusDTO(status);
     }
 
+    // Retrieves all Status entries from the database
     @Transactional(readOnly = true)
-    public List<StatusRequestDTO> getAllStatus(){
+    public List<StatusRequestDTO> getAllStatus() {
         return statusRepository.findAll().stream().map(this::createStatusDTO).toList();
     }
 }

@@ -24,19 +24,22 @@ public class PostalCodeService {
     private final PostalCodeMapper postalCodeMapper;
     private final CityRepository cityRepository;
 
-    private PostalCodeRequestDTO createPostalCodeDTO(PostalCodeModel postalCode){
+    // Maps a PostalCodeModel to a PostalCodeRequestDTO
+    private PostalCodeRequestDTO createPostalCodeDTO(PostalCodeModel postalCode) {
         return postalCodeMapper.createPostalCodeDTO(postalCode);
     }
 
-    private PostalCodeModel createPostalCodeEntity(PostalCodeRequestDTO postalCodeDTO, PostalCodeModel postalCode){
+    // Creates a PostalCodeModel entity from a PostalCodeRequestDTO
+    private PostalCodeModel createPostalCodeEntity(PostalCodeRequestDTO postalCodeDTO, PostalCodeModel postalCode) {
         postalCode.setContent(postalCodeDTO.getContent());
         postalCode.setDeleted(postalCodeDTO.getIsDeleted());
         postalCode.setCity(findCity(postalCodeDTO));
         return postalCode;
     }
 
+    // Saves a PostalCodeRequestDTO to the database
     @Transactional
-    public PostalCodeRequestDTO savePostalCode(PostalCodeRequestDTO postalCodeDTO){
+    public PostalCodeRequestDTO savePostalCode(PostalCodeRequestDTO postalCodeDTO) {
         PostalCodeModel postalCode = createPostalCodeEntity(postalCodeDTO, new PostalCodeModel());
         if (postalCodeRepository.existsByContent(postalCode.getContent())) {
             throw new ResourceDuplicate("Postal code already exists");
@@ -45,30 +48,36 @@ public class PostalCodeService {
         return createPostalCodeDTO(postalCode);
     }
 
+    // Finds a CityModel based on a PostalCodeRequestDTO
     @Transactional(readOnly = true)
-    CityModel findCity(PostalCodeRequestDTO postalCodeDTO){
-       return cityRepository.findById(cityRepository.findCityUuidByCityAndCountry(postalCodeDTO.getCityName(), postalCodeDTO.getCountryName())).orElseThrow(() -> new NoExistData("This city don't exist"));
+    CityModel findCity(PostalCodeRequestDTO postalCodeDTO) {
+        return cityRepository.findById(cityRepository.findCityUuidByCityAndCountry(postalCodeDTO.getCityName(), postalCodeDTO.getCountryName()))
+                .orElseThrow(() -> new NoExistData("This city doesn't exist"));
     }
 
+    // Updates a postal code based on UUID
     @Transactional
-    public void updatePostalCode(UUID uuid, PostalCodeRequestDTO postalCodeDTO){
+    public void updatePostalCode(UUID uuid, PostalCodeRequestDTO postalCodeDTO) {
         PostalCodeModel postalCode = loadPostalCode(uuid);
         createPostalCodeEntity(postalCodeDTO, postalCode);
         postalCodeRepository.save(postalCode);
     }
 
+    // Retrieves all postal codes from the database
     @Transactional(readOnly = true)
-    public List<PostalCodeRequestDTO> getAllPostalCodes(){
+    public List<PostalCodeRequestDTO> getAllPostalCodes() {
         return postalCodeRepository.findAll().stream().map(this::createPostalCodeDTO).toList();
     }
 
+    // Retrieves a postal code by UUID
     @Transactional(readOnly = true)
-    public PostalCodeModel loadPostalCode(UUID uuid){
-        return postalCodeRepository.findById(uuid).orElseThrow(() -> new NoExistData("Postal code don't exist"));
+    public PostalCodeModel loadPostalCode(UUID uuid) {
+        return postalCodeRepository.findById(uuid).orElseThrow(() -> new NoExistData("Postal code doesn't exist"));
     }
 
+    // Retrieves all available postal codes from the database
     @Transactional(readOnly = true)
-    public List<PostalCodeRequestDTO> getAllAvailablePostalCodes(){
+    public List<PostalCodeRequestDTO> getAllAvailablePostalCodes() {
         return postalCodeRepository.findAllByIsDeletedFalse().stream().map(this::createPostalCodeDTO).toList();
     }
 }

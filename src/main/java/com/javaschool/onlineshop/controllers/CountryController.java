@@ -15,21 +15,24 @@ import java.util.UUID;
 public class CountryController {
     private final CountryService countryService;
 
+    // Endpoint to create a new country
     @PostMapping
     public ResponseEntity<String> createCountry(@RequestBody CountryRequestDTO countryDTO) {
         CountryRequestDTO result = countryService.saveCountry(countryDTO);
         return ResponseEntity.ok("Country created with : " + result.getName());
     }
 
+    // Endpoint to get all countries
     @GetMapping
-    public ResponseEntity<List<CountryRequestDTO>> getAllCountries(){
+    public ResponseEntity<List<CountryRequestDTO>> getAllCountries() {
         List<CountryRequestDTO> result = countryService.getAllCountries();
         return ResponseEntity.ok(result);
     }
 
+    // Endpoint to update an existing country by UUID
     @PutMapping("/{uuid}")
-    public ResponseEntity<String> updateCountry(@PathVariable UUID uuid, @RequestBody CountryRequestDTO countryDTO){
+    public ResponseEntity<String> updateCountry(@PathVariable UUID uuid, @RequestBody CountryRequestDTO countryDTO) {
         countryService.updateCountry(uuid, countryDTO);
-        return ResponseEntity.ok("Country changed succesfully");
+        return ResponseEntity.ok("Country changed successfully");
     }
 }
