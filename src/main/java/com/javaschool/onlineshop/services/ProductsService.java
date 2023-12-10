@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -58,11 +59,17 @@ public class ProductsService {
     @Transactional
     public void updateProduct(UUID uuid, ProductRequestDTO productDTO) {
         ProductsModel products = loadProduct(uuid);
-        if (productsRepository.existsByTitleAndPlatformAndCategoryAndIsDigital(productDTO.getTitle(), findPlatform(productDTO.getPlatform()), findCategory(productDTO.getCategory()), productDTO.getIsDigital())) {
-            throw new ResourceDuplicate("Product already exists with that platform, category and format");
+        if(products.getTitle().equals(productDTO.getTitle()) && products.getPlatform().getType().equals(productDTO.getPlatform())
+                && products.getCategory().getType().equals(productDTO.getCategory()) && products.getIsDigital().equals(productDTO.getIsDigital())){
+            createProductEntity(productDTO, products);
+            productsRepository.save(products);
+        }else {
+            if (productsRepository.existsByTitleAndPlatformAndCategoryAndIsDigital(productDTO.getTitle(), findPlatform(productDTO.getPlatform()), findCategory(productDTO.getCategory()), productDTO.getIsDigital())) {
+                throw new ResourceDuplicate("Product already exists with that platform, category and format");
+            }
+            createProductEntity(productDTO, products);
+            productsRepository.save(products);
         }
-        createProductEntity(productDTO, products);
-        productsRepository.save(products);
     }
 
     // Saves a new product to the database
@@ -82,6 +89,7 @@ public class ProductsService {
     public void deleteProduct(UUID uuid) {
         ProductsModel products = loadProduct(uuid);
         products.setIsDeleted(true);
+        products.setStock(0);
         productsRepository.save(products);
     }
 
@@ -153,5 +161,11 @@ public class ProductsService {
         ProductsModel products = loadProduct(uuid);
         products.setStock(productDTO.getStock());
         productsRepository.save(products);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductRequestDTO> getCheapestProducts(){
+        List<ProductsModel> cheapestProducts = productsRepository.findCheapestProducts();
+        return cheapestProducts.stream().map(this::createProductDTO).toList();
     }
 }

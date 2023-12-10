@@ -18,7 +18,7 @@ public class ProductsModel {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID productUuid;
 	
-	@OneToOne
+	@ManyToOne
     @JoinColumn(name = "product_category_uuid")
     private CategoryModel category;
 	
@@ -43,9 +43,9 @@ public class ProductsModel {
 	
 	@Column(name = "product_description")
 	private String description;
-	
-	@Column(name = "product_image")
-	private String image;
+
+	@Column(name = "product_image", length = 10000)
+	private byte[] image;
 				
 	@Column(name = "product_isDeleted")
 	private Boolean isDeleted;

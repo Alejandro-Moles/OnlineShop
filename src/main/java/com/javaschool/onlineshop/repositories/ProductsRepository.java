@@ -27,7 +27,18 @@ public interface ProductsRepository  extends JpaRepository<ProductsModel, UUID> 
 
     @Query("SELECT p FROM ProductsModel p " +
             "WHERE p.isDeleted = false AND p.stock > 0 " +
-            "ORDER BY (SELECT SUM(op.quantity) FROM OrderProductsModel op WHERE op.product = p) DESC " +
+            "AND (" +
+            "   SELECT SUM(op.quantity) FROM OrderProductsModel op WHERE op.product = p " +
+            ") > 0 " +
+            "ORDER BY (" +
+            "   SELECT SUM(op.quantity) FROM OrderProductsModel op WHERE op.product = p " +
+            ") DESC " +
             "LIMIT 10")
     List<ProductsModel> findTop10SoldProductsByStock();
+
+    @Query("SELECT p FROM ProductsModel p " +
+            "WHERE p.isDeleted = false AND p.stock > 0 " +
+            "ORDER BY p.price ASC " +
+            "LIMIT 5")
+    List<ProductsModel> findCheapestProducts();
 }

@@ -17,22 +17,23 @@ public class OrderModel {
 	//COLUMNS
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
+	@Column(nullable = false)
 	private UUID orderUuid;
-	
-	@OneToOne
+
+	@ManyToOne
 	@JoinColumn(name = "order_payment_uuid")
 	private PaymentModel payment;
 	
-	@OneToOne
-	@JoinColumn(name = "order_status_uuid")
+	@ManyToOne
+	@JoinColumn(name = "order_status_uuid", unique = false)
 	private StatusModel status;
 	
-	@OneToOne
-	@JoinColumn(name = "order_delivery_uuid")
+	@ManyToOne
+	@JoinColumn(name = "order_delivery_uuid", unique = false)
 	private DeliveryModel delivery;
 	
-	@OneToOne
-	@JoinColumn(name = "order_userAddress_uuid")
+	@ManyToOne
+	@JoinColumn(name = "order_userAddress_uuid", unique = false)
 	private UserAddressModel userAddress;
 	
 	@ManyToOne

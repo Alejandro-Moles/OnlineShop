@@ -86,7 +86,7 @@ public class ProductsServiceTest {
         productDTO.setStock(100);
         productDTO.setIsDigital(true);
         productDTO.setDescription("Updated Description");
-        productDTO.setImage("updated_image.jpg");
+        productDTO.setImage("updated_image.jpg".getBytes());
         productDTO.setIsDeleted(true);
 
         CategoryModel categoryModel = new CategoryModel();
@@ -141,7 +141,7 @@ public class ProductsServiceTest {
         productDTO.setStock(50);
         productDTO.setIsDigital(true);
         productDTO.setDescription("New Description");
-        productDTO.setImage("new_image.jpg");
+        productDTO.setImage("new_image.jpg".getBytes());
         productDTO.setIsDeleted(false);
 
         when(productsRepositoryMock.existsByTitleAndPlatformAndCategoryAndIsDigital(any(), any(), any(), any())).thenReturn(false);
@@ -192,13 +192,13 @@ public class ProductsServiceTest {
         productDTO.setStock(50);
         productDTO.setIsDigital(true);
         productDTO.setDescription("Existing Description");
-        productDTO.setImage("existing_image.jpg");
+        productDTO.setImage("existing_image.jpg".getBytes());
         productDTO.setIsDeleted(false);
 
         ResourceDuplicate exception = assertThrows(ResourceDuplicate.class, () ->
                 productsService.saveProduct(productDTO));
 
-        assertEquals("Product already exists with that platform", exception.getMessage());
+        assertEquals("Product already exists with that platform, category and format", exception.getMessage());
 
         verify(productsRepositoryMock, never()).save(any(ProductsModel.class));
     }

@@ -1,13 +1,9 @@
 package com.javaschool.onlineshop.models;
+import java.util.List;
 import java.util.UUID;
 
+import jakarta.persistence.*;
 import lombok.*;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
-import jakarta.persistence.Column;
 
 @Entity
 @Table(name="Category")
@@ -27,4 +23,7 @@ public class CategoryModel {
 	
 	@Column(name = "category_isDeleted")
 	private Boolean isDeleted;
+
+	@OneToMany(mappedBy = "category", cascade= CascadeType.ALL)
+	private List<ProductsModel> products;
 }

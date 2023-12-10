@@ -1,12 +1,9 @@
 package com.javaschool.onlineshop.models;
+import java.util.List;
 import java.util.UUID;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
+
+import jakarta.persistence.*;
 import lombok.Data;
-import jakarta.persistence.Id;
-import jakarta.persistence.Column;
 import lombok.NoArgsConstructor;
 
 
@@ -26,4 +23,7 @@ public class PaymentModel {
 	
 	@Column(name = "payment_isDeleted")
 	private Boolean isDeleted;
+
+	@OneToMany(mappedBy = "payment", cascade= CascadeType.ALL)
+	private List<OrderModel> orders;
 }

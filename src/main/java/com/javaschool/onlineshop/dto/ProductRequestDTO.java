@@ -16,7 +16,7 @@ public class ProductRequestDTO {
     private Integer pegi;
     private Boolean isDigital;
     private String description;
-    private String image;
+    private byte[] image;
     private List<String> genres;
     private Boolean isDeleted;
 

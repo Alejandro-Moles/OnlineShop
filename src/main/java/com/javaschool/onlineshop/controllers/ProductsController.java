@@ -2,11 +2,14 @@ package com.javaschool.onlineshop.controllers;
 
 import com.javaschool.onlineshop.dto.ProductRequestDTO;
 import com.javaschool.onlineshop.dto.TotalSaleProductDTO;
+import com.javaschool.onlineshop.models.ProductsModel;
 import com.javaschool.onlineshop.services.ProductsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,6 +50,7 @@ public class ProductsController {
     // Endpoint to update a product by UUID
     @PutMapping("updateProduct/{uuid}")
     public ResponseEntity<String> updateProduct(@PathVariable UUID uuid, @RequestBody ProductRequestDTO productDTO) {
+        //System.out.println(productDTO);
         productsService.updateProduct(uuid, productDTO);
         return ResponseEntity.ok("Product updated successfully");
     }
@@ -88,4 +92,12 @@ public class ProductsController {
         productsService.assignGenresToProducts(uuid, genresTypes);
         return ResponseEntity.ok("Genres assigned successfully to product with UUID: " + uuid);
     }
+
+    @GetMapping("/cheapestProduct")
+    public ResponseEntity<List<ProductRequestDTO>> getCheapestProduct(){
+        List<ProductRequestDTO> result = productsService.getCheapestProducts();
+        return  ResponseEntity.ok(result);
+    }
+
+
 }

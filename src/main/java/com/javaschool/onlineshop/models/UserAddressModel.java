@@ -1,15 +1,9 @@
 package com.javaschool.onlineshop.models;
+import java.util.List;
 import java.util.UUID;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
+
+import jakarta.persistence.*;
 import lombok.Data;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Column;
 import lombok.NoArgsConstructor;
 
 
@@ -28,8 +22,8 @@ public class UserAddressModel {
 	@JoinColumn(name = "address_user_uuid")
 	private ShopUserModel user;
 	
-	@OneToOne
-	@JoinColumn(name = "address_postal_code_uuid", unique = false)
+	@ManyToOne
+	@JoinColumn(name = "address_postal_code_uuid")
 	private PostalCodeModel postal_code;
 	
 	@Column(name = "address_street")
@@ -43,5 +37,8 @@ public class UserAddressModel {
 	
 	@Column(name = "address_isDeleted")
 	private Boolean isDeleted;
+
+	@OneToMany(mappedBy = "userAddress", cascade= CascadeType.ALL)
+	private List<OrderModel> orders;
 	
 }

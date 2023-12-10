@@ -1,11 +1,8 @@
 package com.javaschool.onlineshop.models;
+import java.util.List;
 import java.util.UUID;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
-import jakarta.persistence.Column;
+
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -26,4 +23,7 @@ public class DeliveryModel {
 			
 	@Column(name = "delivery_isDeleted")
 	private Boolean isDeleted;
+
+	@OneToMany(mappedBy = "delivery", cascade= CascadeType.ALL)
+	private List<OrderModel> orders;
 }
