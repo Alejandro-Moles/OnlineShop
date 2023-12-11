@@ -143,7 +143,7 @@ public class OrderServiceTests {
         // Assertions
         NoExistData exception = assertThrows(NoExistData.class, () -> orderService.findStatus(nonExistingStatusType));
 
-        assertEquals("This status don't exist", exception.getMessage());
+        assertEquals("This status doesn't exist", exception.getMessage());
     }
 
     /**
@@ -174,7 +174,7 @@ public class OrderServiceTests {
         // Assertions
         NoExistData exception = assertThrows(NoExistData.class, () -> orderService.findDelivery(nonExistingDeliveryType));
 
-        assertEquals("This delivery don't exist", exception.getMessage());
+        assertEquals("This delivery method doesn't exist", exception.getMessage());
     }
 
     /**
@@ -205,7 +205,7 @@ public class OrderServiceTests {
         // Assertions
         NoExistData exception = assertThrows(NoExistData.class, () -> orderService.findShopUser(nonExistingUserEmail));
 
-        assertEquals("This shop user don't exist", exception.getMessage());
+        assertEquals("This shop user doesn't exist", exception.getMessage());
     }
 
     /**
@@ -243,7 +243,7 @@ public class OrderServiceTests {
         NoExistData exception = assertThrows(NoExistData.class, () ->
                 orderService.findUserAddress(nonExistingApartament, nonExistingHome, nonExistingStreet));
 
-        assertEquals("This user address don't exist", exception.getMessage());
+        assertEquals("This user address doesn't exist", exception.getMessage());
     }
 
     /**
@@ -275,7 +275,7 @@ public class OrderServiceTests {
         NoExistData exception = assertThrows(NoExistData.class, () ->
                 orderService.findPayment(nonExistingPaymentType));
 
-        assertEquals("This payment method don't exist", exception.getMessage());
+        assertEquals("This payment method doesn't exist", exception.getMessage());
     }
 
 

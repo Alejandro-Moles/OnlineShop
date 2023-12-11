@@ -124,7 +124,7 @@ public class PaymentServiceTests {
         NoExistData exception = assertThrows(NoExistData.class, () ->
                 paymentService.updatePayment(nonExistingPaymentUUID, paymentDTO));
 
-        assertEquals("Payment don't exist", exception.getMessage());
+        assertEquals("Payment doesn't exist", exception.getMessage());
 
         verify(paymentRepositoryMock, never()).save(any(PaymentModel.class));
     }
@@ -159,7 +159,7 @@ public class PaymentServiceTests {
         NoExistData exception = assertThrows(NoExistData.class, () ->
                 paymentService.loadPayment(nonExistingPaymentUUID));
 
-        assertEquals("Payment don't exist", exception.getMessage());
+        assertEquals("Payment doesn't exist", exception.getMessage());
 
         verify(paymentRepositoryMock).findById(nonExistingPaymentUUID);
     }

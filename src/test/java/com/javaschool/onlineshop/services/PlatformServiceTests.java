@@ -52,7 +52,7 @@ public class PlatformServiceTests {
         // Assertions
         NoExistData exception = assertThrows(NoExistData.class, () -> platformService.loadPlatform(nonExistingPlatformUUID));
 
-        assertEquals("Platform don't exist", exception.getMessage());
+        assertEquals("Platform doesn't exist", exception.getMessage());
         verify(platformsRepositoryMock).findById(nonExistingPlatformUUID);
     }
 

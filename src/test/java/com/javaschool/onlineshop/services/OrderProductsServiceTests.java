@@ -41,7 +41,10 @@ public class OrderProductsServiceTests {
         // Mocking data
         when(orderProductsMapperMock.createOrderProductsDTO(any())).thenReturn(new OrderProductsRequestDTO());
         when(orderRepositoryMock.findById(any())).thenReturn(Optional.of(new OrderModel()));
-        when(productsRepositoryMock.findByTitle(any())).thenReturn(Optional.of(new ProductsModel()));
+
+        ProductsModel existingProduct = new ProductsModel();
+        when(productsRepositoryMock.findById(any())).thenReturn(Optional.of(existingProduct));
+
         when(orderProductsRepositoryMock.existsByOrderAndProduct(any(OrderModel.class), any(ProductsModel.class)))
                 .thenReturn(false);
 
@@ -65,7 +68,10 @@ public class OrderProductsServiceTests {
     void saveOrderProducts_WhenOrderProductsExists_ShouldThrowResourceDuplicateException() {
         // Mocking data
         when(orderRepositoryMock.findById(any())).thenReturn(Optional.of(new OrderModel()));
-        when(productsRepositoryMock.findByTitle(any())).thenReturn(Optional.of(new ProductsModel()));
+
+        ProductsModel existingProduct = new ProductsModel();
+        when(productsRepositoryMock.findById(any())).thenReturn(Optional.of(existingProduct));
+
         when(orderProductsRepositoryMock.existsByOrderAndProduct(any(OrderModel.class), any(ProductsModel.class)))
                 .thenReturn(true);
 

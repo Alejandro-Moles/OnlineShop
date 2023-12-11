@@ -125,7 +125,7 @@ public class PostalCodeServiceTests {
         // Assertions
         NoExistData exception = assertThrows(NoExistData.class, () -> postalCodeService.updatePostalCode(nonExistentPostalCodeUUID, postalCodeDTO));
 
-        assertEquals("Postal code don't exist", exception.getMessage());
+        assertEquals("Postal code doesn't exist", exception.getMessage());
 
         // Verifying that the repository method was NOT called
         verify(postalCodeRepositoryMock, never()).save(any(PostalCodeModel.class));
@@ -164,7 +164,7 @@ public class PostalCodeServiceTests {
         // Assertions
         NoExistData exception = assertThrows(NoExistData.class, () -> postalCodeService.loadPostalCode(nonExistentPostalCodeUUID));
 
-        assertEquals("Postal code don't exist", exception.getMessage());
+        assertEquals("Postal code doesn't exist", exception.getMessage());
 
         // Verifying that the repository method was called
         verify(postalCodeRepositoryMock).findById(nonExistentPostalCodeUUID);

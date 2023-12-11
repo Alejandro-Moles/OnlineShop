@@ -85,8 +85,10 @@ public class ShopUserService {
     @Transactional
     public void updateShopUserData(UUID uuid, ProfileDataDTO profileDataDTO) {
         ShopUserModel shopUser = loadShopUser(uuid);
-        if (shopUserRepository.existsByMail(profileDataDTO.getMail())) {
-            throw new ResourceDuplicate("Shop User already exists with that mail");
+        if (!shopUser.getMail().equals(profileDataDTO.getMail())) {
+            if (shopUserRepository.existsByMail(profileDataDTO.getMail())) {
+                throw new ResourceDuplicate("Shop User already exists with that mail");
+            }
         }
         shopUser.setMail(profileDataDTO.getMail());
         shopUser.setName(profileDataDTO.getName());

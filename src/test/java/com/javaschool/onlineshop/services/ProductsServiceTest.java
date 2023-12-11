@@ -77,7 +77,7 @@ public class ProductsServiceTest {
     @Test
     void updateProduct_ShouldUpdateProduct() {
         UUID productUUID = UUID.randomUUID();
-        when(productsRepositoryMock.findById(productUUID)).thenReturn(Optional.of(new ProductsModel()));
+        when(productsRepositoryMock.findById(productUUID)).thenReturn(Optional.of(createMockProductWithNonNullTitle()));
 
         ProductRequestDTO productDTO = new ProductRequestDTO();
         productDTO.setTitle("Updated Title");
@@ -105,6 +105,12 @@ public class ProductsServiceTest {
         productDTO.setGenres(genreTypes);
 
         assertDoesNotThrow(() -> productsService.updateProduct(productUUID, productDTO));
+    }
+
+    private ProductsModel createMockProductWithNonNullTitle() {
+        ProductsModel mockProduct = new ProductsModel();
+        mockProduct.setTitle("Some Title");
+        return mockProduct;
     }
 
     /**
