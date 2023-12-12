@@ -25,3 +25,5 @@ Upon backend execution, the absence of a user interface is expected, as frontend
 - It has tests that check different functionalities of the project.
 - Implements Spring security.
 - The database is perfectly normalized and with soft delete implemented.
+
+> **Note:**  The frontend repository link is https://github.com/Alejandro-Moles/onlineShopFrontend.git
